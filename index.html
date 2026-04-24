@@ -4,88 +4,415 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nirajan Tripathi | GIS Portfolio</title>
+  <meta
+    name="description"
+    content="Portfolio of Nirajan Tripathi, GIS Analyst and Geomatics Engineer specializing in geospatial analysis, remote sensing, Python, and spatial data workflows."
+  />
   <style>
+    :root {
+      --bg: #f4f7f8;
+      --surface: #ffffff;
+      --surface-alt: #ecf3f4;
+      --text: #182126;
+      --muted: #5f6b73;
+      --accent: #0f766e;
+      --accent-dark: #0b5d57;
+      --border: #d7e2e5;
+      --shadow: 0 10px 30px rgba(15, 35, 45, 0.08);
+      --radius: 18px;
+      --max-width: 1100px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px;
       line-height: 1.6;
-      background: #f7f7f7;
-      color: #222;
+      background: linear-gradient(to bottom, #eef4f5 0%, #f7fafb 100%);
+      color: var(--text);
     }
-    header {
-      margin-bottom: 40px;
-    }
-    h1 {
-      margin-bottom: 8px;
-    }
-    section {
-      background: white;
-      padding: 24px;
-      margin-bottom: 24px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
+
     a {
-      color: #0b63ce;
+      color: var(--accent);
       text-decoration: none;
     }
+
     a:hover {
-      text-decoration: underline;
+      color: var(--accent-dark);
     }
-    .project {
-      margin-bottom: 18px;
+
+    .container {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 72px 0 40px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #103b45 0%, #0f766e 100%);
+      color: #ffffff;
+      padding: 48px;
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(10, 35, 40, 0.18);
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 3rem;
+      line-height: 1.1;
+    }
+
+    .hero .subtitle {
+      font-size: 1.1rem;
+      margin: 0 0 14px;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .hero .summary {
+      max-width: 760px;
+      margin: 0 0 24px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #0f4f56;
+    }
+
+    .btn-primary:hover {
+      background: #e7f3f2;
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+      background: transparent;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .quick-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 18px;
+      font-size: 0.98rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    main {
+      padding-bottom: 56px;
+    }
+
+    section {
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 1.6rem;
+      color: #12303a;
+    }
+
+    .about p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      background: var(--surface-alt);
+      color: #17434a;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      border: 1px solid #d8e7e8;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .project-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 24px rgba(20, 35, 40, 0.08);
+    }
+
+    .project-card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+      color: #12333d;
+    }
+
+    .project-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .project-tools {
+      font-size: 0.9rem;
+      color: #24616a;
+      font-weight: 600;
+    }
+
+    .links-list,
+    .contact-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .link-row,
+    .contact-row {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fbfb;
+      border: 1px solid var(--border);
+    }
+
+    .label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 12px 0 40px;
+    }
+
+    @media (max-width: 700px) {
+      .hero {
+        padding-top: 32px;
+      }
+
+      .hero-card {
+        padding: 28px 22px;
+        border-radius: 22px;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .card {
+        padding: 22px;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Nirajan Tripathi</h1>
-    <p>GIS Analyst | Geomatics Engineer | Remote Sensing | Python</p>
-    <p>San Marcos, TX | <a href="mailto:nirajantripathi5523@gmail.com">nirajantripathi5523@gmail.com</a></p>
-  </header>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-card">
+        <h1>Nirajan Tripathi</h1>
+        <p class="subtitle">GIS Analyst | Geomatics Engineer | Remote Sensing | Python</p>
+        <p class="summary">
+          GIS and geomatics professional with experience in spatial analysis, remote sensing, geospatial data management,
+          and Python-based workflows. I use GIS and geospatial technologies to support environmental, infrastructure,
+          planning, and decision-making projects through clear, actionable spatial insights.
+        </p>
 
-  <section>
-    <h2>About Me</h2>
-    <p>
-      GIS and geomatics professional with experience in spatial analysis, remote sensing, and geospatial data management. Skilled in tools 
-      such as ArcGIS Pro, QGIS, and Python to support data-driven decision-making across environmental, infrastructure, and planning 
-      projects. Experienced in building efficient GIS workflows, analyzing spatial patterns, and producing clear, actionable geospatial 
-      outputs.
-    </p>
-  </section>
+        <div class="quick-info">
+          <span>San Marcos, Texas</span>
+          <span><a href="mailto:nirajantripathi5523@gmail.com" style="color: #ffffff;">nirajantripathi5523@gmail.com</a></span>
+          <span><a href="tel:7373879007" style="color: #ffffff;">737-387-9007</a></span>
+        </div>
 
-  <section>
-    <h2>Projects</h2>
+        <div class="hero-links">
+          <a class="btn btn-primary" href="N_Tripathi_Resume.pdf" download="N_Tripathi_Resume.pdf">Download Resume</a>
+          <a class="btn btn-secondary" href="https://www.linkedin.com/in/nirajan-tripathi-5434a8308/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn btn-secondary" href="https://github.com/nirajan550123" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </header>
 
-    <div class="project">
-      <h3>Transit Dependency Likelihood Index</h3>
-      <p>Developed a GIS-based index to evaluate transit dependency and accessibility using spatial modeling and Python.</p>
-    </div>
+    <main>
+      <section class="about">
+        <div class="card">
+          <h2 class="section-title">About Me</h2>
+          <p>
+            I work at the intersection of GIS, geomatics, remote sensing, and spatial data analysis. My experience includes
+            geospatial workflows for environmental assessment, land-use planning, flood-risk studies, and transportation-related
+            spatial modeling. I am especially interested in using ArcGIS Pro, QGIS, Python, and spatial analytics to solve
+            real-world infrastructure and planning problems.
+          </p>
 
-    <div class="project">
-      <h3>Flood Impact Assessment</h3>
-      <p>Evaluated flood exposure on land parcels and population using GIS overlay analysis and produced vulnerability maps.</p>
-    </div>
+          <div class="skills-list">
+            <span class="tag">ArcGIS Pro</span>
+            <span class="tag">QGIS</span>
+            <span class="tag">Python</span>
+            <span class="tag">Remote Sensing</span>
+            <span class="tag">Spatial Analysis</span>
+            <span class="tag">Geospatial Data Management</span>
+            <span class="tag">GNSS / UAV Surveying</span>
+            <span class="tag">Google Earth Engine</span>
+          </div>
+        </div>
+      </section>
 
-    <div class="project">
-      <h3>Urban Growth Modeling</h3>
-      <p>Applied GIS-based multi-criteria analysis and simulation methods to study urban expansion suitability.</p>
-    </div>
-  </section>
+      <section>
+        <div class="card">
+          <h2 class="section-title">Featured Projects</h2>
+          <div class="projects-grid">
+            <div class="project-card">
+              <h3>Transit Dependency Likelihood Index</h3>
+              <p>
+                Developed a GIS-based index to evaluate transit dependency and accessibility using spatial modeling and Python-based analysis.
+              </p>
+              <div class="project-tools">Tools: GIS, Python, Spatial Modeling</div>
+            </div>
 
-  <section>
-  <h2>Resume & Links</h2>
-  <p><a href="N_Tripathi_Resume.pdf" target="_blank" rel="noopener noreferrer">View Resume (PDF)</a></p>
-  <p><a href="https://www.linkedin.com/in/nirajan-tripathi-5434a8308/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
-  <p><a href="https://github.com/nirajan550123" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-</section>
+            <div class="project-card">
+              <h3>Flood Impact Assessment</h3>
+              <p>
+                Evaluated flood exposure on land parcels and population using GIS overlay analysis and produced vulnerability maps.
+              </p>
+              <div class="project-tools">Tools: ArcGIS, Overlay Analysis, Risk Mapping</div>
+            </div>
 
-  <section>
-  <h2>Contact</h2>
-  <p>Email: <a href="mailto:nirajantripathi5523@gmail.com">nirajantripathi5523@gmail.com</a></p>
-  <p>Cell: <a href="tel:7373879007">737-387-9007</a></p>
-</section>
+            <div class="project-card">
+              <h3>Urban Growth Modeling</h3>
+              <p>
+                Applied GIS-based multi-criteria analysis and simulation methods to study urban expansion suitability and land-use change.
+              </p>
+              <div class="project-tools">Tools: MCDA, GIS Modeling, Spatial Planning</div>
+            </div>
+
+            <div class="project-card">
+              <h3>Remote Sensing & Land Surface Analysis</h3>
+              <p>
+                Investigated vegetation, land surface temperature, and land-use dynamics using remote sensing and spatial statistical methods.
+              </p>
+              <div class="project-tools">Tools: Landsat, Google Earth Engine, Raster Analysis</div>
+            </div>
+
+            <div class="project-card">
+              <h3>Watershed & Runoff Modeling</h3>
+              <p>
+                Estimated runoff and watershed response using hydrologic methods and spatial datasets to support environmental assessment.
+              </p>
+              <div class="project-tools">Tools: Hydrologic Modeling, GIS, Environmental Analysis</div>
+            </div>
+
+            <div class="project-card">
+              <h3>GNSS/UAV-Based Survey Projects</h3>
+              <p>
+                Conducted field-based geospatial data collection and mapping using GNSS and UAV systems for terrain and flood-related studies.
+              </p>
+              <div class="project-tools">Tools: GNSS, UAV, Surveying, Mapping</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card">
+          <h2 class="section-title">Resume & Professional Links</h2>
+          <div class="links-list">
+            <div class="link-row">
+              <span class="label">Resume</span>
+              <a href="N_Tripathi_Resume.pdf" download="N_Tripathi_Resume.pdf">Download Resume (PDF)</a>
+            </div>
+
+            <div class="link-row">
+              <span class="label">LinkedIn</span>
+              <a href="https://www.linkedin.com/in/nirajan-tripathi-5434a8308/" target="_blank" rel="noopener noreferrer">
+                linkedin.com/in/nirajan-tripathi-5434a8308
+              </a>
+            </div>
+
+            <div class="link-row">
+              <span class="label">GitHub</span>
+              <a href="https://github.com/nirajan550123" target="_blank" rel="noopener noreferrer">
+                github.com/nirajan550123
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card">
+          <h2 class="section-title">Contact</h2>
+          <div class="contact-list">
+            <div class="contact-row">
+              <span class="label">Email</span>
+              <a href="mailto:nirajantripathi5523@gmail.com">nirajantripathi5523@gmail.com</a>
+            </div>
+
+            <div class="contact-row">
+              <span class="label">Phone</span>
+              <a href="tel:7373879007">737-387-9007</a>
+            </div>
+
+            <div class="contact-row">
+              <span class="label">Location</span>
+              <span>San Marcos, Texas, USA</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2026 Nirajan Tripathi | GIS Portfolio</p>
+    </footer>
+  </div>
 </body>
 </html>
