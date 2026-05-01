@@ -1,38 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Transit Dependency Likelihood Index – Portland, Oregon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      color: #111827;
+      background-color: #f9fafb;
+    }
+    header {
+      background: #0f766e;
+      color: white;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.8rem;
+    }
+    header p {
+      margin: 0.2rem 0;
+    }
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem 1.5rem;
+      background: white;
+    }
+    h2 {
+      margin-top: 2rem;
+      font-size: 1.4rem;
+      color: #0f172a;
+    }
+    p {
+      margin: 0.75rem 0;
+    }
+    ul {
+      margin: 0.5rem 0 0.5rem 1.25rem;
+    }
+    .tagline {
+      font-size: 0.95rem;
+      color: #e5e7eb;
+    }
+    .meta {
+      font-size: 0.9rem;
+      color: #d1d5db;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.6rem;
+      margin-right: 0.4rem;
+      margin-top: 0.25rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    .section-meta {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.5rem;
+    }
+    .card {
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+      padding: 1rem 1.25rem;
+      background: #f9fafb;
+    }
+    .card h3 {
+      margin-top: 0;
+      font-size: 1rem;
+      color: #0f172a;
+    }
+    .links a {
+      display: inline-block;
+      margin-right: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+      color: #0f766e;
+      border-bottom: 1px solid #0f766e;
+    }
+    .back-link {
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+    }
+    .back-link a {
+      color: #4b5563;
+      text-decoration: none;
+      border-bottom: 1px solid #d1d5db;
+    }
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      header {
+        text-align: left;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Transit Dependency Likelihood Index – Portland, Oregon</h1>
-  <p>
-    This project uses GIS, ArcPy, and demographic indicators to build a
-    Transit Dependency Likelihood Index (TDLI) and identify unserved
-    high-need transit areas in Portland, Oregon.
-  </p>
+  <header>
+    <h1>Transit Dependency Likelihood Index – Portland, Oregon</h1>
+    <p class="tagline">
+      GIS-based Transit Dependency Likelihood Index (TDLI) and service gap analysis
+      for equity-focused transit planning.
+    </p>
+    <p class="meta">
+      Tools: ArcGIS Pro · ArcPy · Python · Pandas · Network Analyst
+    </p>
+  </header>
 
-  <h2>Overview</h2>
-  <p>
-    The tool combines demographic variables, z-score standardization,
-    weighted scoring, and transit service areas to highlight where
-    high-transit-dependent neighborhoods lack nearby bus stops.
-  </p>
+  <main>
+    <section class="grid-2">
+      <div>
+        <h2>Project overview</h2>
+        <p>
+          This project develops a <strong>Transit Dependency Likelihood Index (TDLI)</strong>
+          for Portland, Oregon and uses transit service areas to find
+          <strong>high-need neighborhoods that are poorly served by bus stops</strong>.
+        </p>
+        <p>
+          The workflow combines demographic indicators, z-score standardization, weighted
+          scoring, and network-based service areas. The outputs help planners see where
+          transit investment could reduce inequities in access.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Role & scope</h3>
+        <p class="section-meta">What I did</p>
+        <u
+        <ul>
+          >Designed the TDLI concept and variable set</l/li>
+          >Implemented the workflow in ArcGIS Pro and ArcPy</l/li>
+          >Built a reusable script tool for future cities</l/li>
+          >Produced maps of high-TDLI and unserved streets</li>
+        </ul>
+      </div>
+    </section>
 
-  <h2>Key outputs</h2>
-  <ul>
-    >TDLI score for each polygon.</li>
-    >High-TDLI neighborhoods.</li>
-    >Unserved high-TDLI areas outside service buffers.</li>
-    >Unserved street segments in high-need areas.</li>
-  </ul>
+    <h2>Problem & goal</h2>
+    <p>
+      Many cities have good transit overall but still leave some neighborhoods
+      underserved, especially communities with higher dependency on public transport.
+      The goal of this project was to build a GIS-based tool that:
+    </p>
+    <ul>
+      >Quantifies transit dependency at the neighborhood level</li>
+      >Maps where high-dependency areas lack nearby bus stops</li>
+      >Outputs unserved street segments for targeted improvements</li>
+    </ul>
 
-  <h2>Links</h2>
-  <ul>
-    ><a href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/tdli-portland">
-      Code and files on GitHub
-    </a></li>
-    ><a href="/">Back to portfolio homepage</a></li>
-  </ul>
+    <h2>Data & study area</h2>
+    <p>
+      The study area is the City of Portland, Oregon. The analysis uses:
+    </p>
+    <ul>
+      >Census-based demographic variables (age, disability, poverty, vehicle access, etc.)</li>
+      >Portland city boundary and census geography</li>
+      >Bus routes and stop locations</li>
+      >Street network and a network dataset for service areas</li>
+    </ul>
+    <p class="section-meta">
+      Demographic variables are transformed into indicators of transit dependency,
+      then combined into a single TDLI score for each polygon.
+    </p>
+
+    <section class="grid-2">
+      <div>
+        <h2>Methodology</h2>
+        <o<ol>
+          >
+            Export selected fields from the polygon layer into a pandas DataFrame
+            using ArcPy data access.
+          </l/li>
+          >
+            Standardize each variable using z-scores and reclassify to
+            W-scores (0, 0.5, 1) based on thresholds.
+          </l/li>
+          >
+            Compute a weighted TDLI score for each polygon from the W-scores
+            (equal or custom weights).
+          </l/li>
+          >
+            Use Network Analyst to generate service areas around bus stops
+            using a walking-distance cutoff.
+          </l/li>
+          >
+            Select polygons with TDLI ≥ 0.5 and identify areas outside
+            the service area (unserved high-TDLI polygons).
+          </l/li>
+          >
+            Clip the street network to these unserved polygons to output
+            unserved street segments.
+          </li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Key outputs</h3>
+        <u
+        <ul>
+          >All polygons with TDLI values and supporting fields</l/li>
+          >High-TDLI polygons (TDLI ≥ 0.5)</l/li>
+          >Unserved high-TDLI polygons outside service buffers</l/li>
+          >Unserved street segments in high-need areas</li>
+        </ul>
+      </div>
+    </section>
+
+    <h2>Results & insights</h2>
+    <p>
+      The TDLI maps highlight neighborhoods with higher transit dependency,
+      while the gap analysis shows which of those neighborhoods do not fall
+      within the walking-distance service area of existing bus stops.
+    </p>
+    <p>
+      The unserved street layer provides a direct way to see where additional
+      stops, routing changes, or micro-transit options could improve equity
+      in access to transit.
+    </p>
+
+    <h2>What I would improve next</h2>
+    <ul>
+      >
+        Use <strong>mode-specific accessibility thresholds</strong> (e.g., different
+        walking distances for bus, light rail, and commuter rail).
+      </li>
+      >
+        Incorporate <strong>service frequency and reliability</strong> so high-frequency
+        routes are weighted more than infrequent service.
+      </li>
+      >
+        Add preprocessing checks for data quality, missing values, and
+        consistent coordinate systems.
+      </li>
+      >
+        Package the workflow as a Python toolbox (de>.pyt</code>) for easier reuse
+        by planners in other cities.
+      </li>
+    </ul>
+
+    <h2>Links</h2>
+    <div class="links">
+      <a href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/tdli-portland">
+        View code and files on GitHub
+      </a>
+      <a href="/">Back to portfolio homepage</a>
+    </div>
+
+    <div class="back-link">
+      <p><a href="/">← Back to portfolio</a></p>
+    </div>
+  </main>
 </body>
 </html>
