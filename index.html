@@ -1,432 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nirajan Tripathi | GIS Portfolio</title>
-  <meta
-    name="description"
-    content="Portfolio of Nirajan Tripathi, GIS Analyst and Geomatics Engineer specializing in geospatial analysis, remote sensing, Python, and spatial data workflows."
-  />
-  <style>
-    :root {
-      --bg: #f4f7f8;
-      --surface: #ffffff;
-      --surface-alt: #ecf3f4;
-      --text: #182126;
-      --muted: #5f6b73;
-      --accent: #0f766e;
-      --accent-dark: #0b5d57;
-      --border: #d7e2e5;
-      --shadow: 0 10px 30px rgba(15, 35, 45, 0.08);
-      --radius: 18px;
-      --max-width: 1100px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nirajan Tripathi | GIS & Geospatial Data Scientist</title>
+<meta name="description" content="Portfolio of Nirajan Tripathi — GIS Analyst and geospatial data scientist specializing in spatial analysis, remote sensing, Python, R, and web mapping." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3efe6;       /* aged map paper */
+    --paper-2:#ece6d9;
+    --ink:#1f2a24;         /* deep forest ink */
+    --ink-soft:#4a5650;
+    --muted:#6b756e;
+    --line:#d8d0bf;        /* contour line */
+    --forest:#2f5d50;      /* primary green */
+    --forest-deep:#1d3b33;
+    --moss:#6b8f5e;
+    --clay:#c2703d;        /* terracotta accent, used sparingly */
+    --gold:#cda434;
+    --surface:#fbf9f4;
+    --shadow-sm:0 2px 8px rgba(31,42,36,.06);
+    --shadow:0 16px 40px rgba(29,59,51,.12);
+    --shadow-lg:0 30px 60px rgba(29,59,51,.18);
+    --radius:16px;
+    --max:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Inter",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--forest);text-decoration:none;transition:color .18s;}
+  a:hover{color:var(--clay);}
+  .wrap{width:min(var(--max),calc(100% - 40px));margin:0 auto;}
+  .mono{font-family:"JetBrains Mono",monospace;}
 
-    * {
-      box-sizing: border-box;
-    }
+  /* ---------- top nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(243,239,230,.82);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+  .brand{font-family:"Fraunces",serif;font-weight:600;font-size:1.15rem;letter-spacing:.01em;color:var(--ink);}
+  .brand span{color:var(--forest);}
+  nav.links{display:flex;gap:26px;}
+  nav.links a{color:var(--ink-soft);font-size:.92rem;font-weight:500;}
+  nav.links a:hover{color:var(--forest);}
+  .nav-cta{background:var(--forest);color:#fff;padding:9px 16px;border-radius:999px;font-size:.88rem;font-weight:600;}
+  .nav-cta:hover{background:var(--forest-deep);color:#fff;}
+  @media(max-width:760px){nav.links{display:none;}}
 
-    html {
-      scroll-behavior: smooth;
-    }
+  /* ---------- hero with contour signature ---------- */
+  .hero{position:relative;overflow:hidden;padding:88px 0 72px;}
+  .hero-bg{position:absolute;inset:0;z-index:0;opacity:.5;}
+  .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.5fr .9fr;gap:48px;align-items:center;}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay);margin-bottom:18px;}
+  .hero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.6rem,6vw,4.3rem);line-height:1.02;letter-spacing:-.01em;color:var(--ink);}
+  .hero h1 em{font-style:italic;color:var(--forest);}
+  .hero .lede{font-size:1.12rem;color:var(--ink-soft);max-width:46ch;margin:22px 0 14px;}
+  .coords{font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--muted);margin-bottom:26px;}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-weight:600;font-size:.95rem;transition:transform .18s,box-shadow .18s,background .18s;}
+  .btn-primary{background:var(--forest);color:#fff;box-shadow:var(--shadow-sm);}
+  .btn-primary:hover{background:var(--forest-deep);color:#fff;transform:translateY(-2px);box-shadow:var(--shadow);}
+  .btn-ghost{border:1.5px solid var(--forest);color:var(--forest);}
+  .btn-ghost:hover{background:var(--forest);color:#fff;}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      background: linear-gradient(to bottom, #eef4f5 0%, #f7fafb 100%);
-      color: var(--text);
-    }
+  /* portrait framed like a survey marker */
+  .portrait-wrap{position:relative;justify-self:center;}
+  .portrait{
+    width:248px;height:300px;object-fit:cover;border-radius:140px 140px 18px 18px;
+    border:5px solid var(--surface);box-shadow:var(--shadow-lg);
+    background:var(--paper-2);
+  }
+  .portrait-ring{
+    position:absolute;inset:-16px;border:1.5px dashed var(--moss);
+    border-radius:150px 150px 26px 26px;opacity:.6;
+  }
+  .pin{
+    position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+    background:var(--clay);color:#fff;font-family:"JetBrains Mono",monospace;
+    font-size:.72rem;padding:5px 12px;border-radius:999px;box-shadow:var(--shadow-sm);white-space:nowrap;
+  }
+  @media(max-width:860px){
+    .hero .wrap{grid-template-columns:1fr;text-align:left;}
+    .portrait-wrap{justify-self:start;margin-top:10px;}
+  }
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+  /* ---------- section scaffolding ---------- */
+  section.block{padding:68px 0;}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:34px;}
+  .sec-num{font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--clay);padding-top:6px;}
+  .sec-title{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(1.7rem,3.5vw,2.4rem);color:var(--ink);line-height:1.1;}
+  .sec-sub{color:var(--muted);max-width:60ch;margin-top:6px;font-size:1rem;}
 
-    a:hover {
-      color: var(--accent-dark);
-    }
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:start;}
+  .about-grid p{color:var(--ink-soft);font-size:1.06rem;margin-bottom:16px;}
+  .facts{display:grid;gap:14px;}
+  .fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow-sm);}
+  .fact b{font-family:"Fraunces",serif;font-size:1.5rem;color:var(--forest);display:block;}
+  .fact span{font-size:.85rem;color:var(--muted);}
+  @media(max-width:760px){.about-grid{grid-template-columns:1fr;}}
 
-    .container {
-      width: min(var(--max-width), calc(100% - 32px));
-      margin: 0 auto;
-    }
+  /* skills as field categories */
+  .skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;}
+  .skill-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s;}
+  .skill-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+  .skill-card h3{font-family:"Fraunces",serif;font-size:1.12rem;color:var(--forest-deep);margin-bottom:10px;}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .chip{font-size:.82rem;background:var(--paper-2);color:var(--ink-soft);padding:5px 11px;border-radius:999px;border:1px solid var(--line);}
 
-    .hero {
-      padding: 72px 0 40px;
-    }
+  /* projects */
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
+  .proj{
+    position:relative;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);
+    transition:transform .22s,box-shadow .22s,border-color .22s;display:flex;flex-direction:column;
+  }
+  .proj:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--moss);}
+  .proj .tagrow{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .proj .dot{width:8px;height:8px;border-radius:50%;background:var(--moss);}
+  .proj .kind{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .proj.live .dot{background:var(--forest);}
+  .proj.live .kind{color:var(--forest);}
+  .proj h3{font-family:"Fraunces",serif;font-size:1.25rem;color:var(--ink);margin-bottom:10px;line-height:1.2;}
+  .proj p{color:var(--ink-soft);font-size:.96rem;margin-bottom:16px;flex:1;}
+  .proj .tools{font-size:.82rem;color:var(--muted);margin-bottom:14px;font-family:"JetBrains Mono",monospace;}
+  .proj .go{font-weight:600;color:var(--forest);font-size:.95rem;align-self:flex-start;}
+  .proj .go:hover{color:var(--clay);}
+  .proj .soon{font-size:.85rem;color:var(--muted);font-style:italic;}
 
-    .hero-card {
-      background: linear-gradient(135deg, #103b45 0%, #0f766e 100%);
-      color: #ffffff;
-      padding: 48px;
-      border-radius: 28px;
-      box-shadow: 0 18px 40px rgba(10, 35, 40, 0.18);
-    }
+  /* experience timeline */
+  .timeline{position:relative;padding-left:28px;}
+  .timeline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--moss),var(--line));}
+  .tl{position:relative;margin-bottom:30px;}
+  .tl::before{content:"";position:absolute;left:-28px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--surface);border:3px solid var(--forest);}
+  .tl .when{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--clay);}
+  .tl h3{font-family:"Fraunces",serif;font-size:1.18rem;color:var(--ink);margin:3px 0 2px;}
+  .tl .org{font-size:.92rem;color:var(--muted);margin-bottom:8px;}
+  .tl p{color:var(--ink-soft);font-size:.96rem;}
 
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: 3rem;
-      line-height: 1.1;
-    }
+  /* awards */
+  .award-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+  .award{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow-sm);}
+  .award b{display:block;color:var(--ink);font-size:.98rem;}
+  .award span{font-size:.85rem;color:var(--muted);}
 
-    .hero .subtitle {
-      font-size: 1.1rem;
-      margin: 0 0 14px;
-      color: rgba(255, 255, 255, 0.92);
-    }
+  /* contact */
+  .contact-card{background:linear-gradient(135deg,var(--forest-deep),var(--forest));color:#fff;border-radius:24px;padding:48px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;}
+  .contact-card h2{font-family:"Fraunces",serif;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:12px;position:relative;}
+  .contact-card p{color:rgba(255,255,255,.85);max-width:48ch;margin-bottom:24px;position:relative;}
+  .contact-row{display:flex;flex-wrap:wrap;gap:12px;position:relative;}
+  .contact-row a{background:rgba(255,255,255,.12);color:#fff;padding:11px 18px;border-radius:999px;font-weight:600;font-size:.92rem;border:1px solid rgba(255,255,255,.2);}
+  .contact-row a:hover{background:#fff;color:var(--forest-deep);}
+  .contact-card .topo{position:absolute;right:-60px;bottom:-80px;width:340px;opacity:.18;z-index:0;}
 
-    .hero .summary {
-      max-width: 760px;
-      margin: 0 0 24px;
-      color: rgba(255, 255, 255, 0.9);
-    }
+  footer{text-align:center;padding:38px 0;color:var(--muted);font-size:.9rem;}
 
-    .hero-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .btn-primary {
-      background: #ffffff;
-      color: #0f4f56;
-    }
-
-    .btn-primary:hover {
-      background: #e7f3f2;
-    }
-
-    .btn-secondary {
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: #ffffff;
-      background: transparent;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .quick-info {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin-top: 18px;
-      font-size: 0.98rem;
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    main {
-      padding-bottom: 56px;
-    }
-
-    section {
-      margin-bottom: 28px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 30px;
-    }
-
-    .section-title {
-      margin: 0 0 18px;
-      font-size: 1.6rem;
-      color: #12303a;
-    }
-
-    .about p {
-      margin: 0;
-      color: var(--text);
-    }
-
-    .skills-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .tag {
-      background: var(--surface-alt);
-      color: #17434a;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      border: 1px solid #d8e7e8;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-    }
-
-    .project-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 14px 24px rgba(20, 35, 40, 0.08);
-    }
-
-    .project-card h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 1.15rem;
-      color: #12333d;
-    }
-
-    .project-card p {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    .project-tools {
-      font-size: 0.9rem;
-      color: #24616a;
-      font-weight: 600;
-    }
-
-    .links-list,
-    .contact-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .link-row,
-    .contact-row {
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: #f8fbfb;
-      border: 1px solid var(--border);
-    }
-
-    .label {
-      display: block;
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.95rem;
-      padding: 12px 0 40px;
-    }
-
-    @media (max-width: 700px) {
-      .hero {
-        padding-top: 32px;
-      }
-
-      .hero-card {
-        padding: 28px 22px;
-        border-radius: 22px;
-      }
-
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-
-      .card {
-        padding: 22px;
-      }
-    }
-  </style>
+  /* scroll reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header class="hero">
-      <div class="hero-card">
-        <h1>Nirajan Tripathi</h1>
-        <p class="subtitle">GIS Analyst | Geomatics Engineer | Remote Sensing | Python</p>
-        <p class="summary">
-          GIS and geomatics professional with experience in spatial analysis, remote sensing, geospatial data management,
-          and Python-based workflows. I use GIS and geospatial technologies to support environmental, infrastructure,
-          planning, and decision-making projects through clear, actionable spatial insights.
-        </p>
 
-        <div class="quick-info">
-          <span>San Marcos, Texas</span>
-          <span><a href="mailto:nirajantripathi5523@gmail.com" style="color: #ffffff;">nirajantripathi5523@gmail.com</a></span>
-          <span><a href="tel:7373879007" style="color: #ffffff;">737-387-9007</a></span>
-        </div>
-
-        <div class="hero-links">
-          <a class="btn btn-primary" href="N_Tripathi_Resume.pdf" download="N_Tripathi_Resume.pdf">Download Resume</a>
-          <a class="btn btn-secondary" href="https://www.linkedin.com/in/nirajan-tripathi-5434a8308/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="btn btn-secondary" href="https://github.com/nirajan550123" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </div>
-      </div>
-    </header>
-
-    <main>
-      <section class="about">
-        <div class="card">
-          <h2 class="section-title">About Me</h2>
-          <p>
-            I work at the intersection of GIS, geomatics, remote sensing, and spatial data analysis. My experience includes
-            geospatial workflows for environmental assessment, land-use planning, flood-risk studies, and transportation-related
-            spatial modeling. I am especially interested in using ArcGIS Pro, QGIS, Python, and spatial analytics to solve
-            real-world infrastructure and planning problems.
-          </p>
-
-          <div class="skills-list">
-            <span class="tag">ArcGIS Pro</span>
-            <span class="tag">QGIS</span>
-            <span class="tag">Python</span>
-            <span class="tag">Remote Sensing</span>
-            <span class="tag">Spatial Analysis</span>
-            <span class="tag">Geospatial Data Management</span>
-            <span class="tag">GNSS / UAV Surveying</span>
-            <span class="tag">Google Earth Engine</span>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="card">
-          <h2 class="section-title">Featured Projects</h2>
-          <div class="projects-grid">
-            <div class="project-card">
-              <h3>Transit Dependency Likelihood Index</h3>
-        <p>
-          Developed a GIS-based index to evaluate transit dependency and accessibility using spatial modeling and Python-based analysis.
-        </p>
-        <p>
-          <a href="./projects/tdli-portland/">View project →</a>
-        </p>
-        <div class="project-tools">Tools: GIS, Python, Spatial Modeling</div>
-      </div>
-
-            <div class="project-card">
-              <h3>Flood Impact Assessment</h3>
-              <p>
-                Evaluated flood exposure on land parcels and population using GIS overlay analysis and produced vulnerability maps.
-              </p>
-              <div class="project-tools">Tools: ArcGIS, Overlay Analysis, Risk Mapping</div>
-            </div>
-
-            <div class="project-card">
-              <h3>Urban Growth Modeling</h3>
-              <p>
-                Applied GIS-based multi-criteria analysis and simulation methods to study urban expansion suitability and land-use change.
-              </p>
-              <div class="project-tools">Tools: MCDA, GIS Modeling, Spatial Planning</div>
-            </div>
-
-            <div class="project-card">
-              <h3>Post-Fire Vegetation Damage Assessment</h3>
-              <p>
-                Pre/post-fire change detection of the 2025 Pacific Palisades Fire using Wyvern hyperspectral imagery and red-edge vegetation indices.
-              </p>
-              <p>
-                <a href="./projects/palisades-fire-rs/">View project →</a>
-              </p>
-              <div class="project-tools">Tools: ERDAS IMAGINE, Hyperspectral, Change Detection</div>
-            </div>
-              <p>
-                Investigated vegetation, land surface temperature, and land-use dynamics using remote sensing and spatial statistical methods.
-              </p>
-              <div class="project-tools">Tools: Landsat, Google Earth Engine, Raster Analysis</div>
-            </div>
-
-            <div class="project-card">
-              <h3>NDVI, Land Surface Temperature & Land Cover</h3>
-              <p>
-                Statistical analysis of how vegetation cools the land surface across five land-cover types in Texas Hill Country, using Landsat, ArcGIS Pro, and a full R workflow (Kruskal–Wallis, ANCOVA).
-              </p>
-              <p>
-                <a href="./projects/ndvi-lst-hillcountry/">View project →</a>
-              </p>
-              <div class="project-tools">Tools: ArcGIS Pro, Landsat, R, Statistics</div>
-            </div>
-
-            <div class="project-card">
-              <h3>GNSS/UAV-Based Survey Projects</h3>
-              <p>
-                Conducted field-based geospatial data collection and mapping using GNSS and UAV systems for terrain and flood-related studies.
-              </p>
-              <div class="project-tools">Tools: GNSS, UAV, Surveying, Mapping</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="card">
-          <h2 class="section-title">Resume & Professional Links</h2>
-          <div class="links-list">
-            <div class="link-row">
-              <span class="label">Resume</span>
-              <a href="N_Tripathi_Resume.pdf" download="N_Tripathi_Resume.pdf">Download Resume (PDF)</a>
-            </div>
-
-            <div class="link-row">
-              <span class="label">LinkedIn</span>
-              <a href="https://www.linkedin.com/in/nirajan-tripathi-5434a8308/" target="_blank" rel="noopener noreferrer">
-                linkedin.com/in/nirajan-tripathi-5434a8308
-              </a>
-            </div>
-
-            <div class="link-row">
-              <span class="label">GitHub</span>
-              <a href="https://github.com/nirajan550123" target="_blank" rel="noopener noreferrer">
-                github.com/nirajan550123
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="card">
-          <h2 class="section-title">Contact</h2>
-          <div class="contact-list">
-            <div class="contact-row">
-              <span class="label">Email</span>
-              <a href="mailto:nirajantripathi5523@gmail.com">nirajantripathi5523@gmail.com</a>
-            </div>
-
-            <div class="contact-row">
-              <span class="label">Phone</span>
-              <a href="tel:7373879007">737-387-9007</a>
-            </div>
-
-            <div class="contact-row">
-              <span class="label">Location</span>
-              <span>San Marcos, Texas, USA</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <p>© 2026 Nirajan Tripathi | GIS Portfolio</p>
-    </footer>
+<!-- NAV -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">Nirajan&nbsp;<span>Tripathi</span></div>
+    <nav class="links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="N_Tripathi_Resume.pdf" download>Résumé</a>
   </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- contour-line signature background -->
+  <svg class="hero-bg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g fill="none" stroke="#9db89a" stroke-width="1.1">
+      <path d="M-50 480 C 200 420 380 520 600 470 S 1000 380 1260 440"/>
+      <path d="M-50 430 C 220 360 400 470 620 410 S 1010 320 1260 390"/>
+      <path d="M-50 380 C 230 300 420 420 640 350 S 1020 260 1260 340"/>
+      <path d="M-50 330 C 250 250 440 370 660 290 S 1030 210 1260 290"/>
+      <path d="M-50 280 C 260 200 450 320 670 240 S 1040 160 1260 240"/>
+      <path d="M-50 230 C 270 150 470 270 690 190 S 1050 120 1260 195"/>
+      <path d="M-50 180 C 290 110 490 220 700 150 S 1060 80 1260 150"/>
+      <path d="M-50 130 C 300 70 500 175 720 110 S 1070 45 1260 110"/>
+      <path d="M-50 540 C 180 500 360 580 580 540 S 990 460 1260 510"/>
+    </g>
+    <g fill="#c2703d" opacity=".55">
+      <circle cx="660" cy="290" r="4"/>
+    </g>
+  </svg>
+
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">GIS · Remote Sensing · Geospatial Data Science</p>
+      <h1>Turning spatial data into <em>decisions</em> you can map.</h1>
+      <p class="lede">
+        I'm a GIS and geomatics professional and M.S. Geography candidate at Texas State University.
+        I build reproducible geospatial workflows across environment, water resources, and urban planning —
+        from hydroclimatic analysis to remote sensing and web mapping.
+      </p>
+      <p class="coords">29.8833° N, 97.9414° W — San Marcos, Texas</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#projects">View projects ↓</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/nirajan-tripathi-5434a8308/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/nirajan550123" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="portrait-wrap reveal">
+      <span class="portrait-ring"></span>
+      <img class="portrait" src="profile.jpg" alt="Nirajan Tripathi" onerror="this.style.visibility='hidden'">
+      <span class="pin">M.S. Geography · GPA 3.84</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="block" id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">01</span>
+      <div>
+        <h2 class="sec-title">About</h2>
+        <p class="sec-sub">Where field surveying, remote sensing, and statistics meet a command line.</p>
+      </div>
+    </div>
+    <div class="about-grid reveal">
+      <div>
+        <p>
+          I work at the intersection of GIS, geomatics, remote sensing, and spatial data science.
+          My experience spans hydroclimatic data analysis in Python and R, multi-criteria suitability
+          and flood-risk modeling in ArcGIS Pro, hyperspectral and Landsat remote sensing, and GNSS/UAV
+          field surveying.
+        </p>
+        <p>
+          What sets my work apart is reproducibility: every project ships with documented code, real
+          data, and results you can verify — not just a pretty map. I'm looking for GIS Analyst, GIS
+          Developer, and geospatial data science roles in environment, water resources, energy, and planning.
+        </p>
+      </div>
+      <div class="facts">
+        <div class="fact"><b>3.84</b><span>Graduate GPA · M.S. Geography, Texas State</span></div>
+        <div class="fact"><b>4+ yrs</b><span>GIS, surveying & research experience</span></div>
+        <div class="fact"><b>5</b><span>Fellowships & scholarships awarded</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="block" id="skills" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">02</span>
+      <div>
+        <h2 class="sec-title">Toolkit</h2>
+        <p class="sec-sub">The instruments I reach for, grouped by what they do.</p>
+      </div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card reveal">
+        <h3>GIS &amp; Cartography</h3>
+        <div class="chips">
+          <span class="chip">ArcGIS Pro</span><span class="chip">ArcGIS Online</span><span class="chip">QGIS</span>
+          <span class="chip">ModelBuilder</span><span class="chip">Field Maps</span><span class="chip">Survey123</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Programming</h3>
+        <div class="chips">
+          <span class="chip">Python (ArcPy)</span><span class="chip">Pandas / NumPy</span><span class="chip">Rasterio</span>
+          <span class="chip">R (Tidyverse)</span><span class="chip">SQL</span><span class="chip">Git / GitHub</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Remote Sensing</h3>
+        <div class="chips">
+          <span class="chip">Google Earth Engine</span><span class="chip">ERDAS IMAGINE</span><span class="chip">Landsat / Sentinel</span>
+          <span class="chip">Hyperspectral</span><span class="chip">NDVI / LST</span><span class="chip">Classification</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Surveying &amp; Field</h3>
+        <div class="chips">
+          <span class="chip">GNSS / DGPS</span><span class="chip">UAV / Drone</span><span class="chip">Pix4D</span>
+          <span class="chip">AutoCAD</span><span class="chip">Statistics / SPSS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="block" id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">03</span>
+      <div>
+        <h2 class="sec-title">Featured projects</h2>
+        <p class="sec-sub">Reproducible work with code, real data, and results — open the repos and check.</p>
+      </div>
+    </div>
+    <div class="proj-grid">
+
+      <div class="proj live reveal">
+        <div class="tagrow"><span class="dot"></span><span class="kind">Live · Analyst + Python</span></div>
+        <h3>Transit Dependency Likelihood Index</h3>
+        <p>A custom ArcPy tool combining demographic need with transit service areas to find high-need neighborhoods underserved by bus stops in Portland, OR.</p>
+        <div class="tools">ArcPy · Network Analyst · z-scores · VIF</div>
+        <a class="go" href="./projects/tdli-portland/">Open project →</a>
+      </div>
+
+      <div class="proj live reveal">
+        <div class="tagrow"><span class="dot"></span><span class="kind">Live · Remote Sensing</span></div>
+        <h3>Post-Fire Vegetation Damage Assessment</h3>
+        <p>Pre/post-fire change detection of the 2025 Pacific Palisades Fire using Wyvern hyperspectral imagery and red-edge vegetation indices.</p>
+        <div class="tools">ERDAS · Hyperspectral · ChangeCIred-edge</div>
+        <a class="go" href="./projects/palisades-fire-rs/">Open project →</a>
+      </div>
+
+      <div class="proj live reveal">
+        <div class="tagrow"><span class="dot"></span><span class="kind">Live · RS + Statistics</span></div>
+        <h3>NDVI, Land Surface Temperature &amp; Land Cover</h3>
+        <p>How vegetation cools the land surface across five land-cover types in Texas Hill Country, with a full reproducible R workflow (Kruskal–Wallis, ANCOVA).</p>
+        <div class="tools">ArcGIS Pro · Landsat · R · ANCOVA</div>
+        <a class="go" href="./projects/ndvi-lst-hillcountry/">Open project →</a>
+      </div>
+
+      <div class="proj reveal">
+        <div class="tagrow"><span class="dot"></span><span class="kind">In progress</span></div>
+        <h3>Flood Impact on Parcels &amp; Population</h3>
+        <p>Overlay of FEMA flood zones on parcels and population to quantify exposure, with a summary dashboard of who and what is at risk.</p>
+        <div class="tools">ArcGIS Pro · FEMA NFHL · Census</div>
+        <span class="soon">Repo coming soon</span>
+      </div>
+
+      <div class="proj reveal">
+        <div class="tagrow"><span class="dot"></span><span class="kind">In progress</span></div>
+        <h3>Urban Growth Suitability (MCDA)</h3>
+        <p>Weighted multi-criteria suitability modeling for urban expansion using slope, roads, and land use with AHP weighting in ModelBuilder.</p>
+        <div class="tools">ArcGIS Pro · AHP · ModelBuilder</div>
+        <span class="soon">Repo coming soon</span>
+      </div>
+
+      <div class="proj reveal">
+        <div class="tagrow"><span class="dot"></span><span class="kind">In progress</span></div>
+        <h3>GNSS / UAV Field Survey</h3>
+        <p>Field-based geospatial data collection and mapping with GNSS and UAV systems for terrain and flood-related studies.</p>
+        <div class="tools">GNSS · DGPS · UAV · Pix4D</div>
+        <span class="soon">Repo coming soon</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="block" id="experience" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">04</span>
+      <div>
+        <h2 class="sec-title">Experience</h2>
+        <p class="sec-sub">From municipal GIS in Nepal to hydroclimatic research in Texas.</p>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="tl reveal">
+        <div class="when">Jan 2025 — Present</div>
+        <h3>Graduate Research Assistant</h3>
+        <div class="org">Texas State University · San Marcos, TX</div>
+        <p>Hydroclimatic data analysis in Python and R; long-term climate and water-resources research; building reproducible data-processing workflows.</p>
+      </div>
+      <div class="tl reveal">
+        <div class="when">Nov 2023 — Jun 2024</div>
+        <h3>Geomatics Engineer</h3>
+        <div class="org">Pokhara Metropolitan City · Gandaki, Nepal</div>
+        <p>GNSS and UAV surveys for river, terrain, and surface-water analysis; multi-temporal remote sensing of Fewa Lake water-extent change for flood-risk management.</p>
+      </div>
+      <div class="tl reveal">
+        <div class="when">Jun 2021 — Oct 2023</div>
+        <h3>GIS Analyst</h3>
+        <div class="org">Earth Eco Consultancy · Gandaki, Nepal</div>
+        <p>Multi-criteria land-use suitability analysis; wildfire-risk model for Banke National Park; cadastral/DGPS land pooling; municipal thematic mapping for planning and reporting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section class="block">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-num">05</span>
+      <div>
+        <h2 class="sec-title">Awards &amp; education</h2>
+        <p class="sec-sub">M.S. Geography, Texas State · B.S. Geomatics Engineering, Tribhuvan University.</p>
+      </div>
+    </div>
+    <div class="award-grid">
+      <div class="award reveal"><b>The Graduate College Scholarship</b><span>Texas State University · 2026</span></div>
+      <div class="award reveal"><b>Joe &amp; Jerry Moore Scholarship</b><span>Texas State University · 2025</span></div>
+      <div class="award reveal"><b>TSUS Graduate Endowed Fellowship</b><span>2024 &amp; 2025</span></div>
+      <div class="award reveal"><b>TXST Graduate Merit Fellowship</b><span>Texas State University · 2024</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="block" id="contact">
+  <div class="wrap">
+    <div class="contact-card reveal">
+      <svg class="topo" viewBox="0 0 300 300" fill="none" stroke="#ffffff" stroke-width="1.4" aria-hidden="true">
+        <circle cx="150" cy="150" r="30"/><circle cx="150" cy="150" r="60"/>
+        <circle cx="150" cy="150" r="90"/><circle cx="150" cy="150" r="120"/>
+        <circle cx="150" cy="150" r="150"/>
+      </svg>
+      <h2>Let's map something together.</h2>
+      <p>Open to GIS Analyst, GIS Developer, and geospatial data science roles. The fastest way to reach me is email.</p>
+      <div class="contact-row">
+        <a href="mailto:nirajantripathi5523@gmail.com">nirajantripathi5523@gmail.com</a>
+        <a href="tel:7373879007">737-387-9007</a>
+        <a href="N_Tripathi_Resume.pdf" download>Download résumé</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Nirajan Tripathi · Built and hosted on GitHub Pages</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
