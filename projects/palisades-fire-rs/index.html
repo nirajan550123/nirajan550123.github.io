@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Post-Fire Vegetation Assessment – 2025 Pacific Palisades Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f6f7f9; --surface: #ffffff; --text: #0f172a; --muted: #475569;
+      --soft: #64748b; --border: #e2e8f0; --primary: #0f766e; --primary-dark: #115e59;
+      --accent-bg: #ecfdf5; --shadow: 0 10px 30px rgba(15,23,42,0.08); --radius: 18px; --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.7; }
+    .container { width: min(100% - 2rem, var(--max)); margin: 0 auto; }
+    .hero { background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%); color:#fff; padding: 4rem 0 3rem; }
+    .eyebrow { display:inline-block; font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; opacity:.9; margin-bottom:1rem; }
+    h1 { font-size: clamp(2rem,4vw,3.1rem); line-height:1.15; margin:0 0 1rem; max-width:16ch; }
+    .hero p { max-width:720px; margin:0 0 1rem; color:rgba(255,255,255,.92); font-size:1.05rem; }
+    .tool-tags { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1rem; }
+    .tag { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); color:#fff; padding:.45rem .8rem; border-radius:999px; font-size:.9rem; }
+    .content { padding: 2rem 0 4rem; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.4rem; box-shadow:var(--shadow); margin-bottom:1.5rem; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+    h2 { font-size:1.4rem; margin:0 0 .85rem; }
+    p { margin:0 0 1rem; color:var(--muted); }
+    ul, ol { margin:.5rem 0 0; padding-left:1.2rem; color:var(--muted); }
+    li { margin-bottom:.55rem; }
+    figure { margin:0; }
+    img { width:100%; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.18); display:block; }
+    figcaption { font-size:.85rem; color:var(--soft); margin-top:.5rem; text-align:center; }
+    .callout { background:var(--accent-bg); border-left:4px solid var(--primary); padding:1rem; border-radius:12px; }
+    .stats { display:flex; flex-wrap:wrap; gap:1rem; }
+    .stat { flex:1 1 160px; background:#f8fafc; border:1px solid var(--border); border-radius:14px; padding:1rem; text-align:center; }
+    .stat b { display:block; font-size:1.5rem; color:var(--primary-dark); }
+    .stat span { font-size:.85rem; color:var(--soft); }
+    .button-row { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:1.25rem; }
+    .btn { display:inline-block; text-decoration:none; padding:.8rem 1rem; border-radius:12px; font-weight:600; font-size:.95rem; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-secondary { background:#fff; color:var(--primary); border:1px solid var(--border); }
+    .back-link { margin-top:2rem; }
+    .back-link a { color:var(--primary); text-decoration:none; font-weight:600; }
+    @media (max-width:860px){ .grid2 { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow">Remote Sensing Case Study</span>
+      <h1>Post-Fire Vegetation Damage Assessment — 2025 Pacific Palisades Fire</h1>
+      <p>Pre/post-fire change detection using VNIR hyperspectral satellite imagery (Wyvern Dragonette-001)
+         to map vegetation loss and burn severity from the January 2025 Palisades Fire in Los Angeles County.</p>
+      <div class="tool-tags">
+        <span class="tag">ERDAS IMAGINE</span>
+        <span class="tag">Hyperspectral (VNIR)</span>
+        <span class="tag">Red-edge Indices</span>
+        <span class="tag">Change Detection</span>
+        <span class="tag">ArcGIS Pro</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="container">
+
+      <div class="card">
+        <figure>
+          <img src="delta_cired_edge_change.jpg" alt="ChangeCIred-edge change detection over the Palisades burn area" />
+          <figcaption>ΔCIred-edge change map — red shows significant vegetation/chlorophyll loss, yellow shows increase.</figcaption>
+        </figure>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h2>Problem &amp; goal</h2>
+          <p>The Palisades Fire struck a coastal chaparral wildland–urban interface with steep terrain,
+             damaging vegetation and infrastructure. The goal was to map where vegetation was lost and how
+             severe the burn was, to support recovery monitoring and fire-risk planning.</p>
+          <div class="callout"><p style="margin:0;">Index-based change detection turns two satellite images
+             into a clear, quantitative map of vegetation damage.</p></div>
+        </div>
+        <div class="card">
+          <h2>Data</h2>
+          <ul>
+            <li><strong>Sensor:</strong> Wyvern Dragonette-001 commercial VNIR hyperspectral.</li>
+            <li><strong>Resolution:</strong> 5.3 m, 23 bands (500–800 nm), 12-bit.</li>
+            <li><strong>Pre-fire:</strong> 04 Nov 2024 · <strong>Post-fire:</strong> 23 Jan 2025.</li>
+            <li><strong>Bands used:</strong> red-edge (b20 ~750 nm), NIR (b23 ~799 nm).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <figure>
+          <img src="study_area_location.jpg" alt="Study area location in Los Angeles County, California" />
+          <figcaption>Study area — Pacific Palisades / Santa Monica Mountains, Los Angeles County, CA.</figcaption>
+        </figure>
+      </div>
+
+      <div class="card">
+        <h2>Methodology</h2>
+        <ol>
+          <li>Visual co-registration check and multipoint <strong>geometric correction</strong> (total RMS error 0.0002).</li>
+          <li>Select red-edge (b20) and NIR (b23) bands from the hyperspectral cube.</li>
+          <li>Convert radiance to <strong>TOA reflectance</strong> using image metadata.</li>
+          <li>Stack bands and re-project WGS84 → WGS 1984 UTM Zone 11N.</li>
+          <li>Compute <strong>CIred-edge</strong> and <strong>NDVIred-edge</strong> for both dates.</li>
+          <li>Difference (post − pre) to produce change maps; negative Δ = vegetation loss.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Results</h2>
+        <div class="stats">
+          <div class="stat"><b>−0.30</b><span>Mean ΔCIred-edge (chlorophyll decline)</span></div>
+          <div class="stat"><b>−0.07</b><span>Mean ΔNDVIred-edge (greenness decline)</span></div>
+          <div class="stat"><b>0.0002</b><span>Geometric correction RMS error</span></div>
+        </div>
+        <p style="margin-top:1rem;">Vegetation loss concentrated in forested hilltops with high burn severity,
+           while urban/built-up areas showed little change. Both indices agreed spatially, confirming the pattern:
+           CIred-edge captured chlorophyll loss and NDVIred-edge captured structural canopy loss.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h2>CIred-edge — pre vs. post</h2>
+          <figure><img src="cired_edge_prefire.jpg" alt="CIred-edge pre-fire 2024" /><figcaption>Pre-fire (Nov 2024)</figcaption></figure>
+          <figure style="margin-top:1rem;"><img src="cired_edge_postfire.jpg" alt="CIred-edge post-fire 2025" /><figcaption>Post-fire (Jan 2025)</figcaption></figure>
+        </div>
+        <div class="card">
+          <h2>NDVIred-edge — pre vs. post</h2>
+          <figure><img src="ndvi_prefire.jpg" alt="NDVIred-edge pre-fire 2024" /><figcaption>Pre-fire (Nov 2024)</figcaption></figure>
+          <figure style="margin-top:1rem;"><img src="ndvi_postfire.jpg" alt="NDVIred-edge post-fire 2025" /><figcaption>Post-fire (Jan 2025)</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>What I would improve next</h2>
+        <ul>
+          <li>Calibrate severity thresholds against field or dNBR reference data.</li>
+          <li>Add atmospheric correction (surface reflectance) for cross-sensor robustness.</li>
+          <li>Validate against an independent burn-perimeter dataset.</li>
+        </ul>
+        <div class="button-row">
+          <a class="btn btn-primary" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/palisades-fire-rs" target="_blank" rel="noopener noreferrer">View code &amp; full README on GitHub</a>
+          <a class="btn btn-secondary" href="https://nirajan550123.github.io/">Back to portfolio homepage</a>
+        </div>
+      </div>
+
+      <div class="back-link"><a href="https://nirajan550123.github.io/">← Back to portfolio</a></div>
+    </div>
+  </main>
+</body>
+</html>
