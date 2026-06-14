@@ -1,0 +1,19 @@
+
+Call:
+lm(formula = LST ~ NDVI, data = df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-24.1326  -4.5350  -0.7352   3.9496  18.8665 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  43.8006     0.2957 148.148   <2e-16 ***
+NDVI         13.8484     1.4242   9.723   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 5.395 on 1487 degrees of freedom
+Multiple R-squared:  0.05978,	Adjusted R-squared:  0.05915 
+F-statistic: 94.54 on 1 and 1487 DF,  p-value: < 2.2e-16
+
