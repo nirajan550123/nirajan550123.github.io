@@ -5,7 +5,7 @@ transit service coverage to find neighborhoods that are highly transit-dependent
 **but** poorly served by existing bus stops. Built as a reusable, parameterized
 geoprocessing tool so the same workflow can be re-run for any city.
 
-![Transit Dependent Areas and Unserved Streets — Portland, OR](tdli_results_map.png)
+![Transit Dependent Areas and Unserved Streets — Portland, OR](Output%20Map.jpg)
 
 ## Problem
 Portland has a strong transit system overall, yet service is not evenly
@@ -62,7 +62,7 @@ is worst, so planners can target investment.
   street segments** for targeted stop placement / micro-transit.
 
 ## Methodology diagram
-![Workflow](tdli_workflow.png)
+![Workflow](Workflow.jpg)
 
 ## How to run
 1. Open **ArcGIS Pro** and add `TDIandSERVICEGAP.atbx` to your project.
