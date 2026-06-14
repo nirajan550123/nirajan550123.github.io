@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Watershed Land Cover Simulation – Markov-CA Urban Growth (San Antonio)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f6f7f9;--surface:#fff;--text:#0f172a;--muted:#475569;--soft:#64748b;
+      --border:#e2e8f0;--primary:#0f766e;--primary-dark:#115e59;--accent-bg:#ecfdf5;
+      --shadow:0 10px 30px rgba(15,23,42,0.08);--radius:18px;--max:1080px;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+    .container{width:min(100% - 2rem,var(--max));margin:0 auto;}
+    .hero{background:linear-gradient(135deg,#0f766e 0%,#134e4a 100%);color:#fff;padding:4rem 0 3rem;}
+    .eyebrow{display:inline-block;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;opacity:.9;margin-bottom:1rem;}
+    h1{font-size:clamp(2rem,4vw,3rem);line-height:1.15;margin:0 0 1rem;max-width:18ch;}
+    .hero p{max-width:720px;margin:0 0 1rem;color:rgba(255,255,255,.92);font-size:1.05rem;}
+    .tool-tags{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem;}
+    .tag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:#fff;padding:.45rem .8rem;border-radius:999px;font-size:.9rem;}
+    .content{padding:2rem 0 4rem;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow);margin-bottom:1.5rem;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+    h2{font-size:1.4rem;margin:0 0 .85rem;}
+    p{margin:0 0 1rem;color:var(--muted);}
+    ul,ol{margin:.5rem 0 0;padding-left:1.2rem;color:var(--muted);}
+    li{margin-bottom:.55rem;}
+    figure{margin:0;}
+    img{width:100%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.16);display:block;}
+    figcaption{font-size:.82rem;color:var(--soft);margin-top:.45rem;text-align:center;}
+    code{background:#f1f5f9;border:1px solid var(--border);border-radius:6px;padding:.15rem .4rem;font-size:.88rem;}
+    .callout{background:var(--accent-bg);border-left:4px solid var(--primary);padding:1rem;border-radius:12px;}
+    .stats{display:flex;flex-wrap:wrap;gap:1rem;}
+    .stat{flex:1 1 150px;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center;}
+    .stat b{display:block;font-size:1.4rem;color:var(--primary-dark);}
+    .stat span{font-size:.82rem;color:var(--soft);}
+    .button-row{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.25rem;}
+    .btn{display:inline-block;text-decoration:none;padding:.8rem 1rem;border-radius:12px;font-weight:600;font-size:.95rem;}
+    .btn-primary{background:var(--primary);color:#fff;}
+    .btn-secondary{background:#fff;color:var(--primary);border:1px solid var(--border);}
+    .back-link{margin-top:2rem;}
+    .back-link a{color:var(--primary);text-decoration:none;font-weight:600;}
+    @media(max-width:860px){.grid2{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow">Predictive Modeling Case Study</span>
+      <h1>Watershed Land Cover Simulation — Markov-CA Urban Growth</h1>
+      <p>A Markov chain–Cellular Automata model that learns 2010→2020 land-cover transitions and
+         forecasts where San Antonio will grow by 2030, validated at a Figure of Merit of 0.85.</p>
+      <div class="tool-tags">
+        <span class="tag">ArcGIS Pro</span><span class="tag">Markov-CA</span>
+        <span class="tag">Python</span><span class="tag">NLCD / DEM</span>
+        <span class="tag">Model Validation</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="container">
+
+      <div class="card">
+        <figure><img src="predicted_lulc_2030.jpg" alt="Predicted land cover 2030" />
+        <figcaption>Simulated 2030 land cover — urban growth concentrates near the existing core and major highways.</figcaption></figure>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h2>Problem &amp; goal</h2>
+          <p>Urban growth changes watershed hydrology: more impervious surface means more runoff and flood
+             risk. Knowing where a city will expand lets planners act early. The goal: model and forecast
+             San Antonio's urban growth to 2030.</p>
+          <div class="callout"><p style="margin:0;">This isn't a snapshot — it's a <strong>prediction</strong>,
+             built from real transitions and validated against what actually happened.</p></div>
+        </div>
+        <div class="card">
+          <figure><img src="watershed.jpg" alt="Delineated watershed study area" />
+          <figcaption>Watershed of San Antonio River near Falls City (~5,453 km²) — the study area.</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Data</h2>
+        <ul>
+          <li>DEM (USGS) for watershed delineation.</li>
+          <li>NLCD 2010 &amp; 2020 (MRLC) for land cover.</li>
+          <li>Roads (TxDOT) and attractive features (OpenStreetMap).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Method</h2>
+        <ol>
+          <li>Delineate watershed from DEM (Fill → Flow Direction → Flow Accumulation → Snap Pour Point → Watershed).</li>
+          <li>Reclassify NLCD 2010 &amp; 2020 into 5 classes.</li>
+          <li>Compute the 2010→2020 <strong>Markov transition matrix</strong> in Python.</li>
+          <li>Build CA spatial factors: normalized distance to roads, highways, and facilities, plus 3×3 neighborhood influence.</li>
+          <li>Transition potential: <code>TP = α·Markov + β1·roads + β2·highways + β3·facilities + β4·neighborhood</code>.</li>
+          <li>Calibrate weights &amp; threshold against observed 2020 (maximize Figure of Merit), then simulate 2030.</li>
+        </ol>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><figure><img src="calibration_flowchart.jpg" alt="Calibration workflow" /><figcaption>Iterative calibration &amp; validation workflow</figcaption></figure></div>
+        <div class="card"><figure><img src="factor_neighborhood.jpg" alt="Neighborhood influence layer" /><figcaption>Neighborhood influence — the strongest driver (β4 = 7)</figcaption></figure></div>
+      </div>
+
+      <div class="card">
+        <h2>Results</h2>
+        <div class="stats">
+          <div class="stat"><b>0.85</b><span>Figure of Merit (validation accuracy)</span></div>
+          <div class="stat"><b>β4 = 7</b><span>Neighborhood influence dominated growth</span></div>
+          <div class="stat"><b>~5,453 km²</b><span>Watershed study area</span></div>
+        </div>
+        <p style="margin-top:1rem;">From 2010 to 2020, 4% of barren, 3% of agriculture, and 2% of forest
+           converted to built; built land was &gt;99% stable. The 2030 forecast shows continued growth near
+           the city core and along highways. Validation (predicted vs. observed 2020) confirmed the model
+           with low false positives and negatives.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><figure><img src="predicted_lulc_2020_validation.jpg" alt="2020 validation" /><figcaption>Predicted 2020 vs. observed (validation)</figcaption></figure></div>
+        <div class="card"><figure><img src="new_growth_2030.jpg" alt="New growth 2030" /><figcaption>Where new urban growth is forecast by 2030</figcaption></figure></div>
+      </div>
+
+      <div class="card">
+        <figure><img src="builtup_trend.png" alt="Built-up area trend 2010-2030" />
+        <figcaption>Built-up area share rising across 2010, 2020, and the 2030 prediction.</figcaption></figure>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><figure><img src="lulc_2010.jpg" alt="Land cover 2010" /><figcaption>Land cover 2010 (model input)</figcaption></figure></div>
+        <div class="card"><figure><img src="lulc_2020.jpg" alt="Land cover 2020" /><figcaption>Land cover 2020 (model input)</figcaption></figure></div>
+      </div>
+
+      <div class="card">
+        <h2>Limitations &amp; next steps</h2>
+        <ul>
+          <li>Drivers limited to proximity and neighborhood (next: demographics, economics, policy, climate).</li>
+          <li>Two-date Markov assumes stationary transitions; 30 m resolution; single watershed.</li>
+        </ul>
+        <div class="button-row">
+          <a class="btn btn-primary" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/watershed-lulc-markov" target="_blank" rel="noopener noreferrer">View full README &amp; maps on GitHub</a>
+          <a class="btn btn-secondary" href="https://nirajan550123.github.io/">Back to portfolio homepage</a>
+        </div>
+      </div>
+
+      <div class="back-link"><a href="https://nirajan550123.github.io/">← Back to portfolio</a></div>
+    </div>
+  </main>
+</body>
+</html>
