@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NDVI, Land Surface Temperature & Land Cover – Texas Hill Country</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg:#f6f7f9; --surface:#fff; --text:#0f172a; --muted:#475569; --soft:#64748b;
+      --border:#e2e8f0; --primary:#0f766e; --primary-dark:#115e59; --accent-bg:#ecfdf5;
+      --shadow:0 10px 30px rgba(15,23,42,0.08); --radius:18px; --max:1080px;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+    .container{width:min(100% - 2rem,var(--max));margin:0 auto;}
+    .hero{background:linear-gradient(135deg,#0f766e 0%,#134e4a 100%);color:#fff;padding:4rem 0 3rem;}
+    .eyebrow{display:inline-block;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;opacity:.9;margin-bottom:1rem;}
+    h1{font-size:clamp(2rem,4vw,3rem);line-height:1.15;margin:0 0 1rem;max-width:18ch;}
+    .hero p{max-width:720px;margin:0 0 1rem;color:rgba(255,255,255,.92);font-size:1.05rem;}
+    .tool-tags{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem;}
+    .tag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:#fff;padding:.45rem .8rem;border-radius:999px;font-size:.9rem;}
+    .content{padding:2rem 0 4rem;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow);margin-bottom:1.5rem;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+    h2{font-size:1.4rem;margin:0 0 .85rem;}
+    p{margin:0 0 1rem;color:var(--muted);}
+    ul,ol{margin:.5rem 0 0;padding-left:1.2rem;color:var(--muted);}
+    li{margin-bottom:.55rem;}
+    figure{margin:0;}
+    img{width:100%;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:block;}
+    figcaption{font-size:.85rem;color:var(--soft);margin-top:.5rem;text-align:center;}
+    table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:.5rem;}
+    th,td{border:1px solid var(--border);padding:.5rem .7rem;text-align:left;color:var(--muted);}
+    th{background:#f1f5f9;color:var(--text);}
+    .callout{background:var(--accent-bg);border-left:4px solid var(--primary);padding:1rem;border-radius:12px;}
+    .stats{display:flex;flex-wrap:wrap;gap:1rem;}
+    .stat{flex:1 1 150px;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center;}
+    .stat b{display:block;font-size:1.4rem;color:var(--primary-dark);}
+    .stat span{font-size:.82rem;color:var(--soft);}
+    .button-row{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.25rem;}
+    .btn{display:inline-block;text-decoration:none;padding:.8rem 1rem;border-radius:12px;font-weight:600;font-size:.95rem;}
+    .btn-primary{background:var(--primary);color:#fff;}
+    .btn-secondary{background:#fff;color:var(--primary);border:1px solid var(--border);}
+    .back-link{margin-top:2rem;}
+    .back-link a{color:var(--primary);text-decoration:none;font-weight:600;}
+    @media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow">Remote Sensing &amp; Statistics Case Study</span>
+      <h1>NDVI, Land Surface Temperature &amp; Land Cover — Texas Hill Country</h1>
+      <p>A statistics-driven study of how vegetation cools the land surface across five land-cover
+         types, combining ArcGIS Pro raster processing with a complete, reproducible workflow in R.</p>
+      <div class="tool-tags">
+        <span class="tag">ArcGIS Pro</span><span class="tag">Landsat 8/9</span>
+        <span class="tag">R (tidyverse)</span><span class="tag">Kruskal–Wallis</span>
+        <span class="tag">ANCOVA</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="container">
+
+      <div class="card">
+        <figure><img src="ancova_interaction.jpg" alt="ANCOVA interaction of LST vs NDVI by land cover" />
+        <figcaption>ANCOVA — the slope of LST on NDVI differs significantly by land cover (significant interaction).</figcaption></figure>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h2>Problem &amp; goal</h2>
+          <p>Vegetation cools the surface, but not equally across land types. This study quantifies how the
+             NDVI–LST relationship varies among water, forest, agriculture, built-up, and barren land.</p>
+          <div class="callout"><p style="margin:0;">The interesting result is not "vegetation cools things" but
+             <strong>how much that effect changes by land cover</strong> — tested with formal statistics in R.</p></div>
+        </div>
+        <div class="card">
+          <h2>Data</h2>
+          <ul>
+            <li>Landsat 8/9 Collection 2 ARD (Aug 2024) → NDVI &amp; LST, 30 m.</li>
+            <li>Annual NLCD 2024 → land cover, 30 m.</li>
+            <li>Census TIGER boundaries → 17-county Hill Country extent.</li>
+            <li><strong>1,500 stratified random points</strong> (300/class, 900 m spacing).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="card"><figure><img src="ndvi_map.jpg" alt="NDVI map" /><figcaption>NDVI</figcaption></figure></div>
+        <div class="card"><figure><img src="lst_map.jpg" alt="LST map" /><figcaption>Land Surface Temperature</figcaption></figure></div>
+        <div class="card"><figure><img src="lulc_map.jpg" alt="Land cover map" /><figcaption>Land cover (5 classes)</figcaption></figure></div>
+      </div>
+
+      <div class="card">
+        <h2>Methodology</h2>
+        <ol>
+          <li>Mosaic/stack Landsat bands in ArcGIS Pro; compute NDVI (B5/B4) and LST from thermal band ST_B10 (°C).</li>
+          <li>Reclassify NLCD into 5 land-cover classes.</li>
+          <li>Stratified random sampling (1,500 points); extract NDVI/LST via Zonal Statistics → CSV.</li>
+          <li>In R: Levene's test (variances unequal) → Kruskal–Wallis + Dunn post-hoc; Pearson/Spearman correlation; regression; ANCOVA.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Key results</h2>
+        <div class="stats">
+          <div class="stat"><b>−0.80</b><span>NDVI–LST correlation in agriculture (strongest cooling)</span></div>
+          <div class="stat"><b>R² 0.64</b><span>Agriculture regression fit</span></div>
+          <div class="stat"><b>p &lt; 0.001</b><span>Kruskal–Wallis: classes differ for NDVI &amp; LST</span></div>
+        </div>
+        <table>
+          <tr><th>LULC</th><th>Mean NDVI</th><th>Mean LST (°C)</th><th>Pearson r</th></tr>
+          <tr><td>Water</td><td>0.038</td><td>39.73</td><td>+0.50</td></tr>
+          <tr><td>Forest</td><td>0.251</td><td>43.39</td><td>−0.01 (ns)</td></tr>
+          <tr><td>Agriculture</td><td>0.210</td><td>51.31</td><td>−0.80</td></tr>
+          <tr><td>Built-up</td><td>0.203</td><td>48.89</td><td>−0.48</td></tr>
+          <tr><td>Barren</td><td>0.214</td><td>48.36</td><td>−0.43</td></tr>
+        </table>
+        <p style="margin-top:1rem;">Vegetation strongly cools agriculture, built-up, and barren land, but has
+           almost no effect in forest (already dense, NDVI saturates). ANCOVA confirmed a significant NDVI × land-cover interaction.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><figure><img src="lst_box.jpg" alt="LST by land cover box plot" /><figcaption>LST distribution by class</figcaption></figure></div>
+        <div class="card"><figure><img src="lst_vs_ndvi_by_lulc.jpg" alt="LST vs NDVI faceted by class" /><figcaption>LST vs NDVI, fitted per class</figcaption></figure></div>
+      </div>
+
+      <div class="card">
+        <h2>Limitations</h2>
+        <ul>
+          <li>NLCD land cover from a separate source (possible pixel-label mismatch).</li>
+          <li>NDVI not meaningful over water; NDVI saturation in dense forest.</li>
+          <li>Single-date (Aug 2024) snapshot; 30 m resolution; 5 broad classes.</li>
+        </ul>
+        <div class="button-row">
+          <a class="btn btn-primary" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/ndvi-lst-hillcountry" target="_blank" rel="noopener noreferrer">View R code, README &amp; results on GitHub</a>
+          <a class="btn btn-secondary" href="https://nirajan550123.github.io/">Back to portfolio homepage</a>
+        </div>
+      </div>
+
+      <div class="back-link"><a href="https://nirajan550123.github.io/">← Back to portfolio</a></div>
+    </div>
+  </main>
+</body>
+</html>
