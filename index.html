@@ -78,7 +78,7 @@
   /* portrait framed like a survey marker */
   .portrait-wrap{position:relative;justify-self:center;}
   .portrait{
-    width:280px;height:340px;object-fit:cover;object-position:center top;border-radius:150px 150px 18px 18px;image-rendering:auto;
+    width:248px;height:300px;object-fit:cover;border-radius:140px 140px 18px 18px;
     border:5px solid var(--surface);box-shadow:var(--shadow-lg);
     background:var(--paper-2);
   }
@@ -126,8 +126,14 @@
     position:relative;background:var(--surface);border:1px solid var(--line);
     border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);
     transition:transform .22s,box-shadow .22s,border-color .22s;display:flex;flex-direction:column;
+    color:inherit;text-decoration:none;
   }
-  .proj:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--moss);}
+  a.proj.live{cursor:pointer;}
+  a.proj.live:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--moss);}
+  .proj:not(a):hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--moss);}
+  .proj .go{font-weight:600;color:var(--forest);font-size:.95rem;align-self:flex-start;margin-top:auto;display:inline-flex;align-items:center;gap:4px;transition:gap .2s;}
+  a.proj.live::after{content:"→";position:absolute;top:20px;right:22px;font-size:1.1rem;color:var(--moss);opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s;}
+  a.proj.live:hover::after{opacity:1;transform:translateX(0);}
   .proj .tagrow{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
   .proj .dot{width:8px;height:8px;border-radius:50%;background:var(--moss);}
   .proj .kind{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
@@ -136,9 +142,6 @@
   .proj h3{font-family:"Fraunces",serif;font-size:1.25rem;color:var(--ink);margin-bottom:10px;line-height:1.2;}
   .proj p{color:var(--ink-soft);font-size:.96rem;margin-bottom:16px;flex:1;}
   .proj .tools{font-size:.82rem;color:var(--muted);margin-bottom:14px;font-family:"JetBrains Mono",monospace;}
-  .proj .go{font-weight:600;color:var(--forest);font-size:.95rem;align-self:flex-start;}
-  .proj .go:hover{color:var(--clay);}
-  .proj .soon{font-size:.85rem;color:var(--muted);font-style:italic;}
 
   /* experience timeline */
   .timeline{position:relative;padding-left:28px;}
@@ -322,53 +325,33 @@
     </div>
     <div class="proj-grid">
 
-      <div class="proj live reveal">
+      <a class="proj live reveal" href="./projects/tdli-portland/">
         <div class="tagrow"><span class="dot"></span><span class="kind">Live · Analyst + Python</span></div>
         <h3>Transit Dependency Likelihood Index</h3>
         <p>A custom ArcPy tool combining demographic need with transit service areas to find high-need neighborhoods underserved by bus stops in Portland, OR.</p>
         <div class="tools">ArcPy · Network Analyst · z-scores · VIF</div>
-        <a class="go" href="./projects/tdli-portland/">Open project →</a>
-      </div>
+      </a>
 
-      <div class="proj live reveal">
+      <a class="proj live reveal" href="./projects/palisades-fire-rs/">
         <div class="tagrow"><span class="dot"></span><span class="kind">Live · Remote Sensing</span></div>
         <h3>Post-Fire Vegetation Damage Assessment</h3>
         <p>Pre/post-fire change detection of the 2025 Pacific Palisades Fire using Wyvern hyperspectral imagery and red-edge vegetation indices.</p>
         <div class="tools">ERDAS · Hyperspectral · ChangeCIred-edge</div>
-        <a class="go" href="./projects/palisades-fire-rs/">Open project →</a>
-      </div>
+      </a>
 
-      <div class="proj live reveal">
+      <a class="proj live reveal" href="./projects/ndvi-lst-hillcountry/">
         <div class="tagrow"><span class="dot"></span><span class="kind">Live · RS + Statistics</span></div>
         <h3>NDVI, Land Surface Temperature &amp; Land Cover</h3>
         <p>How vegetation cools the land surface across five land-cover types in Texas Hill Country, with a full reproducible R workflow (Kruskal–Wallis, ANCOVA).</p>
         <div class="tools">ArcGIS Pro · Landsat · R · ANCOVA</div>
-        <a class="go" href="./projects/ndvi-lst-hillcountry/">Open project →</a>
-      </div>
+      </a>
 
-      <div class="proj reveal">
-        <div class="tagrow"><span class="dot"></span><span class="kind">In progress</span></div>
-        <h3>Flood Impact on Parcels &amp; Population</h3>
-        <p>Overlay of FEMA flood zones on parcels and population to quantify exposure, with a summary dashboard of who and what is at risk.</p>
-        <div class="tools">ArcGIS Pro · FEMA NFHL · Census</div>
-        <span class="soon">Repo coming soon</span>
-      </div>
-
-      <div class="proj live reveal">
+      <a class="proj live reveal" href="./projects/watershed-lulc-markov/">
         <div class="tagrow"><span class="dot"></span><span class="kind">Live · Predictive Modeling</span></div>
         <h3>Watershed Land Cover Simulation (Markov-CA)</h3>
         <p>A Markov chain–Cellular Automata model that learns 2010–2020 land-cover transitions and forecasts where San Antonio will grow by 2030 (Figure of Merit 0.85).</p>
         <div class="tools">ArcGIS Pro · Markov-CA · Python · NLCD</div>
-        <a class="go" href="./projects/watershed-lulc-markov/">Open project →</a>
-      </div>
-
-      <div class="proj reveal">
-        <div class="tagrow"><span class="dot"></span><span class="kind">In progress</span></div>
-        <h3>GNSS / UAV Field Survey</h3>
-        <p>Field-based geospatial data collection and mapping with GNSS and UAV systems for terrain and flood-related studies.</p>
-        <div class="tools">GNSS · DGPS · UAV · Pix4D</div>
-        <span class="soon">Repo coming soon</span>
-      </div>
+      </a>
 
     </div>
   </div>
