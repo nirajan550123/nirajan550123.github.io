@@ -76,6 +76,22 @@ delineated from a 30 m DEM — **~5,453 km²** containing the core of San Antoni
 |---|---|
 | ![2010](lulc_2010.jpg) | ![2020](lulc_2020.jpg) |
 
+## Code
+Two Python scripts drive the model (in this repo):
+- `markov_transition_matrix.py` — computes the 2010→2020 Markov transition count
+  and probability matrices from the reclassified land-cover rasters (NumPy, rasterio).
+- `calibration_figure_of_merit.py` — compares the simulated 2020 built-up map against
+  observed 2020 to compute the Figure of Merit, false positives, and false negatives
+  (arcpy, NumPy).
+
+```bash
+# transition matrix (standalone Python)
+python markov_transition_matrix.py   # prompts for raster folder + filenames
+
+# calibration (run inside ArcGIS Pro Python, set the .gdb raster paths first)
+python calibration_figure_of_merit.py
+```
+
 ## Tools & skills demonstrated
 ArcGIS Pro (hydrology toolset, watershed delineation, Euclidean distance, raster
 calculator, reclassification) · **Markov chain transition modeling (Python)** ·
