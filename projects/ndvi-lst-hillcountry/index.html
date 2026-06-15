@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Transit Dependency Likelihood Index — Portland | Nirajan Tripathi</title>
-<meta name="description" content="A custom ArcPy tool combining demographic need with transit service areas to find underserved neighborhoods in Portland, Oregon." />
+<title>NDVI, LST & Land Cover — Texas Hill Country | Nirajan Tripathi</title>
+<meta name="description" content="Statistical analysis of how vegetation cools the land surface across five land-cover types, using Landsat, ArcGIS Pro, and a full R workflow." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -106,12 +106,12 @@
     <circle cx="660" cy="190" r="4" fill="#c2703d" opacity=".6"/>
   </svg>
   <div class="wrap">
-    <p class="eyebrow">Spatial Analysis · Python Tool</p>
-    <h1>Transit Dependency Likelihood Index</h1>
-    <p class="lede">A custom ArcGIS Python tool that combines demographic need with real transit service coverage to find neighborhoods in Portland, Oregon that are highly transit-dependent yet poorly served by bus stops — and outputs the exact streets where the gap is worst.</p>
+    <p class="eyebrow">Remote Sensing · Statistics in R</p>
+    <h1>NDVI, Land Surface Temperature &amp; Land Cover</h1>
+    <p class="lede">A statistics-driven study of how vegetation cools the land surface across five land-cover types in the Texas Hill Country, combining ArcGIS Pro raster processing with a complete, reproducible non-parametric workflow in R.</p>
     <div class="tagrow">
-      <span class="tag">ArcPy</span><span class="tag">Network Analyst</span><span class="tag">Python</span>
-      <span class="tag">z-scores · VIF</span><span class="tag">Reusable tool</span>
+      <span class="tag">ArcGIS Pro</span><span class="tag">Landsat 8/9</span><span class="tag">R · tidyverse</span>
+      <span class="tag">Kruskal–Wallis</span><span class="tag">ANCOVA</span>
     </div>
   </div>
 </section>
@@ -119,84 +119,94 @@
 <main class="wrap">
 
   <section class="sec">
-    <figure class="fig reveal" style="max-width:880px;margin:0 auto;">
-      <img src="Output%20Map.jpg" alt="Transit Dependent Areas and Unserved Streets, Portland" />
-      <figcaption>High transit-dependency areas (TDI ≥ 0.5) and the unserved streets that fall outside bus service</figcaption>
+    <figure class="fig reveal" style="max-width:840px;margin:0 auto;">
+      <img src="ancova_interaction.jpg" alt="ANCOVA interaction of LST vs NDVI by land cover" />
+      <figcaption>ANCOVA — the slope of temperature on vegetation differs significantly by land cover</figcaption>
     </figure>
   </section>
 
   <section class="sec">
     <div class="split text-lead">
       <div class="prose reveal">
-        <div class="sec-label"><span class="sec-num">01</span><span class="sec-title">The problem</span></div>
-        <p>Portland has a strong transit system overall, yet service is not evenly distributed. Some neighborhoods with the <strong>highest dependence</strong> on public transit still fall outside the walking-distance service area of any bus stop.</p>
-        <p>This tool quantifies that mismatch and outputs the specific street segments where the gap is worst, so planners can target investment.</p>
-        <div class="callout"><p>Built as a reusable, parameterized geoprocessing tool — the same workflow can be re-run for any city.</p></div>
+        <div class="sec-label"><span class="sec-num">01</span><span class="sec-title">The question</span></div>
+        <p>Vegetation cools the surface — but <strong>not equally</strong> across land types. This study quantifies how the NDVI–temperature relationship varies among water, forest, agriculture, built-up, and barren land.</p>
+        <div class="callout"><p>The interesting result isn't "vegetation cools things" — it's <strong>how much that effect changes by land cover</strong>, tested with formal statistics.</p></div>
       </div>
       <figure class="fig reveal">
-        <img src="Workflow.jpg" alt="TDLI methodology workflow" />
-        <figcaption>Two-track workflow — transit service areas meet demographic need scoring</figcaption>
+        <img src="sample_points.jpg" alt="Stratified random sample points" />
+        <figcaption>1,500 stratified random points (300 per class, 900 m spacing)</figcaption>
       </figure>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">Method</span></div>
-    <div class="split">
-      <div class="prose reveal">
-        <ol>
-          <li>Read a polygon layer and user-selected demographic fields with ArcPy.</li>
-          <li>Standardize each variable with <strong>z-scores</strong>, reclassify into weighted scores.</li>
-          <li>Compute a weighted <strong>Transit Dependency Index</strong> per polygon.</li>
-          <li>Run a <strong>multicollinearity (VIF)</strong> check on the variables.</li>
-          <li>Build <strong>Network Analyst service areas</strong> around bus stops at a walking-distance threshold.</li>
-          <li>Use symmetric difference + clip to isolate high-need areas outside coverage and output the unserved streets.</li>
-        </ol>
-      </div>
-      <div class="prose reveal">
-        <p class="mono" style="font-size:.78rem;color:var(--muted);margin-bottom:10px;">PORTLAND RUN · SETTINGS</p>
+    <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">Inputs</span></div>
+    <p class="mono reveal" style="font-size:.78rem;color:var(--muted);margin-bottom:14px;">THREE RASTERS · ONE STUDY AREA</p>
+    <div class="figrow three reveal">
+      <figure class="fig"><img src="ndvi_map.jpg" alt="NDVI map" /><figcaption>NDVI</figcaption></figure>
+      <figure class="fig"><img src="lst_map.jpg" alt="Land surface temperature map" /><figcaption>Land Surface Temp</figcaption></figure>
+      <figure class="fig"><img src="lulc_map.jpg" alt="Land cover map" /><figcaption>Land cover (5 classes)</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">03</span><span class="sec-title">Method</span></div>
+    <div class="prose reveal" style="max-width:72ch;">
+      <ol>
+        <li>Mosaic/stack Landsat bands in ArcGIS Pro; compute NDVI (B5/B4) and LST from thermal band ST_B10 (°C).</li>
+        <li>Reclassify NLCD into 5 land-cover classes.</li>
+        <li>Stratified random sampling (1,500 points); extract NDVI/LST via Zonal Statistics.</li>
+        <li>In R: Levene's test (variances unequal) → <strong>Kruskal–Wallis + Dunn</strong> post-hoc; Pearson/Spearman correlation; regression; <strong>ANCOVA</strong>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">04</span><span class="sec-title">Results</span></div>
+    <div class="stats reveal" style="margin-bottom:22px;">
+      <div class="stat"><b>−0.80</b><span>NDVI–LST correlation in agriculture</span></div>
+      <div class="stat"><b>R² 0.64</b><span>Agriculture regression fit</span></div>
+      <div class="stat"><b>p &lt; 0.001</b><span>Classes differ for NDVI &amp; LST</span></div>
+    </div>
+    <div class="split reveal" style="align-items:start;">
+      <div class="prose">
         <table class="datatable">
-          <tr><th>Parameter</th><th>Value</th></tr>
-          <tr><td>Variables</td><td>age 65+, poverty, minority, disability, vehicle access, education</td></tr>
-          <tr><td>Weighting</td><td>Equal</td></tr>
-          <tr><td>Service distance</td><td>800 ft around active stops</td></tr>
-          <tr><td>High-need threshold</td><td>TDI ≥ 0.5</td></tr>
+          <tr><th>Land cover</th><th>Mean NDVI</th><th>Mean LST °C</th><th>Pearson r</th></tr>
+          <tr><td>Water</td><td>0.038</td><td>39.73</td><td>+0.50</td></tr>
+          <tr><td>Forest</td><td>0.251</td><td>43.39</td><td>−0.01 (ns)</td></tr>
+          <tr><td>Agriculture</td><td>0.210</td><td>51.31</td><td>−0.80</td></tr>
+          <tr><td>Built-up</td><td>0.203</td><td>48.89</td><td>−0.48</td></tr>
+          <tr><td>Barren</td><td>0.214</td><td>48.36</td><td>−0.43</td></tr>
         </table>
       </div>
+      <div class="prose">
+        <p>Vegetation strongly cools agriculture, built-up, and barren land, but has almost <strong>no effect in forest</strong> (already dense, NDVI saturates). ANCOVA confirmed a significant NDVI × land-cover interaction.</p>
+      </div>
+    </div>
+    <div class="figrow reveal" style="margin-top:20px;">
+      <figure class="fig"><img src="lst_box.jpg" alt="LST by land cover box plot" /><figcaption>LST distribution by class</figcaption></figure>
+      <figure class="fig"><img src="lst_vs_ndvi_by_lulc.jpg" alt="LST vs NDVI fitted per class" /><figcaption>LST vs NDVI, fitted per class</figcaption></figure>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">03</span><span class="sec-title">Results</span></div>
-    <div class="stats reveal" style="margin-bottom:22px;">
-      <div class="stat"><b>35%+</b><span>Disability share in the highest-TDI area</span></div>
-      <div class="stat"><b>19%+</b><span>Disabled residents in TDI 0.50–0.54 zones</span></div>
-      <div class="stat"><b>7.2%</b><span>In poverty in those same zones</span></div>
-    </div>
-    <div class="prose reveal" style="max-width:72ch;">
-      <p>High transit-dependency areas concentrate in the <strong>northern part of the city</strong>, and many fall outside the 800-ft service area of existing stops — a clear, mappable service gap. The demographic profile of those zones confirms the index is capturing genuine vulnerability.</p>
-      <p>The output unserved-street layer gives planners a direct, actionable target for new stops, routing changes, or micro-transit.</p>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">04</span><span class="sec-title">Limitations &amp; next steps</span></div>
+    <div class="sec-label reveal"><span class="sec-num">05</span><span class="sec-title">Limitations</span></div>
     <div class="prose reveal" style="max-width:70ch;">
       <ul>
-        <li>Single accessibility radius for all transit modes (next: mode-specific radii).</li>
-        <li>Ignores service frequency and reliability (next: schedule-based weighting).</li>
-        <li>Add data-quality and CRS checks; package as a <code>.pyt</code> Python toolbox.</li>
+        <li>NLCD land cover from a separate source (possible pixel-label mismatch).</li>
+        <li>NDVI not meaningful over water; NDVI saturation in dense forest.</li>
+        <li>Single-date (Aug 2024) snapshot; 30 m resolution; 5 broad classes.</li>
       </ul>
     </div>
   </section>
 
   <div class="endcta reveal">
     <div>
-      <h3>Read the code</h3>
-      <p>Full ArcPy tool, toolbox, README, and maps on GitHub.</p>
+      <h3>Read the R code</h3>
+      <p>Full R script, result tables, sample data, and maps on GitHub.</p>
     </div>
     <div class="acts">
-      <a class="btn btn-light" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/tdli-portland" target="_blank" rel="noopener">View on GitHub →</a>
+      <a class="btn btn-light" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/ndvi-lst-hillcountry" target="_blank" rel="noopener">View on GitHub →</a>
       <a class="btn btn-outline" href="../../">Back to portfolio</a>
     </div>
   </div>
