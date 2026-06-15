@@ -53,8 +53,11 @@
   .brand{font-family:"Fraunces",serif;font-weight:600;font-size:1.15rem;letter-spacing:.01em;color:var(--ink);}
   .brand span{color:var(--forest);}
   nav.links{display:flex;gap:26px;}
-  nav.links a{color:var(--ink-soft);font-size:.92rem;font-weight:500;}
+  nav.links a{position:relative;color:var(--ink-soft);font-size:.92rem;font-weight:500;transition:color .35s ease;padding-bottom:4px;}
   nav.links a:hover{color:var(--forest);}
+  nav.links a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--clay);border-radius:2px;transform:scaleX(0);transform-origin:left center;transition:transform .35s ease;}
+  nav.links a.active{color:var(--forest);}
+  nav.links a.active::after{transform:scaleX(1);}
   .nav-cta{background:var(--forest);color:#fff;padding:9px 16px;border-radius:999px;font-size:.88rem;font-weight:600;}
   .nav-cta:hover{background:var(--forest-deep);color:#fff;}
   @media(max-width:760px){nav.links{display:none;}}
@@ -64,6 +67,13 @@
   .hero-bg{position:absolute;inset:0;z-index:0;opacity:.5;}
   .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.5fr .9fr;gap:48px;align-items:center;}
   .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay);margin-bottom:18px;}
+  .eyebrow-marquee{overflow:hidden;margin-bottom:18px;max-width:540px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);}
+  .eyebrow-track{display:inline-flex;align-items:center;white-space:nowrap;will-change:transform;animation:eyebrow-scroll 22s linear infinite;}
+  .eyebrow-track span{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);}
+  .eyebrow-track .sep{color:var(--moss);margin:0 .9rem;opacity:.7;}
+  .eyebrow-marquee:hover .eyebrow-track{animation-play-state:paused;}
+  @keyframes eyebrow-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.eyebrow-track{animation:none;}}
   .hero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.6rem,6vw,4.3rem);line-height:1.02;letter-spacing:-.01em;color:var(--ink);}
   .hero h1 em{font-style:italic;color:var(--forest);}
   .hero .lede{font-size:1.12rem;color:var(--ink-soft);max-width:46ch;margin:22px 0 14px;}
@@ -99,6 +109,20 @@
   /* ---------- section scaffolding ---------- */
   section.block{padding:68px 0;}
   .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:34px;}
+  /* section header entrance */
+  .sec-head .sec-num{display:inline-block;opacity:0;transform:translateY(8px) scale(.8);transition:opacity .5s ease .05s,transform .5s cubic-bezier(.2,.8,.2,1) .05s;}
+  .sec-head .sec-title{position:relative;display:inline-block;opacity:0;transform:translateY(14px);transition:opacity .6s ease .12s,transform .6s cubic-bezier(.2,.8,.2,1) .12s;}
+  .sec-head .sec-sub{opacity:0;transform:translateY(10px);transition:opacity .6s ease .24s,transform .6s ease .24s;}
+  /* the sweeping accent underline under the title */
+  .sec-head .sec-title::after{content:"";position:absolute;left:0;bottom:-6px;height:3px;width:100%;background:linear-gradient(90deg,var(--clay),var(--moss));border-radius:3px;transform:scaleX(0);transform-origin:left center;transition:transform .7s cubic-bezier(.2,.8,.2,1) .35s;}
+  .sec-head.in .sec-num{opacity:1;transform:translateY(0) scale(1);}
+  .sec-head.in .sec-title{opacity:1;transform:translateY(0);}
+  .sec-head.in .sec-title::after{transform:scaleX(1);}
+  .sec-head.in .sec-sub{opacity:1;transform:translateY(0);}
+  @media(prefers-reduced-motion:reduce){
+    .sec-head .sec-num,.sec-head .sec-title,.sec-head .sec-sub{opacity:1;transform:none;transition:none;}
+    .sec-head .sec-title::after{transform:scaleX(1);transition:none;}
+  }
   .sec-num{font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--clay);padding-top:6px;}
   .sec-title{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(1.7rem,3.5vw,2.4rem);color:var(--ink);line-height:1.1;}
   .sec-sub{color:var(--muted);max-width:60ch;margin-top:6px;font-size:1rem;}
@@ -172,6 +196,7 @@
 
   /* scroll reveal */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+  .sec-head.reveal{opacity:1;transform:none;}
   .reveal.in{opacity:1;transform:none;}
   @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
 </style>
@@ -215,7 +240,12 @@
 
   <div class="wrap">
     <div>
-      <p class="eyebrow">GIS · Remote Sensing · Geospatial Data Science</p>
+      <div class="eyebrow-marquee" aria-label="GIS, Remote Sensing, Geospatial Data Science, Python, Web Mapping">
+        <div class="eyebrow-track">
+          <span>GIS</span><span class="sep">/</span><span>Remote Sensing</span><span class="sep">/</span><span>Geospatial Data Science</span><span class="sep">/</span><span>Python &amp; R</span><span class="sep">/</span><span>Web Mapping</span><span class="sep">/</span>
+          <span>GIS</span><span class="sep">/</span><span>Remote Sensing</span><span class="sep">/</span><span>Geospatial Data Science</span><span class="sep">/</span><span>Python &amp; R</span><span class="sep">/</span><span>Web Mapping</span><span class="sep">/</span>
+        </div>
+      </div>
       <h1>Turning spatial data into <em>decisions</em> you can map.</h1>
       <p class="lede">
         I'm a GIS and geomatics professional and M.S. Geography candidate at Texas State University.
@@ -276,7 +306,7 @@
     <div class="sec-head reveal">
       <span class="sec-num">02</span>
       <div>
-        <h2 class="sec-title">Toolkit</h2>
+        <h2 class="sec-title">Skills</h2>
         <p class="sec-sub">The instruments I reach for, grouped by what they do.</p>
       </div>
     </div>
@@ -319,7 +349,7 @@
     <div class="sec-head reveal">
       <span class="sec-num">03</span>
       <div>
-        <h2 class="sec-title">Featured projects</h2>
+        <h2 class="sec-title">Projects</h2>
         <p class="sec-sub">Reproducible work with code, real data, and results — open the repos and check.</p>
       </div>
     </div>
@@ -432,10 +462,62 @@
 <footer>© 2026 Nirajan Tripathi · Built and hosted on GitHub Pages</footer>
 
 <script>
+  // scroll-reveal fade-ins (one-time for general elements)
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
   },{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('.reveal:not(.sec-head)').forEach(el=>io.observe(el));
+
+  // section headers: replay the entrance every time they scroll into view
+  const headIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); }
+      else { e.target.classList.remove('in'); }
+    });
+  },{threshold:0, rootMargin:'0px 0px -25% 0px'});
+  document.querySelectorAll('.sec-head').forEach(el=>headIO.observe(el));
+
+  // active nav highlight — pick the section whose top is nearest above a line ~30% down the viewport
+  const navLinks = Array.from(document.querySelectorAll('nav.links a'));
+  const sections = navLinks
+    .map(a => ({ link:a, el:document.querySelector(a.getAttribute('href')) }))
+    .filter(s => s.el);
+
+  function setActiveNav(){
+    const line = window.scrollY + window.innerHeight * 0.30; // detection line 30% down
+    let current = sections[0];
+    for(const s of sections){
+      const top = s.el.getBoundingClientRect().top + window.scrollY;
+      if(top <= line) current = s; else break;
+    }
+    // if scrolled to very bottom, force the last section active
+    if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 4){
+      current = sections[sections.length - 1];
+    }
+    navLinks.forEach(a => a.classList.toggle('active', current && a === current.link));
+  }
+  let navTick = false;
+  window.addEventListener('scroll', ()=>{
+    if(!navTick){ requestAnimationFrame(()=>{ setActiveNav(); navTick=false; }); navTick=true; }
+  }, {passive:true});
+  window.addEventListener('resize', setActiveNav, {passive:true});
+  setActiveNav();
+
+  // remember scroll position when leaving to a project, restore on return
+  document.querySelectorAll('a.proj.live').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      try{ sessionStorage.setItem('homeScroll', String(window.scrollY)); }catch(e){}
+    });
+  });
+  window.addEventListener('pageshow', ()=>{
+    try{
+      const y = sessionStorage.getItem('homeScroll');
+      if(y !== null){
+        window.scrollTo(0, parseInt(y,10));
+        sessionStorage.removeItem('homeScroll');
+      }
+    }catch(e){}
+  });
 </script>
 </body>
 </html>
