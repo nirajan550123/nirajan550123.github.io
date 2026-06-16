@@ -86,6 +86,13 @@
   .lb-cap{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);font-family:"JetBrains Mono",monospace;font-size:.8rem;}
   .crumb{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--muted);margin-bottom:10px;letter-spacing:.04em;}
   .crumb a{color:var(--muted);} .crumb a:hover{color:var(--forest);}
+  pre.code{background:var(--forest-deep);color:#e8efe9;border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:.8rem;line-height:1.55;box-shadow:var(--shadow-sm);margin:6px 0 4px;}
+  pre.code .cm{color:#8fae93;}
+  pre.code .kw{color:#e0a86b;}
+  pre.code .fn{color:#9ec7e8;}
+  .codecap{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--muted);margin-bottom:16px;}
+  .pill-row{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 14px;}
+  .pill{font-family:"JetBrains Mono",monospace;font-size:.72rem;background:var(--paper-2);border:1px solid var(--line);color:var(--ink-soft);padding:5px 11px;border-radius:999px;}
 </style>
 </head>
 <body>
@@ -101,9 +108,9 @@
     <p class="crumb"><a href="../../">Portfolio</a> / <a href="./">Rooftop Solar</a> / Methodology</p>
     <p class="eyebrow">Deep dive · Point-cloud processing</p>
     <h1>LiDAR Processing Methodology</h1>
-    <p class="lede">From a raw 24.6-million-point airborne LiDAR tile to building-ready 1 m elevation surfaces — the full ArcGIS Pro workflow, tools, parameters, and coordinate handling behind the Austin side of this project.</p>
+    <p class="lede">From a raw 24.6-million-point airborne LiDAR tile to per-building solar estimates — the full pipeline across <strong>two stages</strong>: point-cloud processing in ArcGIS Pro, and a reproducible analytical pipeline in Python (rasterio, geopandas, NumPy) that derives slope and aspect, aggregates per building, and models energy yield.</p>
     <div class="tagrow">
-      <span class="tag">USGS 3DEP LiDAR</span><span class="tag">ArcGIS Pro</span><span class="tag">LAS Dataset</span><span class="tag">EPSG 6343</span>
+      <span class="tag">USGS 3DEP LiDAR</span><span class="tag">ArcGIS Pro</span><span class="tag">Python · rasterio</span><span class="tag">geopandas · NumPy</span><span class="tag">EPSG 6343</span>
     </div>
   </div>
 </section>
@@ -113,7 +120,12 @@
   <section class="sec">
     <div class="sec-label reveal"><span class="sec-num">01</span><span class="sec-title">Overview</span></div>
     <div class="prose reveal" style="max-width:74ch;">
-      <p>This page documents the point-cloud pipeline that produced the Digital Surface Model (DSM) and Digital Terrain Model (DTM) used in the rooftop-solar analysis. It takes a raw airborne LiDAR tile and derives correct 1 m surface and terrain rasters with verified coordinate handling. Processing was done in ArcGIS Pro; the downstream slope, aspect, and solar analysis runs in Python.</p>
+      <p>This pipeline has <strong>two distinct stages</strong>, both documented here in full:</p>
+      <ul>
+        <li><strong>Stage A — point-cloud processing (ArcGIS Pro):</strong> raw LiDAR → 1 m DSM and DTM with verified coordinate handling (sections 02–04).</li>
+        <li><strong>Stage B — analytical pipeline (Python):</strong> the DSM → slope and aspect → per-building zonal aggregation → energy estimate, written with rasterio, geopandas, and NumPy (sections 05–07).</li>
+      </ul>
+      <p>The same Python module runs both study areas — only the input surface changes — which is what makes the Austin/Kathmandu comparison a true methods transfer.</p>
       <p><strong>Source data:</strong> USGS 3DEP Lidar Point Cloud, project TX Central B1 2017, tile over the West Austin Neighborhood Group — <strong>24,579,588 points</strong>, retrieved as a compressed LAZ file via the USGS 3DEP LidarExplorer.</p>
     </div>
   </section>
@@ -158,9 +170,50 @@
   </section>
 
   <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">05</span><span class="sec-title">Result &amp; reproducibility</span></div>
+    <div class="sec-label reveal"><span class="sec-num">05</span><span class="sec-title">Python · slope &amp; aspect from the DSM</span></div>
     <div class="prose reveal" style="max-width:74ch;">
-      <p>The DSM fed the Python pipeline, where per-building slope, aspect, usable area, and a first-order solar estimate were computed over OpenStreetMap footprints. The point-cloud-to-raster stage was performed in the ArcGIS Pro GUI — a standard professional workflow — so it is documented here by tool, parameter, and decision rather than by script. Every parameter needed to reproduce the surfaces is in the table above; from the DSM onward, the workflow is fully scripted in Python and reproducible from the repository.</p>
+      <p>With the 1 m DSM in hand, the Python stage begins. Slope and aspect are derived directly from the elevation grid using the <strong>Horn (1981) 3×3 gradient</strong> — the same algorithm ArcGIS uses internally — rather than relying on a black-box tool. The raster is read with rasterio, nodata is masked to NaN, and the gradient is divided by the true pixel size so slope is in real degrees regardless of cell resolution.</p>
+      <div class="pill-row"><span class="pill">rasterio.open</span><span class="pill">np.gradient</span><span class="pill">arctan / arctan2</span><span class="pill">degrees</span></div>
+    </div>
+    <pre class="code reveal"><span class="cm"># Horn 3x3 gradient — slope &amp; aspect in degrees from any DSM</span>
+z = src.read(1).astype(<span class="kw">"float64"</span>); z[z == src.nodata] = np.nan
+dzdx = np.<span class="fn">gradient</span>(z, axis=1) / px      <span class="cm"># divide by true pixel size (m)</span>
+dzdy = np.<span class="fn">gradient</span>(z, axis=0) / py
+slope  = np.<span class="fn">degrees</span>(np.<span class="fn">arctan</span>(np.<span class="fn">sqrt</span>(dzdx**2 + dzdy**2)))
+aspect = np.<span class="fn">degrees</span>(np.<span class="fn">arctan2</span>(dzdy, -dzdx))   <span class="cm"># compass-corrected below</span></pre>
+    <p class="codecap reveal">src/solar_suitability.py · slope_aspect() — vectorised over the whole grid with NumPy (no Python loops).</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">06</span><span class="sec-title">Python · per-building zonal aggregation</span></div>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>OpenStreetMap building footprints are pulled with osmnx and reprojected to the DSM's CRS with geopandas. For each footprint, rasterio's <strong>geometry_mask</strong> rasterises the polygon into a boolean mask over the slope/aspect grids — a true zonal-statistics operation done in-memory. Cells under the slope cap define the usable fraction; the equator-facing aspect score is averaged only over those usable cells.</p>
+      <div class="pill-row"><span class="pill">osmnx.features_from_bbox</span><span class="pill">gdf.to_crs</span><span class="pill">rasterio.features.geometry_mask</span><span class="pill">boolean indexing</span></div>
+    </div>
+    <pre class="code reveal"><span class="cm"># For each OSM footprint: mask the raster &amp; reduce to usable stats</span>
+mask = <span class="fn">geometry_mask</span>([geom], out_shape=slope.shape,
+                     transform=transform, invert=<span class="kw">True</span>)
+s, a = slope[mask], aspect[mask]                 <span class="cm"># cells inside this roof</span>
+under_cap   = s &lt;= max_slope_deg                  <span class="cm"># slope usability filter</span>
+frac_usable = under_cap.<span class="fn">mean</span>()                  <span class="cm"># fraction of roof mountable</span>
+aspect_score = _aspect_score(a[under_cap]).<span class="fn">mean</span>()  <span class="cm"># 1.0 = faces equator</span></pre>
+    <p class="codecap reveal">src/solar_suitability.py · building_suitability() — geometry-aware reduction, not a generic raster average.</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">07</span><span class="sec-title">Python · energy model &amp; the transfer to Kathmandu</span></div>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>The annual per-building yield is a transparent, first-order model — every term is explicit and defensible, with no hidden coefficients:</p>
+    </div>
+    <pre class="code reveal"><span class="cm"># Transparent energy model — every factor is explicit</span>
+usable_area = footprint_area * usable_fraction * frac_usable   <span class="cm"># m²</span>
+annual_kwh  = (usable_area * annual_ghi_kwh_m2 * aspect_score
+               * panel_efficiency * performance_ratio)         <span class="cm"># kWh/yr</span></pre>
+    <p class="codecap reveal">usable_fraction (mountable share), GHI (irradiation), panel efficiency, performance ratio — all named parameters.</p>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>The Kathmandu transfer adds one Python step the LiDAR side did not need: the open Copernicus DSM arrives in geographic WGS84 (degrees), so it is reprojected to metric UTM 45N with rasterio's <strong>calculate_default_transform</strong> and <strong>reproject</strong> before the identical analysis runs — guaranteeing slope and area are computed in metres for both cities.</p>
+      <div class="pill-row"><span class="pill">calculate_default_transform</span><span class="pill">rasterio.warp.reproject</span><span class="pill">Resampling.bilinear</span></div>
+      <div class="callout"><p>The point-cloud stage ran in the ArcGIS Pro GUI — a standard professional workflow documented here by tool and parameter. From the DSM onward, every step is scripted, vectorised, and reproducible from the repository: one shared module, two cities.</p></div>
     </div>
   </section>
 
