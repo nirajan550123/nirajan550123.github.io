@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rooftop Solar Across Data Environments — LiDAR vs Open DSM | Nirajan Tripathi</title>
-<meta name="description" content="The same rooftop-solar method run on 1 m airborne LiDAR (Austin) and a 30 m open global DSM (Kathmandu), showing how elevation-data resolution systematically biases solar estimates." />
+<title>Comparative Analysis — LiDAR vs Open DSM | Nirajan Tripathi</title>
+<meta name="description" content="Comparative statistical analysis of rooftop-solar estimates from 1 m LiDAR (Austin) versus a 30 m open DSM (Kathmandu), diagnosing how resolution biases the result." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -32,7 +32,7 @@
   .phero-bg{position:absolute;inset:0;z-index:0;opacity:.42;}
   .phero .wrap{position:relative;z-index:1;}
   .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin-bottom:16px;}
-  .phero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.1rem,4.6vw,3.3rem);line-height:1.05;letter-spacing:-.01em;max-width:20ch;}
+  .phero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.1rem,4.6vw,3.3rem);line-height:1.05;letter-spacing:-.01em;max-width:22ch;}
   .phero .lede{font-size:1.1rem;color:var(--ink-soft);max-width:64ch;margin:18px 0 22px;}
   .tagrow{display:flex;flex-wrap:wrap;gap:8px;}
   .tag{font-family:"JetBrains Mono",monospace;font-size:.76rem;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);padding:6px 12px;border-radius:999px;}
@@ -84,36 +84,26 @@
   .lb.open{display:flex;}
   .lb img{max-width:95%;max-height:92%;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
   .lb-cap{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);font-family:"JetBrains Mono",monospace;font-size:.8rem;}
+  .crumb{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--muted);margin-bottom:10px;letter-spacing:.04em;}
+  .crumb a{color:var(--muted);} .crumb a:hover{color:var(--forest);}
 </style>
 </head>
 <body>
 <header class="nav">
   <div class="wrap nav-inner">
     <div class="brand">Nirajan&nbsp;<span>Tripathi</span></div>
-    <a class="back" href="../../">← All projects</a>
+    <a class="back" href="./">← Back to project</a>
   </div>
 </header>
 
 <section class="phero">
-  <svg class="phero-bg" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <g fill="none" stroke="#9db89a" stroke-width="1.1">
-      <path d="M-50 300 L 120 300 L 120 220 L 200 220 L 200 300 L 320 300 L 320 180 L 410 180 L 410 300 L 540 300 L 540 240 L 620 240 L 620 300 L 760 300 L 760 160 L 850 160 L 850 300 L 980 300 L 980 230 L 1060 230 L 1060 300 L 1260 300"/>
-      <path d="M-50 350 C 200 320 380 360 600 340 S 1000 320 1260 345"/>
-    </g>
-    <g fill="#c2703d" opacity=".5">
-      <circle cx="160" cy="210" r="3"/><circle cx="365" cy="170" r="3"/><circle cx="805" cy="150" r="3"/>
-    </g>
-    <g fill="#cda434" opacity=".6">
-      <path d="M360 120 l 8 -22 l 8 22 z"/>
-    </g>
-  </svg>
   <div class="wrap">
-    <p class="eyebrow">GIS · LiDAR · Python</p>
-    <h1>Rooftop Solar Across Data Environments</h1>
-    <p class="lede">One rooftop-solar method, two very different elevation datasets: 1 m airborne LiDAR in Austin, and a 30 m open global DSM in Kathmandu — where LiDAR does not exist. The finding is not which city has more sun, but how data resolution systematically biases what the analysis can see.</p>
+    <p class="crumb"><a href="../../">Portfolio</a> / <a href="./">Rooftop Solar</a> / Analysis</p>
+    <p class="eyebrow">Deep dive · Comparative analysis</p>
+    <h1>How Data Resolution Biases a Solar Estimate</h1>
+    <p class="lede">The same method run on 1 m LiDAR (Austin) and a 30 m open DSM (Kathmandu) does not just produce noisier results on the coarse data — it produces <strong>systematically biased</strong> ones. This page quantifies the mechanism.</p>
     <div class="tagrow">
-      <span class="tag">USGS 3DEP LiDAR</span><span class="tag">ArcGIS Pro · PDAL</span><span class="tag">Python · rasterio</span>
-      <span class="tag">Copernicus GLO-30</span><span class="tag">OpenStreetMap</span>
+      <span class="tag">Python · geopandas</span><span class="tag">Mann–Whitney U</span><span class="tag">Kolmogorov–Smirnov</span><span class="tag">1,728 vs 947 buildings</span>
     </div>
   </div>
 </section>
@@ -121,86 +111,80 @@
 <main class="wrap">
 
   <section class="sec">
-    <figure class="fig reveal" style="max-width:900px;margin:0 auto;">
-      <img src="austin_solar_map.png" alt="Per-building rooftop solar potential, West Austin, from 1 m LiDAR" />
-      <figcaption>Per-building rooftop solar potential, West Austin — derived from a 1 m LiDAR DSM. Red = highest annual kWh.</figcaption>
-    </figure>
+    <div class="sec-label reveal"><span class="sec-num">01</span><span class="sec-title">Headline comparison</span></div>
+    <div class="reveal" style="max-width:680px;">
+      <table class="datatable">
+        <tr><th>Metric</th><th>Austin · 1 m LiDAR</th><th>Kathmandu · 30 m DSM</th></tr>
+        <tr><td>Elevation source</td><td>USGS 3DEP LiDAR</td><td>Copernicus GLO-30</td></tr>
+        <tr><td>OSM footprints fetched</td><td>1,795</td><td>7,290</td></tr>
+        <tr><td>Buildings analyzed</td><td>1,728</td><td>947</td></tr>
+        <tr><td>Footprint survival</td><td>96.3%</td><td>13.0%</td></tr>
+        <tr><td>Mean roof slope</td><td>40.3°</td><td>3.7°</td></tr>
+        <tr><td>Usable roof fraction</td><td>0.47</td><td>1.00</td></tr>
+        <tr><td>Median kWh / building</td><td>7,404</td><td>14,355</td></tr>
+        <tr><td>Total annual kWh</td><td>19,187,570</td><td>36,256,333</td></tr>
+      </table>
+    </div>
   </section>
 
   <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">Distributions differ significantly</span></div>
     <div class="split text-lead">
       <div class="prose reveal">
-        <div class="sec-label"><span class="sec-num">01</span><span class="sec-title">The question</span></div>
-        <p>Most rooftop-solar demos run a clean pipeline on a US city with high-quality LiDAR and stop there. But in most of the world — including Nepal — <strong>that ideal data does not exist</strong>. Open LiDAR for Kathmandu is simply not available.</p>
-        <p>So this project turns the data gap into the experiment: run the <strong>identical method</strong> where LiDAR exists (Austin, 1 m) and where it doesn't (Kathmandu, 30 m open DSM), then ask what is gained and lost.</p>
-        <div class="callout"><p>The real question isn't "which city gets more sun" — it's <strong>how much does elevation-data resolution distort a solar estimate</strong>, and in which direction.</p></div>
+        <p>The two cities' per-building distributions are statistically distinct. A <strong>Mann–Whitney U</strong> test rejects equal distributions (p ≈ 10⁻⁶⁸) and a <strong>Kolmogorov–Smirnov</strong> test confirms a large separation (D = 0.31).</p>
+        <p>Counter-intuitively, Kathmandu's median per-building estimate (<strong>14,355 kWh</strong>) is nearly double Austin's (<strong>7,404 kWh</strong>) — despite Kathmandu's buildings being physically smaller. Section 03 explains why this is an artifact, not a real difference.</p>
       </div>
-      <figure class="fig reveal">
-        <img src="kathmandu_solar_map.png" alt="Per-building rooftop solar screen, Kathmandu, from 30 m open DSM" />
-        <figcaption>Kathmandu, same method on a 30 m open DSM — a footprint-level screen, not roof-facet design.</figcaption>
-      </figure>
+      <figure class="fig reveal"><img src="fig1_distributions.png" alt="Distribution comparison" /><figcaption>Per-building solar distributions on shared axes</figcaption></figure>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">From point cloud to surface</span></div>
-    <div class="prose reveal" style="max-width:72ch;margin-bottom:18px;">
-      <p>The Austin side starts from a raw <strong>24.6-million-point</strong> USGS 3DEP LiDAR tile. In ArcGIS Pro the point cloud is filtered and rasterized into two 1 m surfaces: a DSM (first returns — roof and canopy tops) and a ground-filtered DTM (bare earth). Correct coordinate handling (EPSG 6343, metres, NAVD88) keeps slope and area honest.</p>
-    </div>
-    <div class="figrow reveal">
-      <figure class="fig"><img src="dsm.png" alt="Digital Surface Model from LiDAR" /><figcaption>DSM (1 m) — roofs, trees, structures resolved</figcaption></figure>
-      <figure class="fig"><img src="dtm.png" alt="Digital Terrain Model from ground returns" /><figcaption>DTM (1 m) — ground-filtered bare earth</figcaption></figure>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">03</span><span class="sec-title">Method</span></div>
-    <div class="prose reveal" style="max-width:72ch;">
-      <ol>
-        <li>Austin: process raw LiDAR (LAZ → LAS dataset → 1 m DSM/DTM) in ArcGIS Pro; verify CRS (EPSG 6343, metres).</li>
-        <li>Kathmandu: download an open <strong>Copernicus GLO-30</strong> DSM, reproject to UTM 45N (EPSG 32645) in Python.</li>
-        <li>Both: derive slope and aspect from the DSM, pull <strong>OpenStreetMap</strong> building footprints, and aggregate per building (rasterio + geopandas).</li>
-        <li>Estimate annual rooftop kWh per building: usable area × irradiation × aspect score × panel efficiency × performance ratio — the <strong>same shared module</strong> for both cities.</li>
-      </ol>
-      <div class="callout"><p>Identical code runs both cities. Only the input surface and its resolution change — that is the methods-transfer design.</p></div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="sec-label reveal"><span class="sec-num">04</span><span class="sec-title">The resolution-bias finding</span></div>
+    <div class="sec-label reveal"><span class="sec-num">03</span><span class="sec-title">The resolution-bias mechanism</span></div>
     <div class="stats reveal" style="margin-bottom:22px;">
-      <div class="stat"><b>40.3° → 3.7°</b><span>Mean modeled roof slope: LiDAR vs 30 m DSM</span></div>
-      <div class="stat"><b>96% → 13%</b><span>Building footprint survival rate</span></div>
-      <div class="stat"><b>p ≈ 10⁻⁶⁸</b><span>Distributions differ (Mann–Whitney U)</span></div>
+      <div class="stat"><b>40.3° → 3.7°</b><span>Mean modeled roof slope flattens</span></div>
+      <div class="stat"><b>0.47 → 1.00</b><span>Usable roof fraction inflates</span></div>
+      <div class="stat"><b>96% → 13%</b><span>Footprint survival collapses</span></div>
     </div>
-    <div class="split reveal" style="align-items:start;">
-      <div class="prose">
-        <table class="datatable">
-          <tr><th>Metric</th><th>Austin · 1 m LiDAR</th><th>Kathmandu · 30 m DSM</th></tr>
-          <tr><td>Buildings analyzed</td><td>1,728</td><td>947</td></tr>
-          <tr><td>Footprint survival</td><td>96.3%</td><td>13.0%</td></tr>
-          <tr><td>Mean roof slope</td><td>40.3°</td><td>3.7°</td></tr>
-          <tr><td>Usable roof fraction</td><td>0.47</td><td>1.00</td></tr>
-          <tr><td>Median kWh / building</td><td>7,404</td><td>14,355</td></tr>
-        </table>
-      </div>
-      <div class="prose">
-        <p>Coarse open data doesn't just add noise — it adds <strong>directional bias</strong>. The 30 m DSM flattens roof pitch (40° → 4°), so it treats nearly every roof as an ideal flat panel and over-credits usable area. It also drops small buildings: only <strong>13%</strong> of Kathmandu footprints survive, biasing the sample toward large roofs.</p>
-        <p>Together these <strong>inflate</strong> Kathmandu's per-building median above Austin's — an artifact of resolution, not a real difference.</p>
-      </div>
+    <div class="prose reveal" style="max-width:74ch;margin-bottom:16px;">
+      <p>Coarse open data adds <strong>directional bias</strong>, via two compounding mechanisms:</p>
+      <ul>
+        <li><strong>Roof-pitch flattening.</strong> At 1 m, LiDAR resolves individual roof planes (mean slope 40.3°, only 47% of area usable). At 30 m, one cell spans an entire small building, averaging pitched surfaces into a near-flat patch (slope 3.7°, 100% usable). The coarse DSM cannot see that roofs are tilted, so it over-credits usable area.</li>
+        <li><strong>Small-building dropout.</strong> A 30 m cell is larger than many Kathmandu buildings; footprints with too few valid cells are dropped. Only 13% of fetched footprints survive, biasing the sample toward large, high-yield structures.</li>
+      </ul>
     </div>
-    <div class="figrow reveal" style="margin-top:20px;">
-      <figure class="fig"><img src="fig2_resolution_bias.png" alt="Slope, usable fraction, and footprint survival comparison" /><figcaption>The bias mechanism: pitch flattening, usable-fraction inflation, small-building dropout</figcaption></figure>
-      <figure class="fig"><img src="fig1_distributions.png" alt="Distribution of per-building solar potential" /><figcaption>Per-building solar distributions on shared axes</figcaption></figure>
+    <figure class="fig reveal"><img src="fig2_resolution_bias.png" alt="Slope, usable fraction, and footprint survival" /><figcaption>The bias mechanism: pitch flattening, usable-fraction inflation, small-building dropout</figcaption></figure>
+    <div class="callout reveal"><p>Building footprint area correlates strongly with estimated yield (Pearson r = 0.98 Austin, 0.92 Kathmandu), confirming usable area is the dominant driver — exactly the quantity the coarse DSM distorts.</p></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">04</span><span class="sec-title">Advantages &amp; disadvantages</span></div>
+    <div class="split" style="align-items:start;">
+      <div class="prose reveal">
+        <p style="font-family:'Fraunces',serif;font-size:1.1rem;color:var(--forest-deep);margin-bottom:6px;">Airborne LiDAR (Austin)</p>
+        <ul>
+          <li>Resolves roof planes — true per-facet slope, aspect, usable area.</li>
+          <li>High footprint survival; nearly all buildings analyzable.</li>
+          <li>Not openly available for most of the world; large, heavier to process.</li>
+        </ul>
+      </div>
+      <div class="prose reveal">
+        <p style="font-family:'Fraunces',serif;font-size:1.1rem;color:var(--forest-deep);margin-bottom:6px;">Open global DSM (Kathmandu)</p>
+        <ul>
+          <li>Globally available, free, fast — the only option where LiDAR is absent.</li>
+          <li>Adequate for coarse screening of districts and large rooftops.</li>
+          <li>Cannot resolve roof planes; flattens pitch, over-credits usable area, drops small buildings.</li>
+          <li>Per-building values are a relative screen, not absolute design figures.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="sec">
     <div class="sec-label reveal"><span class="sec-num">05</span><span class="sec-title">Limitations</span></div>
-    <div class="prose reveal" style="max-width:70ch;">
+    <div class="prose reveal" style="max-width:74ch;">
       <ul>
-        <li>Global horizontal irradiation values are placeholders (Austin 1,700; Kathmandu 1,800 kWh/m²/yr); absolute totals are provisional, relative within-city rankings are robust.</li>
-        <li>The Kathmandu result is a footprint-level <strong>screen</strong>, not roof-facet design — a 30 m DSM cannot resolve individual roof planes.</li>
+        <li>Irradiation values are placeholders (Austin 1,700; Kathmandu 1,800 kWh/m²/yr); absolute totals are provisional, relative within-city rankings robust.</li>
+        <li>Kathmandu is a footprint-level screen at 30 m, not roof-facet design.</li>
         <li>First-order energy model; no inter-building shading in the Python step.</li>
         <li>OSM footprint completeness and the choice of footprint dataset materially affect Kathmandu totals.</li>
       </ul>
@@ -209,13 +193,12 @@
 
   <div class="endcta reveal">
     <div>
-      <h3>Open the code & methodology</h3>
-      <p>Reproducible Python pipeline, the full LiDAR processing methodology, and the comparative analysis on GitHub.</p>
+      <h3>See how the LiDAR was processed</h3>
+      <p>The full point-cloud-to-surface methodology, and the reproducible code.</p>
     </div>
     <div class="acts">
       <a class="btn btn-light" href="./methodology.html">LiDAR methodology →</a>
-      <a class="btn btn-light" href="./analysis.html">Comparative analysis →</a>
-      <a class="btn btn-outline" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/lidar-rooftop-solar" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-outline" href="./">Back to project</a>
     </div>
   </div>
 
