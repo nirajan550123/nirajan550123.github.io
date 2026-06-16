@@ -36,6 +36,7 @@
     background:var(--paper);
     line-height:1.65;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
   a{color:var(--forest);text-decoration:none;transition:color .18s;}
   a:hover{color:var(--clay);}
@@ -134,7 +135,7 @@
   .fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow-sm);}
   .fact b{font-family:"Fraunces",serif;font-size:1.5rem;color:var(--forest);display:block;}
   .fact span{font-size:.85rem;color:var(--muted);}
-  @media(max-width:760px){.about-grid{grid-template-columns:1fr;}}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;}.facts{grid-template-columns:1fr;}}
 
   /* skills as field categories */
   .skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;}
@@ -208,6 +209,12 @@
   .sec-head.reveal{opacity:1;transform:none;}
   .reveal.in{opacity:1;transform:none;}
   @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  /* back-to-top button */
+  #toTop{position:fixed;right:20px;bottom:20px;z-index:80;width:46px;height:46px;border-radius:50%;background:var(--forest);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .25s,visibility .25s,transform .25s,background .2s;}
+  #toTop.show{opacity:1;visibility:visible;transform:translateY(0);}
+  #toTop:hover{background:var(--forest-deep);transform:translateY(-2px);}
+  #toTop svg{width:20px;height:20px;}
 </style>
 </head>
 <body>
@@ -498,6 +505,10 @@
 
 <footer>© 2026 Nirajan Tripathi · Built and hosted on GitHub Pages</footer>
 
+<button id="toTop" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
 <script>
   // scroll-reveal fade-ins (one-time for general elements)
   const io = new IntersectionObserver((entries)=>{
@@ -514,20 +525,19 @@
   },{threshold:0, rootMargin:'0px 0px -25% 0px'});
   document.querySelectorAll('.sec-head').forEach(el=>headIO.observe(el));
 
-  // active nav highlight — pick the section whose top is nearest above a line ~30% down the viewport
+  // active nav highlight
   const navLinks = Array.from(document.querySelectorAll('nav.links a'));
   const sections = navLinks
     .map(a => ({ link:a, el:document.querySelector(a.getAttribute('href')) }))
     .filter(s => s.el);
 
   function setActiveNav(){
-    const line = window.scrollY + window.innerHeight * 0.30; // detection line 30% down
+    const line = window.scrollY + window.innerHeight * 0.30;
     let current = sections[0];
     for(const s of sections){
       const top = s.el.getBoundingClientRect().top + window.scrollY;
       if(top <= line) current = s; else break;
     }
-    // if scrolled to very bottom, force the last section active
     if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 4){
       current = sections[sections.length - 1];
     }
@@ -555,6 +565,13 @@
       }
     }catch(e){}
   });
+
+  // back-to-top show/hide + smooth scroll
+  const toTop = document.getElementById('toTop');
+  function toggleToTop(){ if(window.scrollY > 600){ toTop.classList.add('show'); } else { toTop.classList.remove('show'); } }
+  window.addEventListener('scroll', toggleToTop, {passive:true});
+  toTop.addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
+  toggleToTop();
 </script>
 </body>
 </html>
