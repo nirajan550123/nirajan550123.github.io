@@ -84,6 +84,12 @@
   .lb.open{display:flex;}
   .lb img{max-width:95%;max-height:92%;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
   .lb-cap{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);font-family:"JetBrains Mono",monospace;font-size:.8rem;}
+  .deepdive{display:inline-flex;align-items:center;gap:7px;margin-top:6px;font-weight:600;font-size:.95rem;color:var(--forest);font-family:"Inter",sans-serif;}
+  .deepdive:hover{color:var(--clay);gap:11px;}
+  .deepdive .arr{transition:transform .2s;}
+  .deepdive:hover .arr{transform:translateX(3px);}
+  .deepdive-wrap{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);}
+  .deepdive-wrap p{color:var(--ink-soft);font-size:.97rem;margin-bottom:6px;}
 </style>
 </head>
 <body>
@@ -146,6 +152,10 @@
     <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">From point cloud to surface</span></div>
     <div class="prose reveal" style="max-width:72ch;margin-bottom:18px;">
       <p>The Austin side starts from a raw <strong>24.6-million-point</strong> USGS 3DEP LiDAR tile. In ArcGIS Pro the point cloud is filtered and rasterized into two 1 m surfaces: a DSM (first returns — roof and canopy tops) and a ground-filtered DTM (bare earth). Correct coordinate handling (EPSG 6343, metres, NAVD88) keeps slope and area honest.</p>
+      <div class="deepdive-wrap">
+        <p>The complete workflow — the LAZ-to-LAS conversion, the LAS Dataset to Raster parameters, the ground filtering, and the CRS verification — is documented step by step with screenshots.</p>
+        <a class="deepdive" href="./methodology.html">Read the full LiDAR processing methodology <span class="arr">→</span></a>
+      </div>
     </div>
     <div class="figrow reveal">
       <figure class="fig"><img src="dsm.png" alt="Digital Surface Model from LiDAR" /><figcaption>DSM (1 m) — roofs, trees, structures resolved</figcaption></figure>
@@ -187,6 +197,10 @@
       <div class="prose">
         <p>Coarse open data doesn't just add noise — it adds <strong>directional bias</strong>. The 30 m DSM flattens roof pitch (40° → 4°), so it treats nearly every roof as an ideal flat panel and over-credits usable area. It also drops small buildings: only <strong>13%</strong> of Kathmandu footprints survive, biasing the sample toward large roofs.</p>
         <p>Together these <strong>inflate</strong> Kathmandu's per-building median above Austin's — an artifact of resolution, not a real difference.</p>
+        <div class="deepdive-wrap">
+          <p>The full statistical comparison — distribution tests, the slope-flattening and footprint-survival mechanisms, and an advantages/disadvantages breakdown of each data environment — is laid out in detail.</p>
+          <a class="deepdive" href="./analysis.html">Read the full comparative analysis <span class="arr">→</span></a>
+        </div>
       </div>
     </div>
     <div class="figrow reveal" style="margin-top:20px;">
@@ -213,9 +227,8 @@
       <p>Reproducible Python pipeline, the full LiDAR processing methodology, and the comparative analysis on GitHub.</p>
     </div>
     <div class="acts">
-      <a class="btn btn-light" href="./methodology.html">LiDAR methodology →</a>
-      <a class="btn btn-light" href="./analysis.html">Comparative analysis →</a>
-      <a class="btn btn-outline" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/lidar-rooftop-solar" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-light" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/lidar-rooftop-solar" target="_blank" rel="noopener">View code on GitHub →</a>
+      <a class="btn btn-outline" href="../../">Back to portfolio</a>
     </div>
   </div>
 
