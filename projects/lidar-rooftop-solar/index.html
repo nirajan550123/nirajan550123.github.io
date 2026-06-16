@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rooftop Solar Across Data Environments — LiDAR vs Open DSM | Nirajan Tripathi</title>
+<meta name="description" content="The same rooftop-solar method run on 1 m airborne LiDAR (Austin) and a 30 m open global DSM (Kathmandu), showing how elevation-data resolution systematically biases solar estimates." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3efe6;--paper-2:#ece6d9;--ink:#1f2a24;--ink-soft:#4a5650;--muted:#6b756e;
+    --line:#d8d0bf;--forest:#2f5d50;--forest-deep:#1d3b33;--moss:#6b8f5e;--clay:#c2703d;--gold:#cda434;
+    --surface:#fbf9f4;--shadow-sm:0 2px 8px rgba(31,42,36,.06);--shadow:0 16px 40px rgba(29,59,51,.12);
+    --shadow-lg:0 30px 60px rgba(29,59,51,.18);--radius:16px;--max:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.65;-webkit-font-smoothing:antialiased;}
+  a{color:var(--forest);text-decoration:none;transition:color .18s;}
+  a:hover{color:var(--clay);}
+  .wrap{width:min(var(--max),calc(100% - 40px));margin:0 auto;}
+  .mono{font-family:"JetBrains Mono",monospace;}
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(243,239,230,.82);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+  .brand{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem;color:var(--ink);}
+  .brand span{color:var(--forest);}
+  .back{font-size:.9rem;color:var(--ink-soft);font-weight:500;}
+  .back:hover{color:var(--forest);}
+  .phero{position:relative;overflow:hidden;padding:64px 0 44px;border-bottom:1px solid var(--line);}
+  .phero-bg{position:absolute;inset:0;z-index:0;opacity:.42;}
+  .phero .wrap{position:relative;z-index:1;}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin-bottom:16px;}
+  .phero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.1rem,4.6vw,3.3rem);line-height:1.05;letter-spacing:-.01em;max-width:20ch;}
+  .phero .lede{font-size:1.1rem;color:var(--ink-soft);max-width:64ch;margin:18px 0 22px;}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:.76rem;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);padding:6px 12px;border-radius:999px;}
+  main{padding:8px 0 40px;}
+  .sec{padding:40px 0;border-bottom:1px solid var(--line);}
+  .sec:last-of-type{border-bottom:none;}
+  .sec-label{display:flex;align-items:baseline;gap:12px;margin-bottom:22px;}
+  .sec-num{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--clay);}
+  .sec-title{font-family:"Fraunces",serif;font-weight:600;font-size:1.55rem;color:var(--ink);}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;}
+  .split.text-lead{grid-template-columns:1.05fr .95fr;}
+  .prose p{color:var(--ink-soft);font-size:1.02rem;margin-bottom:14px;}
+  .prose ul,.prose ol{color:var(--ink-soft);font-size:1.02rem;padding-left:1.2rem;margin:8px 0 0;}
+  .prose li{margin-bottom:8px;}
+  .prose strong{color:var(--ink);}
+  @media(max-width:820px){.split,.split.text-lead{grid-template-columns:1fr;gap:22px;}}
+  figure.fig{margin:0;cursor:zoom-in;}
+  figure.fig img{width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface);transition:transform .25s,box-shadow .25s;}
+  figure.fig:hover img{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+  figure.fig figcaption{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--muted);margin-top:9px;text-align:center;letter-spacing:.02em;}
+  .datatable{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .datatable th,.datatable td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--line);color:var(--ink-soft);}
+  .datatable th{background:var(--paper-2);color:var(--ink);font-weight:600;font-size:.8rem;}
+  .datatable tr:last-child td{border-bottom:none;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow-sm);text-align:center;}
+  .stat b{font-family:"Fraunces",serif;font-size:1.8rem;color:var(--forest);display:block;line-height:1;}
+  .stat span{font-size:.82rem;color:var(--muted);display:block;margin-top:6px;}
+  @media(max-width:560px){.stats{grid-template-columns:1fr;}}
+  .figrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .figrow.three{grid-template-columns:1fr 1fr 1fr;}
+  @media(max-width:640px){.figrow,.figrow.three{grid-template-columns:1fr;}}
+  .callout{background:var(--surface);border-left:4px solid var(--clay);border-radius:10px;padding:16px 18px;margin-top:14px;}
+  .callout p{margin:0;color:var(--ink-soft);font-size:.98rem;}
+  .endcta{background:linear-gradient(135deg,var(--forest-deep),var(--forest));color:#fff;border-radius:20px;padding:36px;margin:40px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;box-shadow:var(--shadow-lg);}
+  .endcta h3{font-family:"Fraunces",serif;font-size:1.4rem;margin-bottom:4px;}
+  .endcta p{color:rgba(255,255,255,.82);font-size:.95rem;}
+  .endcta .acts{display:flex;flex-wrap:wrap;gap:10px;}
+  .btn{display:inline-block;padding:11px 18px;border-radius:999px;font-weight:600;font-size:.92rem;transition:transform .18s,background .18s;}
+  .btn-light{background:#fff;color:var(--forest-deep);}
+  .btn-light:hover{transform:translateY(-2px);color:var(--forest-deep);}
+  .btn-outline{border:1.5px solid rgba(255,255,255,.5);color:#fff;}
+  .btn-outline:hover{background:rgba(255,255,255,.14);color:#fff;}
+  footer{text-align:center;padding:30px 0;color:var(--muted);font-size:.88rem;}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;}}
+  .lb{position:fixed;inset:0;background:rgba(20,28,24,.88);display:none;align-items:center;justify-content:center;z-index:200;padding:24px;cursor:zoom-out;backdrop-filter:blur(4px);}
+  .lb.open{display:flex;}
+  .lb img{max-width:95%;max-height:92%;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  .lb-cap{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);font-family:"JetBrains Mono",monospace;font-size:.8rem;}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">Nirajan&nbsp;<span>Tripathi</span></div>
+    <a class="back" href="../../">← All projects</a>
+  </div>
+</header>
+
+<section class="phero">
+  <svg class="phero-bg" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g fill="none" stroke="#9db89a" stroke-width="1.1">
+      <path d="M-50 300 L 120 300 L 120 220 L 200 220 L 200 300 L 320 300 L 320 180 L 410 180 L 410 300 L 540 300 L 540 240 L 620 240 L 620 300 L 760 300 L 760 160 L 850 160 L 850 300 L 980 300 L 980 230 L 1060 230 L 1060 300 L 1260 300"/>
+      <path d="M-50 350 C 200 320 380 360 600 340 S 1000 320 1260 345"/>
+    </g>
+    <g fill="#c2703d" opacity=".5">
+      <circle cx="160" cy="210" r="3"/><circle cx="365" cy="170" r="3"/><circle cx="805" cy="150" r="3"/>
+    </g>
+    <g fill="#cda434" opacity=".6">
+      <path d="M360 120 l 8 -22 l 8 22 z"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">GIS · LiDAR · Python</p>
+    <h1>Rooftop Solar Across Data Environments</h1>
+    <p class="lede">One rooftop-solar method, two very different elevation datasets: 1 m airborne LiDAR in Austin, and a 30 m open global DSM in Kathmandu — where LiDAR does not exist. The finding is not which city has more sun, but how data resolution systematically biases what the analysis can see.</p>
+    <div class="tagrow">
+      <span class="tag">USGS 3DEP LiDAR</span><span class="tag">ArcGIS Pro · PDAL</span><span class="tag">Python · rasterio</span>
+      <span class="tag">Copernicus GLO-30</span><span class="tag">OpenStreetMap</span>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section class="sec">
+    <figure class="fig reveal" style="max-width:900px;margin:0 auto;">
+      <img src="austin_solar_map.png" alt="Per-building rooftop solar potential, West Austin, from 1 m LiDAR" />
+      <figcaption>Per-building rooftop solar potential, West Austin — derived from a 1 m LiDAR DSM. Red = highest annual kWh.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec">
+    <div class="split text-lead">
+      <div class="prose reveal">
+        <div class="sec-label"><span class="sec-num">01</span><span class="sec-title">The question</span></div>
+        <p>Most rooftop-solar demos run a clean pipeline on a US city with high-quality LiDAR and stop there. But in most of the world — including Nepal — <strong>that ideal data does not exist</strong>. Open LiDAR for Kathmandu is simply not available.</p>
+        <p>So this project turns the data gap into the experiment: run the <strong>identical method</strong> where LiDAR exists (Austin, 1 m) and where it doesn't (Kathmandu, 30 m open DSM), then ask what is gained and lost.</p>
+        <div class="callout"><p>The real question isn't "which city gets more sun" — it's <strong>how much does elevation-data resolution distort a solar estimate</strong>, and in which direction.</p></div>
+      </div>
+      <figure class="fig reveal">
+        <img src="kathmandu_solar_map.png" alt="Per-building rooftop solar screen, Kathmandu, from 30 m open DSM" />
+        <figcaption>Kathmandu, same method on a 30 m open DSM — a footprint-level screen, not roof-facet design.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">From point cloud to surface</span></div>
+    <div class="prose reveal" style="max-width:72ch;margin-bottom:18px;">
+      <p>The Austin side starts from a raw <strong>24.6-million-point</strong> USGS 3DEP LiDAR tile. In ArcGIS Pro the point cloud is filtered and rasterized into two 1 m surfaces: a DSM (first returns — roof and canopy tops) and a ground-filtered DTM (bare earth). Correct coordinate handling (EPSG 6343, metres, NAVD88) keeps slope and area honest.</p>
+    </div>
+    <div class="figrow reveal">
+      <figure class="fig"><img src="dsm.png" alt="Digital Surface Model from LiDAR" /><figcaption>DSM (1 m) — roofs, trees, structures resolved</figcaption></figure>
+      <figure class="fig"><img src="dtm.png" alt="Digital Terrain Model from ground returns" /><figcaption>DTM (1 m) — ground-filtered bare earth</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">03</span><span class="sec-title">Method</span></div>
+    <div class="prose reveal" style="max-width:72ch;">
+      <ol>
+        <li>Austin: process raw LiDAR (LAZ → LAS dataset → 1 m DSM/DTM) in ArcGIS Pro; verify CRS (EPSG 6343, metres).</li>
+        <li>Kathmandu: download an open <strong>Copernicus GLO-30</strong> DSM, reproject to UTM 45N (EPSG 32645) in Python.</li>
+        <li>Both: derive slope and aspect from the DSM, pull <strong>OpenStreetMap</strong> building footprints, and aggregate per building (rasterio + geopandas).</li>
+        <li>Estimate annual rooftop kWh per building: usable area × irradiation × aspect score × panel efficiency × performance ratio — the <strong>same shared module</strong> for both cities.</li>
+      </ol>
+      <div class="callout"><p>Identical code runs both cities. Only the input surface and its resolution change — that is the methods-transfer design.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">04</span><span class="sec-title">The resolution-bias finding</span></div>
+    <div class="stats reveal" style="margin-bottom:22px;">
+      <div class="stat"><b>40.3° → 3.7°</b><span>Mean modeled roof slope: LiDAR vs 30 m DSM</span></div>
+      <div class="stat"><b>96% → 13%</b><span>Building footprint survival rate</span></div>
+      <div class="stat"><b>p ≈ 10⁻⁶⁸</b><span>Distributions differ (Mann–Whitney U)</span></div>
+    </div>
+    <div class="split reveal" style="align-items:start;">
+      <div class="prose">
+        <table class="datatable">
+          <tr><th>Metric</th><th>Austin · 1 m LiDAR</th><th>Kathmandu · 30 m DSM</th></tr>
+          <tr><td>Buildings analyzed</td><td>1,728</td><td>947</td></tr>
+          <tr><td>Footprint survival</td><td>96.3%</td><td>13.0%</td></tr>
+          <tr><td>Mean roof slope</td><td>40.3°</td><td>3.7°</td></tr>
+          <tr><td>Usable roof fraction</td><td>0.47</td><td>1.00</td></tr>
+          <tr><td>Median kWh / building</td><td>7,404</td><td>14,355</td></tr>
+        </table>
+      </div>
+      <div class="prose">
+        <p>Coarse open data doesn't just add noise — it adds <strong>directional bias</strong>. The 30 m DSM flattens roof pitch (40° → 4°), so it treats nearly every roof as an ideal flat panel and over-credits usable area. It also drops small buildings: only <strong>13%</strong> of Kathmandu footprints survive, biasing the sample toward large roofs.</p>
+        <p>Together these <strong>inflate</strong> Kathmandu's per-building median above Austin's — an artifact of resolution, not a real difference.</p>
+      </div>
+    </div>
+    <div class="figrow reveal" style="margin-top:20px;">
+      <figure class="fig"><img src="fig2_resolution_bias.png" alt="Slope, usable fraction, and footprint survival comparison" /><figcaption>The bias mechanism: pitch flattening, usable-fraction inflation, small-building dropout</figcaption></figure>
+      <figure class="fig"><img src="fig1_distributions.png" alt="Distribution of per-building solar potential" /><figcaption>Per-building solar distributions on shared axes</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">05</span><span class="sec-title">Limitations</span></div>
+    <div class="prose reveal" style="max-width:70ch;">
+      <ul>
+        <li>Global horizontal irradiation values are placeholders (Austin 1,700; Kathmandu 1,800 kWh/m²/yr); absolute totals are provisional, relative within-city rankings are robust.</li>
+        <li>The Kathmandu result is a footprint-level <strong>screen</strong>, not roof-facet design — a 30 m DSM cannot resolve individual roof planes.</li>
+        <li>First-order energy model; no inter-building shading in the Python step.</li>
+        <li>OSM footprint completeness and the choice of footprint dataset materially affect Kathmandu totals.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="endcta reveal">
+    <div>
+      <h3>Open the code & methodology</h3>
+      <p>Reproducible Python pipeline, the full LiDAR processing methodology, and the comparative analysis on GitHub.</p>
+    </div>
+    <div class="acts">
+      <a class="btn btn-light" href="https://github.com/nirajan550123/rooftop-solar-data-environments" target="_blank" rel="noopener">View on GitHub →</a>
+      <a class="btn btn-outline" href="../../">Back to portfolio</a>
+    </div>
+  </div>
+
+</main>
+<footer>© 2026 Nirajan Tripathi · GIS &amp; Geospatial Data Science</footer>
+<div class="lb" id="lb"><img id="lb-img" src="" alt=""><div class="lb-cap" id="lb-cap"></div></div>
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const lb=document.getElementById('lb'),lbi=document.getElementById('lb-img'),lbc=document.getElementById('lb-cap');
+  document.querySelectorAll('figure.fig').forEach(f=>{f.addEventListener('click',()=>{const img=f.querySelector('img');const cap=f.querySelector('figcaption');lbi.src=img.src;lbi.alt=img.alt;lbc.textContent=cap?cap.textContent:'';lb.classList.add('open');});});
+  lb.addEventListener('click',()=>lb.classList.remove('open'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open');});
+</script>
+</body>
+</html>
