@@ -144,6 +144,7 @@
   .skill-card h3{font-family:"Fraunces",serif;font-size:1.12rem;color:var(--forest-deep);margin-bottom:10px;}
   .chips{display:flex;flex-wrap:wrap;gap:7px;}
   .chip{font-size:.82rem;background:var(--paper-2);color:var(--ink-soft);padding:5px 11px;border-radius:999px;border:1px solid var(--line);}
+  .chip.lead{background:var(--forest);color:#fff;border-color:var(--forest);font-weight:600;}
 
   /* projects */
   .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
@@ -264,9 +265,9 @@
       </div>
       <h1>Turning spatial data into <em>decisions</em> you can map.</h1>
       <p class="lede">
-        I'm a GIS and geomatics professional and M.S. Geography candidate at Texas State University.
-        I build reproducible geospatial workflows across environment, water resources, and urban planning —
-        from hydroclimatic analysis to remote sensing and web mapping.
+        GIS and geospatial data professional building reproducible, end-to-end spatial workflows —
+        satellite remote sensing in Google Earth Engine, spatial SQL in PostGIS, analysis in Python and R,
+        and interactive web maps. Applied across environment, water resources, and planning.
       </p>
       <p class="coords">29.8833° N, 97.9414° W — San Marcos, Texas</p>
       <div class="hero-cta">
@@ -296,15 +297,15 @@
     <div class="about-grid reveal">
       <div>
         <p>
-          I work at the intersection of GIS, geomatics, remote sensing, and spatial data science.
-          My experience spans hydroclimatic data analysis in Python and R, multi-criteria suitability
-          and flood-risk modeling in ArcGIS Pro, hyperspectral and Landsat remote sensing, and GNSS/UAV
-          field surveying.
+          I work at the intersection of GIS, remote sensing, and spatial data science, building
+          complete pipelines from raw satellite imagery and field surveys through spatial databases
+          to analysis and web delivery. My background spans Google Earth Engine, PostGIS, Python, and R,
+          applied to hydroclimatic analysis, suitability and flood-risk modeling, and remote sensing.
         </p>
         <p>
-          What sets my work apart is reproducibility: every project ships with documented code, real
-          data, and results you can verify — not just a pretty map. I'm looking for GIS Analyst, GIS
-          Developer, and geospatial data science roles in environment, water resources, energy, and planning.
+          What sets my work apart is reproducibility: I favor documented code, real data, and results
+          one can verify over a map that only looks good. I'm looking for GIS Analyst, GIS Developer,
+          and geospatial data science roles in environment, water resources, energy, and planning.
         </p>
       </div>
       <div class="facts">
@@ -323,35 +324,47 @@
       <span class="sec-num">02</span>
       <div>
         <h2 class="sec-title">Skills</h2>
-        <p class="sec-sub">The instruments I reach for, grouped by what they do.</p>
+        <p class="sec-sub">The instruments I reach for, grouped by what they do. Highlighted chips are the ones I lead with.</p>
       </div>
     </div>
     <div class="skill-grid">
       <div class="skill-card reveal">
-        <h3>GIS &amp; Cartography</h3>
+        <h3>Programming &amp; Data</h3>
         <div class="chips">
-          <span class="chip">ArcGIS Pro</span><span class="chip">ArcGIS Online</span><span class="chip">QGIS</span>
-          <span class="chip">ModelBuilder</span><span class="chip">Field Maps</span><span class="chip">Survey123</span>
-        </div>
-      </div>
-      <div class="skill-card reveal">
-        <h3>Programming</h3>
-        <div class="chips">
-          <span class="chip">Python (ArcPy)</span><span class="chip">Pandas / NumPy</span><span class="chip">Rasterio</span>
-          <span class="chip">R (Tidyverse)</span><span class="chip">SQL</span><span class="chip">Git / GitHub</span>
+          <span class="chip lead">Python (ArcPy)</span><span class="chip lead">PostGIS / Spatial SQL</span>
+          <span class="chip">Pandas / NumPy</span><span class="chip">Rasterio</span>
+          <span class="chip">R (Tidyverse, sf)</span><span class="chip">SQL</span><span class="chip">Git / GitHub</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <h3>Remote Sensing</h3>
         <div class="chips">
-          <span class="chip">Google Earth Engine</span><span class="chip">ERDAS IMAGINE</span><span class="chip">Landsat / Sentinel</span>
-          <span class="chip">Hyperspectral</span><span class="chip">NDVI / LST</span><span class="chip">Classification</span>
+          <span class="chip lead">Google Earth Engine</span>
+          <span class="chip">ERDAS IMAGINE</span><span class="chip">Landsat / Sentinel</span>
+          <span class="chip">NDVI / LST</span><span class="chip">Hyperspectral</span><span class="chip">Classification</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Web Mapping</h3>
+        <div class="chips">
+          <span class="chip lead">Leaflet</span>
+          <span class="chip">Chart.js</span><span class="chip">JavaScript</span>
+          <span class="chip">GeoJSON</span><span class="chip">HTML / CSS</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>GIS &amp; Cartography</h3>
+        <div class="chips">
+          <span class="chip lead">ArcGIS Pro</span>
+          <span class="chip">QGIS</span><span class="chip">ArcGIS Online</span>
+          <span class="chip">ModelBuilder</span><span class="chip">Field Maps</span><span class="chip">Survey123</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <h3>Surveying &amp; Field</h3>
         <div class="chips">
-          <span class="chip">GNSS / DGPS</span><span class="chip">UAV / Drone</span><span class="chip">Pix4D</span>
+          <span class="chip lead">GNSS / DGPS</span>
+          <span class="chip">UAV / Drone</span><span class="chip">Pix4D</span>
           <span class="chip">AutoCAD</span><span class="chip">Statistics / SPSS</span>
         </div>
       </div>
