@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Methodology &mdash; Austin Urban Heat Analysis | Nirajan Tripathi</title>
+<meta name="description" content="Full methodology for the Austin urban heat island analysis: data sources, satellite land surface temperature, zonal statistics, a PostGIS spatial join for census income, and an honest account of limitations." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4f1ea;--ink:#1c1c1c;--ink-soft:#4a4a48;--muted:#7a7872;
+    --cool:#2f6f6a;--cool-deep:#1d4b47;--hot:#c4452a;--hot-soft:#e07a4d;
+    --gold:#d8a24a;--line:#ddd7ca;--surface:#fbf9f4;
+    --shadow:0 16px 40px rgba(28,28,28,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:"JetBrains Mono",monospace;}
+  a{color:var(--cool-deep);}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:12px 22px;background:rgba(244,241,234,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .topbar .brand{font-family:"Fraunces",serif;font-weight:600;font-size:1rem;}
+  .topbar .brand span{color:var(--cool);}
+  .topbar a{font-size:.85rem;color:var(--ink-soft);text-decoration:none;font-weight:500;margin-left:18px;}
+  .topbar a:hover{color:var(--cool);}
+
+  .hero{max-width:760px;margin:0 auto;padding:130px 24px 40px;}
+  .hero .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--hot);margin-bottom:18px;}
+  .hero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.05;margin-bottom:18px;}
+  .hero p.lede{font-size:1.15rem;color:var(--ink-soft);}
+
+  .wrap{max-width:760px;margin:0 auto;padding:20px 24px 80px;}
+  .toc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:30px 0 50px;}
+  .toc h4{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+  .toc ol{margin-left:18px;color:var(--cool-deep);}
+  .toc li{margin-bottom:6px;}
+  .toc a{text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+
+  section.block{margin-bottom:52px;}
+  section.block h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.7rem;line-height:1.15;margin-bottom:8px;scroll-margin-top:80px;}
+  section.block .kicker{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hot);margin-bottom:8px;}
+  section.block p{margin-bottom:14px;color:var(--ink-soft);}
+  section.block ul{margin:0 0 14px 20px;color:var(--ink-soft);}
+  section.block li{margin-bottom:7px;}
+  section.block h3{font-family:"Inter",sans-serif;font-weight:700;font-size:1.05rem;margin:18px 0 8px;color:var(--ink);}
+  .pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.72rem;background:rgba(47,111,106,.1);color:var(--cool-deep);border:1px solid rgba(47,111,106,.25);border-radius:6px;padding:2px 8px;margin:2px 3px 2px 0;}
+  code{font-family:"JetBrains Mono",monospace;font-size:.86em;background:rgba(28,28,28,.06);padding:1px 6px;border-radius:5px;}
+  pre{background:#1f1e1c;color:#e9e5da;border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:.82rem;line-height:1.55;margin:14px 0;}
+  pre .c{color:#8f8a7d;}
+  pre .k{color:#e0a04a;}
+  pre .s{color:#9ec9a0;}
+  .note{border-left:3px solid var(--gold);background:var(--surface);padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0;font-size:.96rem;}
+  .note b{color:var(--ink);}
+  .limit{border-left:3px solid var(--hot);background:rgba(196,69,42,.05);padding:14px 18px;border-radius:0 10px 10px 0;margin:14px 0;}
+  .limit b{color:var(--hot);}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem;}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);}
+  th{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .footer{border-top:1px solid var(--line);padding:30px 24px 60px;max-width:760px;margin:0 auto;display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{padding:11px 20px;border-radius:999px;font-weight:600;font-size:.9rem;text-decoration:none;}
+  .btn-hot{background:var(--hot);color:#fff;}
+  .btn-ghost{border:1.5px solid var(--line);color:var(--ink);}
+  @media(max-width:640px){.hero{padding-top:110px;}pre{font-size:.76rem;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Nirajan&nbsp;<span>Tripathi</span></div>
+  <div>
+    <a href="./">&larr; Story map</a>
+    <a href="../../">All projects</a>
+  </div>
+</div>
+
+<div class="hero">
+  <p class="eyebrow">Methodology &middot; Austin Urban Heat</p>
+  <h1>How this analysis was built.</h1>
+  <p class="lede">A full, honest account of the pipeline behind the story map: the data, the satellite processing, the spatial database work, and the limitations. Written to be reproduced, and to be defended.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#overview">Overview &amp; tools</a></li>
+      <li><a href="#boundaries">Neighborhood boundaries</a></li>
+      <li><a href="#lst">Land surface temperature (Landsat / GEE)</a></li>
+      <li><a href="#landcover">Tree canopy &amp; impervious surface</a></li>
+      <li><a href="#zonal">Zonal statistics per neighborhood</a></li>
+      <li><a href="#income">Census income &amp; the PostGIS spatial join</a></li>
+      <li><a href="#analysis">Correlation analysis</a></li>
+      <li><a href="#limitations">Limitations &amp; honest caveats</a></li>
+      <li><a href="#repro">Reproducing this work</a></li>
+    </ol>
+  </div>
+
+  <section class="block" id="overview">
+    <div class="kicker">01</div>
+    <h2>Overview &amp; tools</h2>
+    <p>The goal was to measure, not assume, where Austin runs hottest in summer and to test how strongly that heat is tied to tree canopy, impervious surface, and household income, across all 65 of the city's neighborhood planning areas.</p>
+    <p>The pipeline spans four tools, each used where it is strongest:</p>
+    <p>
+      <span class="pill">Google Earth Engine</span> satellite compositing &amp; zonal stats
+      <span class="pill">PostGIS / PostgreSQL</span> spatial join for census income
+      <span class="pill">R (tidycensus, sf)</span> census data retrieval
+      <span class="pill">Leaflet + Chart.js</span> the web story map
+    </p>
+    <p>Using the right tool for each stage, rather than forcing everything through one, is itself a deliberate choice: Earth Engine for petabyte-scale imagery, a spatial database for the polygon-on-polygon join, R for clean census access, and vanilla web tech for a fast, dependency-light story.</p>
+  </section>
+
+  <section class="block" id="boundaries">
+    <div class="kicker">02</div>
+    <h2>Neighborhood boundaries</h2>
+    <p>Boundaries are the City of Austin's Neighborhood Planning Areas, pulled from the municipal open-data portal. The raw layer contained 95 records, because several multi-part neighborhoods are stored as separate polygons.</p>
+    <p>These were dissolved by neighborhood name into <b>65 unique areas</b>, so that each neighborhood is a single analytical unit. Central East Austin, for example, exists as two separate polygons in the source and was merged into one.</p>
+    <div class="note">Geometry was repaired with <code>st_make_valid()</code> before dissolving, because the source data contained a self-intersecting edge that strict spherical-geometry checks reject. A small detail, but the kind that silently breaks a spatial join if ignored.</div>
+  </section>
+
+  <section class="block" id="lst">
+    <div class="kicker">03</div>
+    <h2>Land surface temperature</h2>
+    <p>Surface temperature comes from the thermal band of <b>Landsat 8 and 9, Collection 2 Level-2</b>, processed in Google Earth Engine. The choice of land surface temperature (LST) rather than air temperature is deliberate: LST is what satellites measure directly, and it is the variable most tightly coupled to the physical surface, canopy and pavement, that this analysis is about.</p>
+    <h3>Compositing</h3>
+    <ul>
+      <li>All clear-sky scenes from <b>June&ndash;August, 2022&ndash;2024</b> (three summers, 19 scenes).</li>
+      <li>Clouds and shadows masked using the scene QA band.</li>
+      <li>The thermal band was scaled to degrees Celsius.</li>
+      <li>A <b>median</b> composite was taken, the per-pixel median across all scenes, giving a typical-summer surface that is robust to any single hot or cloudy day.</li>
+    </ul>
+    <div class="note">Compositing three summers is what makes the temperature value stable. Surface temperature swings wildly scene to scene with weather; the median across many scenes averages that noise out and leaves the persistent spatial pattern.</div>
+  </section>
+
+  <section class="block" id="landcover">
+    <div class="kicker">04</div>
+    <h2>Tree canopy &amp; impervious surface</h2>
+    <p>Both land-cover variables come from national products, sampled in Earth Engine:</p>
+    <ul>
+      <li><b>Tree canopy:</b> USFS / NLCD Tree Canopy Cover, averaged across 2022&ndash;2023 to match the LST window.</li>
+      <li><b>Impervious surface:</b> NLCD impervious layer (2021 release), the share of each pixel covered by roofs, roads, and pavement.</li>
+    </ul>
+    <div class="note">Canopy and impervious are <b>slow-changing structural variables</b>. Unlike temperature, they barely move year to year, so a recent single-year or two-year value is representative of the whole study window. This is why they did not need the multi-summer compositing that LST did, a point worth stating plainly rather than hiding the small date offset.</div>
+  </section>
+
+  <section class="block" id="zonal">
+    <div class="kicker">05</div>
+    <h2>Zonal statistics per neighborhood</h2>
+    <p>With three raster surfaces (temperature, canopy, impervious) and 65 neighborhood polygons, the next step was zonal statistics: reducing each raster to one value per neighborhood. Earth Engine's <code>reduceRegions</code> did this in a single pass.</p>
+    <ul>
+      <li><b>Temperature:</b> mean and standard deviation per neighborhood. The standard deviation is reported as a measure of how much surface temperature varies <i>within</i> a neighborhood, how much the single mean is smoothing over, not as an error bar.</li>
+      <li><b>Canopy &amp; impervious:</b> mean per neighborhood.</li>
+    </ul>
+    <p>The result was a clean 65-row table with measured values for every neighborhood and zero empty cells.</p>
+  </section>
+
+  <section class="block" id="income">
+    <div class="kicker">06</div>
+    <h2>Census income &amp; the PostGIS spatial join</h2>
+    <p>Income is the one variable that does not come from satellites, and it posed the most interesting spatial problem. Median household income is published by the U.S. Census at the <b>tract</b> level, but tracts do not line up with neighborhoods. Aggregating one to the other correctly is a genuine spatial-join task, and it was done in PostGIS.</p>
+
+    <h3>Retrieval</h3>
+    <p>Current income (ACS 2018&ndash;2022, table <code>B19013</code>) was pulled for all 290 Travis County tracts using R's <code>tidycensus</code>, with tract geometry attached, and written to the spatial database.</p>
+
+    <h3>The reprojection problem</h3>
+    <p>The census tracts arrived in <b>NAD83 (EPSG:4269)</b>; the neighborhoods were in <b>WGS84 (EPSG:4326)</b>. PostGIS refuses spatial operations across mismatched coordinate systems, correctly, so the tracts were transformed before the join:</p>
+<pre><span class="c">-- reproject tracts NAD83 -> WGS84 to match neighborhoods</span>
+<span class="k">UPDATE</span> income_tracts
+<span class="k">SET</span> geometry = ST_Transform(geometry, 4326);
+<span class="k">SELECT</span> UpdateGeometrySRID(<span class="s">'income_tracts'</span>, <span class="s">'geometry'</span>, 4326);</pre>
+
+    <h3>The area-weighted join</h3>
+    <p>A neighborhood overlaps several tracts, partially. So each tract's income was weighted by <b>how much of its area falls inside the neighborhood</b>, then averaged. That is the honest way to move a value across mismatched boundaries:</p>
+<pre><span class="k">SELECT</span>
+  n.name,
+  <span class="k">SUM</span>(t.median_income * ST_Area(ST_Intersection(n.geometry, t.geometry)))
+    / NULLIF(<span class="k">SUM</span>(ST_Area(ST_Intersection(n.geometry, t.geometry))), 0)
+    <span class="k">AS</span> income_weighted
+<span class="k">FROM</span> neighborhoods n
+<span class="k">JOIN</span> income_tracts t
+  <span class="k">ON</span> ST_Intersects(n.geometry, t.geometry)
+<span class="k">WHERE</span> t.median_income <span class="k">IS NOT NULL</span>
+<span class="k">GROUP BY</span> n.name;</pre>
+    <p>In words: join each neighborhood to every tract it touches, compute the overlapping sliver of geometry, use that sliver's area as the weight, and take the area-weighted mean income. Tracts with no reported income are dropped so they cannot distort the average.</p>
+    <div class="note">This single query is the technical heart of the income variable: a spatial join, an area weighting, a coordinate transform, and null handling, the everyday tools of real spatial-data work.</div>
+  </section>
+
+  <section class="block" id="analysis">
+    <div class="kicker">07</div>
+    <h2>Correlation analysis</h2>
+    <p>With all four variables on the same 65 neighborhoods, Pearson correlations were computed against surface temperature across the full set, not the six featured neighborhoods, to avoid selection bias:</p>
+    <table>
+      <tr><th>Relationship</th><th>r</th><th>Strength</th></tr>
+      <tr><td>Tree canopy &harr; heat</td><td>&minus;0.87</td><td>Strong negative</td></tr>
+      <tr><td>Impervious surface &harr; heat</td><td>+0.83</td><td>Strong positive</td></tr>
+      <tr><td>Median income &harr; heat</td><td>&minus;0.51</td><td>Moderate negative</td></tr>
+    </table>
+    <p>Computing the correlations across all 65 neighborhoods is what makes them defensible. The six neighborhoods in the story illustrate the pattern; the statistics describe the whole city.</p>
+  </section>
+
+  <section class="block" id="limitations">
+    <div class="kicker">08</div>
+    <h2>Limitations &amp; honest caveats</h2>
+    <p>No analysis is free of these, and naming them is part of doing the work properly.</p>
+    <div class="limit"><b>Surface, not air, temperature.</b> All temperatures are land surface temperature from satellite thermal imagery, which on a summer afternoon runs far hotter than the air a person feels. The values are correct for what they measure; they should never be read as air temperature.</div>
+    <div class="limit"><b>Canopy and pavement are correlated.</b> Leafy neighborhoods tend to be less paved, so the two strongest predictors overlap. The analysis describes a coherent pattern (green-and-cool vs. paved-and-hot); it does not claim canopy and pavement are independent causes.</div>
+    <div class="limit"><b>Income is moderate, with real exceptions.</b> The income&ndash;heat link (r = &minus;0.51) is genuine but far weaker than the physical drivers, and individual neighborhoods break the trend, Central East Austin is hot but gentrifying, Zilker is cool but affluent. The story is framed to reflect this rather than overclaim an equity narrative.</div>
+    <div class="limit"><b>Student-neighborhood artifact.</b> A few areas near the university (West University, UT) report artificially low census income because of student households, which pulls on the citywide income correlation. This is a known property of ACS data at the tract level.</div>
+    <div class="limit"><b>Date offset.</b> LST spans 2022&ndash;2024; canopy is 2022&ndash;2023 and impervious is 2021. Because land cover changes slowly, this offset is immaterial, but it is disclosed rather than hidden.</div>
+  </section>
+
+  <section class="block" id="repro">
+    <div class="kicker">09</div>
+    <h2>Reproducing this work</h2>
+    <p>Every stage is scripted and available, the Earth Engine code, the R census pull, and the PostGIS SQL, in the project repository. The pipeline runs end to end from public data: City of Austin boundaries, public Landsat and NLCD collections in Earth Engine, and Census ACS via the free API.</p>
+    <p>The full code, with the exact collection IDs, parameters, and queries, lives on GitHub alongside this project.</p>
+  </section>
+
+</div>
+
+<div class="footer">
+  <a class="btn btn-hot" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/austin-heat-storymap" target="_blank" rel="noopener">View code on GitHub &rarr;</a>
+  <a class="btn btn-ghost" href="./">&larr; Back to the story map</a>
+</div>
+
+</body>
+</html>
