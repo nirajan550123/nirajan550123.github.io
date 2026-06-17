@@ -1,87 +1,97 @@
-# The Heat Beneath the City — Austin Urban Heat Island Story Map
+# The Heat Beneath the City — Austin Urban Heat Island Analysis
 
-An **interactive scrollytelling web map** of urban heat in Austin, Texas. As the
-reader scrolls, a sticky Leaflet map flies between neighborhoods and recolors to
-tell a five-part story: where the city is hottest, how tree canopy cools it, how
-impervious surfaces heat it, and how that burden lines up with income.
+An interactive scrollytelling web map of summer land surface temperature across
+Austin, Texas, and its relationship to tree canopy, impervious surface, and
+household income. Built on measured satellite and census data across all 65 of
+the city's neighborhood planning areas.
 
 **Live demo:** https://nirajan550123.github.io/projects/austin-heat-storymap/
+**Methodology:** https://nirajan550123.github.io/projects/austin-heat-storymap/methodology.html
 
 ![Story map preview](preview.jpg)
 
-## What it does
-- A **sticky full-screen map** stays in view while narrative "steps" scroll past.
-- Each step **flies the map** to a new extent and **recolors the neighborhoods**
-  by a different variable (surface temperature → tree canopy → impervious surface
-  → median income).
-- Every neighborhood is **clickable** at any time, with a popup showing its
-  surface temperature, canopy %, impervious %, and median income.
-- A live **legend** updates with each variable, and key **statistics**
-  (hottest neighborhood, canopy–heat correlation) are computed from the data
-  in-browser.
+## Overview
 
-## Built with
-Vanilla **JavaScript** + **Leaflet** (no framework), **GeoJSON**, CARTO basemap
-tiles, and the IntersectionObserver API for scroll-driven transitions. The whole
-experience is one self-contained HTML file plus a GeoJSON data file.
+As the reader scrolls, a sticky Leaflet map recolors the neighborhoods through
+four variables — land surface temperature, tree canopy, impervious surface, and
+median income — while the narrative moves from where Austin runs hottest, to why
+(canopy and pavement), to who the heat falls on (income), to what can be done.
+Statistical scatter plots appear alongside the relevant sections.
 
-## The story
-1. **The city** — Austin's neighborhoods, colored by summer land surface temperature.
-2. **The hotspots** — the urban core and east side run hottest.
-3. **The shade** — tree canopy cover; the coolest areas are the leafiest.
-4. **The pavement** — impervious surface; the hottest areas are the most paved.
-5. **Who feels it** — median income; heat exposure tracks with lower-income areas.
+The analysis is built from measured data:
 
-## ⚠️ Data note (read this)
-The version in this repo ships with **realistic, representative placeholder data**
-for 16 Austin neighborhoods so the experience is fully functional. The spatial
-patterns (hotter east/core, cooler leafy west, canopy–heat inverse relationship)
-reflect documented urban-heat findings, but the exact per-neighborhood numbers are
-modeled, not measured. **Swapping in real published data is a documented, one-file
-change** — see below.
+| Variable | Source | Processing |
+|----------|--------|------------|
+| Land surface temperature | Landsat 8/9 C2 L2 thermal band | Median of clear-sky summer scenes (Jun–Aug 2022–2024), Google Earth Engine |
+| Tree canopy | NLCD / USFS Tree Canopy Cover | Zonal mean per neighborhood |
+| Impervious surface | NLCD impervious layer | Zonal mean per neighborhood |
+| Median income | U.S. Census ACS 2018–2022 (B19013) | Area-weighted from tracts to neighborhoods in PostGIS |
+| Boundaries | City of Austin Neighborhood Planning Areas | Dissolved by name to 65 areas |
 
-## Replacing with real Austin data
-The map reads a single GeoJSON file (`austin_heat.geojson`). To make it fully
-authoritative, replace that file with real data carrying the same property names.
+## Key findings
 
-**1. Neighborhood boundaries** — City of Austin open data:
-   https://data.austintexas.gov → "Boundaries: City of Austin Neighborhoods"
-   (export as GeoJSON).
+Across all 65 neighborhoods (Pearson correlation against land surface temperature):
 
-**2. Land surface temperature** — derive from a summer **Landsat 8/9** thermal
-   band (Band 10) scene over Austin in Google Earth Engine or ArcGIS Pro, convert
-   to °C, and compute the **zonal mean per neighborhood** (Zonal Statistics).
-   This is the same LST workflow from my NDVI–LST project.
+- **Tree canopy:** r = −0.87 (strong negative)
+- **Impervious surface:** r = +0.83 (strong positive)
+- **Median income:** r = −0.51 (moderate negative)
 
-**3. Tree canopy & impervious surface** — **NLCD** (mrlc.gov) tree-canopy and
-   impervious layers; zonal mean per neighborhood.
+Heat tracks the physical landscape — canopy and pavement — far more tightly than
+it tracks income.
 
-**4. Median household income** — U.S. Census **ACS** table B19013 at the tract
-   level, area-weighted to neighborhoods (or use Census place/tract GeoJSON directly).
+## Pipeline
 
-**5. Join** all four into the neighborhood GeoJSON so each feature's `properties`
-   has exactly these keys:
-
-```json
-{
-  "name": "East Austin",
-  "lst_c": 38.4, "lst_f": 101.1,
-  "canopy_pct": 11.0,
-  "impervious_pct": 73.0,
-  "median_income_k": 44
-}
+```
+01_create_boundary_asset.js   GEE: build neighborhood asset, dissolve to 65
+02_heat_analysis.js           GEE: LST composite, NLCD zonal stats, correlations, CSV export
+03_census_income.R            R:  pull ACS tract income -> PostGIS
+04_neighborhoods_to_postgis.R R:  dissolve neighborhoods -> PostGIS
+05_income_spatial_join.sql    PostGIS: SRID transform + area-weighted income join
+index.html                    Leaflet + Chart.js scrollytelling map
+methodology.html              Full methodology write-up
 ```
 
-Save it as `austin_heat.geojson`, commit, and the map updates automatically — no
-other code changes needed.
+Stages run in order. Earth Engine produces the temperature, canopy, and
+impervious statistics; R and PostGIS produce the income values; the results are
+merged into `austin_heat.geojson`, which the web map reads.
+
+## Built with
+
+- **Google Earth Engine** (JavaScript API) — satellite compositing and zonal statistics
+- **PostgreSQL + PostGIS** — spatial database and the area-weighted income join
+- **R** (`tidycensus`, `sf`, `RPostgres`) — census data retrieval and loading
+- **Leaflet** — the interactive map
+- **Chart.js** — the statistical scatter plots
+- Vanilla JavaScript, GeoJSON, CARTO basemap tiles
+
+## Running it
+
+The web map (`index.html` + `austin_heat.geojson` + `methodology.html`) is static;
+open `index.html` or serve the folder.
+
+To reproduce the data pipeline:
+
+1. Run `01` and `02` in the Google Earth Engine Code Editor; export the stats CSV.
+2. Install PostgreSQL + PostGIS; create the `austin_heat` database with the
+   PostGIS extension.
+3. Set your database password as an environment variable (`PGPASSWORD`) and your
+   Census API key in the R script. Run `03` and `04` to load PostGIS, then `05`
+   for the spatial join.
+4. Merge the Earth Engine stats and the income CSV into `austin_heat.geojson`.
+
+Credentials (database password, API key) are read from environment variables and
+are not stored in the code.
 
 ## Skills demonstrated
-Interactive **web mapping (Leaflet, JavaScript)** · **scrollytelling / data
-storytelling** · GeoJSON authoring · zonal statistics &
-multi-source spatial joins · remote sensing (Landsat LST, NLCD) · framing a
-spatial-equity narrative for a general audience.
+
+Remote sensing and Google Earth Engine (Landsat LST compositing, NLCD zonal
+statistics) · spatial SQL in PostGIS (coordinate reprojection, area-weighted
+spatial join) · census data retrieval and integration in R · interactive web
+mapping and data visualization (Leaflet, Chart.js) · scrollytelling for a general
+audience.
 
 ## Author
+
 **Nirajan Tripathi** — M.S. Geography, Texas State University
 [Portfolio](https://nirajan550123.github.io/) ·
 [LinkedIn](https://www.linkedin.com/in/nirajan-tripathi-5434a8308/) ·
