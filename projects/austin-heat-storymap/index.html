@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The Heat Beneath the City — Austin's Urban Heat Islands | Nirajan Tripathi</title>
+<title>The Heat Beneath the City &mdash; Austin's Urban Heat Islands | Nirajan Tripathi</title>
 <meta name="description" content="An interactive scrollytelling map of Austin's urban heat islands: where the city runs hottest, and how tree canopy and impervious surfaces shape who feels the heat." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,12 +12,8 @@
 <style>
   :root{
     --paper:#f4f1ea;--ink:#1c1c1c;--ink-soft:#4a4a48;--muted:#7a7872;
-    --cool:#2f6f6a;        /* tree / cool */
-    --cool-deep:#1d4b47;
-    --hot:#c4452a;         /* heat */
-    --hot-soft:#e07a4d;
-    --gold:#d8a24a;
-    --line:#ddd7ca;--surface:#fbf9f4;
+    --cool:#2f6f6a;--cool-deep:#1d4b47;--hot:#c4452a;--hot-soft:#e07a4d;
+    --gold:#d8a24a;--line:#ddd7ca;--surface:#fbf9f4;
     --shadow:0 16px 40px rgba(28,28,28,.16);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -25,30 +21,24 @@
   body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased;}
   .mono{font-family:"JetBrains Mono",monospace;}
   a{color:var(--cool-deep);}
-
-  /* top bar */
   .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:12px 22px;background:rgba(244,241,234,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
   .topbar .brand{font-family:"Fraunces",serif;font-weight:600;font-size:1rem;}
   .topbar .brand span{color:var(--cool);}
   .topbar a{font-size:.85rem;color:var(--ink-soft);text-decoration:none;font-weight:500;}
   .topbar a:hover{color:var(--cool);}
-
-  /* intro hero */
   .intro{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:90px 24px 60px;position:relative;overflow:hidden;}
   .intro::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%, rgba(196,69,42,.16), transparent 60%);z-index:0;}
   .intro .eyebrow{position:relative;z-index:1;font-family:"JetBrains Mono",monospace;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--hot);margin-bottom:24px;}
   .intro h1{position:relative;z-index:1;font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.6rem,7vw,5rem);line-height:1.02;letter-spacing:-.01em;max-width:16ch;margin-bottom:24px;}
   .intro h1 em{font-style:italic;color:var(--hot);}
-  .intro p.lede{position:relative;z-index:1;font-size:1.18rem;color:var(--ink-soft);max-width:54ch;margin-bottom:36px;}
+  .intro p.lede{position:relative;z-index:1;font-size:1.18rem;color:var(--ink-soft);max-width:56ch;margin-bottom:18px;}
+  .intro p.subnote{position:relative;z-index:1;font-size:.92rem;color:var(--muted);max-width:54ch;margin-bottom:36px;}
   .scroll-cue{position:relative;z-index:1;font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px;}
   .scroll-cue .arrow{width:22px;height:22px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);animation:bounce 1.8s infinite;}
   @keyframes bounce{0%,100%{transform:rotate(45deg) translate(0,0);}50%{transform:rotate(45deg) translate(5px,5px);}}
-
-  /* scrolly layout: sticky map on one side, steps scroll on the other */
   .scrolly{position:relative;}
   .map-sticky{position:sticky;top:0;height:100vh;width:100%;z-index:1;}
   #map{position:absolute;inset:0;height:100vh;width:100%;background:#dfe7e6;}
-
   .steps{position:relative;z-index:2;max-width:480px;margin:0 auto;padding:0 20px;}
   .step{min-height:88vh;display:flex;align-items:center;}
   .step-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px 28px;box-shadow:var(--shadow);opacity:.35;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
@@ -60,35 +50,23 @@
   .step-card .si b{font-family:"Fraunces",serif;font-size:1.5rem;color:var(--cool-deep);display:block;line-height:1;}
   .step-card .si.hot b{color:var(--hot);}
   .step-card .si span{font-size:.76rem;color:var(--muted);}
-
-  /* legend */
   .legend{position:absolute;bottom:24px;right:18px;z-index:500;background:rgba(251,249,244,.94);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.76rem;box-shadow:var(--shadow);max-width:200px;}
   .legend .ltitle{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
   .legend .lbar{height:10px;border-radius:5px;background:linear-gradient(90deg,#2c7fb8,#7fcdbb,#ffffbf,#fd8d3c,#bd0026);margin-bottom:5px;}
   .legend .lrow{display:flex;justify-content:space-between;color:var(--ink-soft);}
-  .legend.hidden{display:none;}
-
-  /* conclusion */
   .outro{position:relative;z-index:3;background:var(--ink);color:var(--paper);padding:80px 24px;text-align:center;}
   .outro h2{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);max-width:20ch;margin:0 auto 18px;}
-  .outro p{color:rgba(244,241,234,.8);max-width:56ch;margin:0 auto 14px;font-size:1.05rem;}
-  .outro .methods{margin-top:30px;font-size:.85rem;color:rgba(244,241,234,.55);max-width:60ch;margin-left:auto;margin-right:auto;}
+  .outro p{color:rgba(244,241,234,.8);max-width:58ch;margin:0 auto 14px;font-size:1.05rem;}
+  .outro .methods{margin-top:30px;font-size:.85rem;color:rgba(244,241,234,.55);max-width:64ch;margin-left:auto;margin-right:auto;}
   .outro .btns{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
   .outro .btn{padding:12px 20px;border-radius:999px;font-weight:600;font-size:.92rem;text-decoration:none;}
   .btn-hot{background:var(--hot);color:#fff;}
   .btn-ghost{border:1.5px solid rgba(244,241,234,.4);color:var(--paper);}
-
-  /* leaflet popup styling */
   .leaflet-popup-content-wrapper{border-radius:12px;}
   .nei-popup h3{font-family:"Fraunces",serif;font-size:1.1rem;margin-bottom:6px;color:var(--ink);}
   .nei-popup .row{display:flex;justify-content:space-between;gap:18px;font-size:.85rem;color:var(--ink-soft);padding:2px 0;}
   .nei-popup .row b{color:var(--ink);}
-
-  @media(max-width:760px){
-    .step-card{padding:22px 20px;}
-    .step-card h2{font-size:1.4rem;}
-    .legend{bottom:14px;right:12px;max-width:160px;}
-  }
+  @media(max-width:760px){.step-card{padding:22px 20px;}.step-card h2{font-size:1.4rem;}.legend{bottom:14px;right:12px;max-width:160px;}}
   @media(prefers-reduced-motion:reduce){.scroll-cue .arrow{animation:none;}}
 </style>
 </head>
@@ -96,18 +74,17 @@
 
 <div class="topbar">
   <div class="brand">Nirajan&nbsp;<span>Tripathi</span></div>
-  <a href="../../">← All projects</a>
+  <a href="../../">&larr; All projects</a>
 </div>
 
-<!-- INTRO -->
 <section class="intro">
-  <p class="eyebrow">Interactive Story Map · Austin, Texas</p>
+  <p class="eyebrow">Interactive Story Map &middot; Austin, Texas</p>
   <h1>The heat beneath the <em>city</em>.</h1>
-  <p class="lede">On a summer afternoon, two Austin neighborhoods minutes apart can differ by more than 10°F. This map shows where the city runs hottest — and why the difference isn't random.</p>
+  <p class="lede">On a summer afternoon, the ground in some Austin neighborhoods runs nearly 10&deg;F hotter than in others just minutes away. This map shows where the city's surface burns hottest &mdash; and why the difference isn't random.</p>
+  <p class="subnote">The values here are <strong>land surface temperature</strong> from satellite thermal imagery &mdash; the heat of roofs, roads, and ground, which on a summer afternoon runs far hotter than the air. That surface heat is what drives the urban heat island.</p>
   <div class="scroll-cue"><span>Scroll to explore</span><span class="arrow"></span></div>
 </section>
 
-<!-- SCROLLYTELLING -->
 <div class="scrolly">
   <div class="map-sticky">
     <div id="map"></div>
@@ -121,102 +98,96 @@
   <div class="steps">
     <div class="step" data-step="0">
       <div class="step-card">
-        <div class="step-num">01 · The city</div>
-        <h2>This is Austin in summer</h2>
-        <p>Every neighborhood here was mapped for its average land surface temperature on a hot afternoon, using satellite thermal imagery. Cooler blues, hotter reds.</p>
-        <p>Pan and click any neighborhood at any point to see its numbers.</p>
+        <div class="step-num">01 &middot; The city</div>
+        <h2>Six neighborhoods, one summer</h2>
+        <p>Each neighborhood here is shaded by its average <strong>land surface temperature</strong> across three recent summers, measured from Landsat thermal imagery. Cooler blues, hotter reds.</p>
+        <p>Click any neighborhood at any point to see its numbers.</p>
       </div>
     </div>
 
     <div class="step" data-step="1">
       <div class="step-card">
-        <div class="step-num">02 · The hotspots</div>
+        <div class="step-num">02 &middot; The hotspots</div>
         <h2>The east and core run hottest</h2>
-        <p>The hottest neighborhoods cluster in the urban core and east side — dense, paved, and historically industrial. Here, summer surface temperatures push well past 100°F.</p>
+        <p>The hottest neighborhoods sit in the urban core and east side &mdash; dense, paved, historically industrial. Their summer surface temperatures climb well past 115&deg;F.</p>
         <div class="stat-inline">
-          <div class="si hot"><b id="s2-max">—</b><span>hottest neighborhood (°F)</span></div>
-          <div class="si"><b id="s2-gap">—</b><span>°F hotter than the coolest</span></div>
+          <div class="si hot"><b id="s2-max">&mdash;</b><span>hottest neighborhood (&deg;F surface)</span></div>
+          <div class="si"><b id="s2-gap">&mdash;</b><span>&deg;F hotter than the coolest</span></div>
         </div>
       </div>
     </div>
 
     <div class="step" data-step="2">
       <div class="step-card">
-        <div class="step-num">03 · The shade</div>
-        <h2>Now look at tree canopy</h2>
-        <p>Switch the map to tree-canopy cover. The pattern almost inverts: the coolest neighborhoods are the leafiest, often in the hilly west. Shade is doing real work.</p>
+        <div class="step-num">03 &middot; The shade</div>
+        <h2>Tree canopy is the clearest signal</h2>
+        <p>Switch the map to tree-canopy cover and the pattern nearly inverts. Across all 65 Austin neighborhoods, more canopy means lower surface heat &mdash; a strong, consistent relationship. Leafy Barton Hills is the coolest neighborhood here, and the greenest.</p>
         <div class="stat-inline">
-          <div class="si"><b id="s3-corr">—</b><span>canopy ↔ heat correlation</span></div>
+          <div class="si"><b>r = &minus;0.87</b><span>canopy &harr; heat, citywide (n = 65)</span></div>
         </div>
       </div>
     </div>
 
     <div class="step" data-step="3">
       <div class="step-card">
-        <div class="step-num">04 · The pavement</div>
+        <div class="step-num">04 &middot; The pavement</div>
         <h2>And the pavement</h2>
-        <p>Impervious surfaces — roofs, roads, parking — absorb and re-radiate heat. The hottest neighborhoods are the most paved. Less canopy plus more concrete compounds the effect.</p>
+        <p>Impervious surfaces &mdash; roofs, roads, parking lots &mdash; absorb and re-radiate heat. The most paved neighborhoods are the hottest. Less canopy and more concrete compound each other.</p>
         <div class="stat-inline">
-          <div class="si hot"><b id="s4-imp">—</b><span>impervious in hottest areas</span></div>
+          <div class="si hot"><b>r = +0.83</b><span>pavement &harr; heat, citywide (n = 65)</span></div>
         </div>
       </div>
     </div>
 
     <div class="step" data-step="4">
       <div class="step-card">
-        <div class="step-num">05 · Who feels it</div>
-        <h2>Heat isn't shared equally</h2>
-        <p>Overlaying median income shows the hottest, least-shaded neighborhoods often have the lowest incomes — the communities least able to offset heat with cooling costs. Urban heat is an equity issue, not just a climate one.</p>
+        <div class="step-num">05 &middot; Who feels it</div>
+        <h2>Income matters &mdash; but less than the landscape</h2>
+        <p>Heat in Austin is shaped first by the physical landscape. Income plays a real but weaker role: lower-income neighborhoods tend to run hotter (r = &minus;0.51 citywide), though there are clear exceptions. Central East Austin is among the hottest in the city despite rising incomes from gentrification, while leafy, affluent Zilker stays cooler. The clearest lever for cooling a neighborhood isn't its wealth &mdash; it's its trees and its pavement.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- OUTRO -->
 <section class="outro">
   <h2>Cooling a city starts with knowing where it burns.</h2>
-  <p>This map turns satellite thermal data, tree-canopy cover, and demographic data into one question a planner can act on: where would shade do the most good?</p>
-  <p class="methods">Built with Leaflet and vanilla JavaScript. Land surface temperature derived from Landsat thermal bands; tree canopy and impervious surface from NLCD; neighborhood boundaries and income from the City of Austin open data portal and U.S. Census. Methodology and code on GitHub.</p>
+  <p>This map turns satellite thermal data, tree-canopy and impervious-surface cover, and census income into one question a planner can act on: where would shade do the most good?</p>
+  <p class="methods">Land surface temperature: median of clear-sky Landsat 8 &amp; 9 summer scenes (June&ndash;August, 2022&ndash;2024), Google Earth Engine. Tree canopy and impervious surface: NLCD / USFS, zonal means per neighborhood. Boundaries: City of Austin Neighborhood Planning Areas. Income: U.S. Census ACS 2018&ndash;2022 (B19013), area-weighted from tracts to neighborhoods via a PostGIS spatial join. Correlations computed across all 65 planning areas. Full methodology and code on GitHub.</p>
   <div class="btns">
-    <a class="btn btn-hot" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/austin-heat-storymap" target="_blank" rel="noopener">View code on GitHub →</a>
+    <a class="btn btn-hot" href="https://github.com/nirajan550123/nirajan550123.github.io/tree/main/projects/austin-heat-storymap" target="_blank" rel="noopener">View code on GitHub &rarr;</a>
     <a class="btn btn-ghost" href="../../">Back to portfolio</a>
   </div>
 </section>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  const DATA = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"name": "Downtown", "lst_c": 39.2, "lst_f": 102.6, "canopy_pct": 6.3, "impervious_pct": 66.5, "median_income_k": 34}, "geometry": {"type": "Polygon", "coordinates": [[[-97.76310823028669, 30.25041359589938], [-97.71786256345835, 30.245695510661033], [-97.7216246254425, 30.281238377755503], [-97.76725089620157, 30.285042842304826], [-97.76878771224253, 30.24659070120549]]]}}, {"type": "Feature", "properties": {"name": "East Austin", "lst_c": 39.2, "lst_f": 102.6, "canopy_pct": 11.4, "impervious_pct": 73.8, "median_income_k": 33}, "geometry": {"type": "Polygon", "coordinates": [[[-97.73452455634659, 30.241051990077427], [-97.69055344598533, 30.246585115159906], [-97.69427799586785, 30.278243835998495], [-97.73334229542236, 30.2796927563609], [-97.74025803325297, 30.241773731014668]]]}}, {"type": "Feature", "properties": {"name": "Montopolis", "lst_c": 40.2, "lst_f": 104.4, "canopy_pct": 12.0, "impervious_pct": 76.6, "median_income_k": 47}, "geometry": {"type": "Polygon", "coordinates": [[[-97.71871017526837, 30.213784926111835], [-97.67597172498233, 30.210416325050186], [-97.67236476268597, 30.246948158018917], [-97.71610634479752, 30.246618817162055], [-97.71736342531028, 30.206366595069245]]]}}, {"type": "Feature", "properties": {"name": "Riverside", "lst_c": 37.1, "lst_f": 98.8, "canopy_pct": 8.9, "impervious_pct": 66.7, "median_income_k": 29}, "geometry": {"type": "Polygon", "coordinates": [[[-97.75119198856473, 30.21522378882488], [-97.70291452444587, 30.21591865743176], [-97.70503855226306, 30.25067605624617], [-97.74986417742362, 30.2564932367017], [-97.74681571691804, 30.217873048045334]]]}}, {"type": "Feature", "properties": {"name": "St. Johns", "lst_c": 36.9, "lst_f": 98.4, "canopy_pct": 13.3, "impervious_pct": 69.6, "median_income_k": 31}, "geometry": {"type": "Polygon", "coordinates": [[[-97.71808381319491, 30.31311999807883], [-97.6775444020498, 30.313476914007918], [-97.67525718463848, 30.35020799929237], [-97.72416761542429, 30.344256801951232], [-97.72347637561553, 30.310141927007802]]]}}, {"type": "Feature", "properties": {"name": "Rundberg", "lst_c": 37.1, "lst_f": 98.8, "canopy_pct": 15.4, "impervious_pct": 68.3, "median_income_k": 49}, "geometry": {"type": "Polygon", "coordinates": [[[-97.72075649067764, 30.336165055208486], [-97.67468361928208, 30.3366708148207], [-97.67988095866801, 30.37097302006155], [-97.7215090549267, 30.371101932868186], [-97.72132331207823, 30.34018258306882]]]}}, {"type": "Feature", "properties": {"name": "Pflugerville Edge", "lst_c": 34.6, "lst_f": 94.3, "canopy_pct": 17.9, "impervious_pct": 53.7, "median_income_k": 79}, "geometry": {"type": "Polygon", "coordinates": [[[-97.68527272470261, 30.378376931003395], [-97.64112280695718, 30.383019568333623], [-97.6356633650851, 30.417377279734396], [-97.68549177835078, 30.41705295429205], [-97.67803102895809, 30.38223291476079]]]}}, {"type": "Feature", "properties": {"name": "Mueller", "lst_c": 36.9, "lst_f": 98.4, "canopy_pct": 26.2, "impervious_pct": 57.3, "median_income_k": 45}, "geometry": {"type": "Polygon", "coordinates": [[[-97.72554631704779, 30.280295762643266], [-97.68486539848037, 30.281127694388637], [-97.68610758261123, 30.315478122005352], [-97.72737021034936, 30.319630527420166], [-97.72399317647698, 30.278107112406005]]]}}, {"type": "Feature", "properties": {"name": "Hyde Park", "lst_c": 35.0, "lst_f": 95.0, "canopy_pct": 17.3, "impervious_pct": 59.8, "median_income_k": 76}, "geometry": {"type": "Polygon", "coordinates": [[[-97.75361244166842, 30.288111595958927], [-97.7071282383085, 30.284222714148395], [-97.7058999135994, 30.323315032240956], [-97.74977098817097, 30.323242829377563], [-97.75599542483099, 30.285593248456035]]]}}, {"type": "Feature", "properties": {"name": "South Congress", "lst_c": 33.1, "lst_f": 91.6, "canopy_pct": 27.1, "impervious_pct": 59.1, "median_income_k": 75}, "geometry": {"type": "Polygon", "coordinates": [[[-97.77453988699679, 30.223463401331955], [-97.72597592320636, 30.230575595562385], [-97.73231477238346, 30.262887923706536], [-97.77644629985227, 30.26508481732206], [-97.77087332456556, 30.224027131716]]]}}, {"type": "Feature", "properties": {"name": "Zilker", "lst_c": 30.4, "lst_f": 86.7, "canopy_pct": 42.1, "impervious_pct": 39.4, "median_income_k": 92}, "geometry": {"type": "Polygon", "coordinates": [[[-97.7926148964784, 30.244694385643538], [-97.74768563128976, 30.24883944855272], [-97.75039079149288, 30.281493730330407], [-97.78803880514671, 30.284199024461117], [-97.79249519932868, 30.247140606728284]]]}}, {"type": "Feature", "properties": {"name": "Tarrytown", "lst_c": 28.6, "lst_f": 83.5, "canopy_pct": 34.9, "impervious_pct": 33.8, "median_income_k": 96}, "geometry": {"type": "Polygon", "coordinates": [[[-97.79915908213924, 30.279761739075614], [-97.75643205531193, 30.28304882365816], [-97.75516846572951, 30.32124336010405], [-97.79412291679797, 30.31456685879911], [-97.79909596292507, 30.283351822226372]]]}}, {"type": "Feature", "properties": {"name": "Barton Hills", "lst_c": 29.1, "lst_f": 84.4, "canopy_pct": 32.9, "impervious_pct": 33.4, "median_income_k": 135}, "geometry": {"type": "Polygon", "coordinates": [[[-97.81221863178952, 30.239276955394324], [-97.76554002401787, 30.234523279314892], [-97.77122455348616, 30.27244840945925], [-97.81261137101585, 30.272736197344294], [-97.81016739320434, 30.238386916378346]]]}}, {"type": "Feature", "properties": {"name": "Westlake", "lst_c": 32.9, "lst_f": 91.2, "canopy_pct": 32.2, "impervious_pct": 28.8, "median_income_k": 101}, "geometry": {"type": "Polygon", "coordinates": [[[-97.82910661970918, 30.26998925067136], [-97.79047832873248, 30.271588908382665], [-97.78862494688133, 30.306228361157334], [-97.83400154841695, 30.311386124794208], [-97.83245495403958, 30.274890792838093]]]}}, {"type": "Feature", "properties": {"name": "Northwest Hills", "lst_c": 30.8, "lst_f": 87.4, "canopy_pct": 31.1, "impervious_pct": 38.7, "median_income_k": 139}, "geometry": {"type": "Polygon", "coordinates": [[[-97.78824802994173, 30.355410935864064], [-97.74521043412467, 30.34933048888483], [-97.74811487099639, 30.385709978393596], [-97.79279167765961, 30.38446908319978], [-97.79296821504819, 30.355882470750238]]]}}, {"type": "Feature", "properties": {"name": "Circle C", "lst_c": 29.3, "lst_f": 84.7, "canopy_pct": 47.2, "impervious_pct": 30.5, "median_income_k": 104}, "geometry": {"type": "Polygon", "coordinates": [[[-97.89834145887312, 30.175963381515942], [-97.85755385341274, 30.173747266202373], [-97.8607616253978, 30.20637366260396], [-97.89825032508024, 30.208633442326533], [-97.90166243838901, 30.173983804483033]]]}}]};
+  const DATA = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"name": "Central East Austin", "lst_c": 50.0, "lst_f": 122.0, "canopy_pct": 13.5, "impervious_pct": 52.6, "median_income_k": 86}, "geometry": {"type": "MultiPolygon", "coordinates": [[[[-97.7151997, 30.2611727], [-97.7141722, 30.2620263], [-97.7133756, 30.2632422], [-97.7133497, 30.2634094], [-97.7132489, 30.2640592], [-97.7132515, 30.2644305], [-97.7133416, 30.2646992], [-97.7134714, 30.2650841], [-97.7135469, 30.2653084], [-97.7136604, 30.2654758], [-97.7138447, 30.2657463], [-97.7140886, 30.2661006], [-97.7147445, 30.2667411], [-97.7152508, 30.2674665], [-97.7154257, 30.2677341], [-97.7166665, 30.2700615], [-97.7170867, 30.2700179], [-97.7176284, 30.2699382], [-97.7180498, 30.2698808], [-97.7190384, 30.2697057], [-97.7199716, 30.2695569], [-97.7209931, 30.2694237], [-97.7221233, 30.2691965], [-97.7231163, 30.2690627], [-97.7237176, 30.2689704], [-97.7243377, 30.2688896], [-97.7249516, 30.2687728], [-97.725649, 30.2686742], [-97.7269239, 30.2683949], [-97.7263508, 30.2681467], [-97.7253809, 30.2678079], [-97.7248879, 30.2676411], [-97.724508, 30.2674518], [-97.7249032, 30.2666045], [-97.7251146, 30.2661688], [-97.7252936, 30.2657021], [-97.7257026, 30.2648111], [-97.7261454, 30.2639592], [-97.726328, 30.2635036], [-97.7252984, 30.2631471], [-97.7223272, 30.262124], [-97.7221192, 30.2625818], [-97.7180434, 30.2615773], [-97.7174678, 30.2614803], [-97.7166834, 30.2613735], [-97.7151997, 30.2611727]]], [[[-97.7314155, 30.2747377], [-97.7314943, 30.2745165], [-97.7316101, 30.2741888], [-97.7317395, 30.2738257], [-97.7318665, 30.2734652], [-97.732002, 30.2730829], [-97.7321099, 30.2727798], [-97.7322077, 30.272504], [-97.7324375, 30.2718541], [-97.7329087, 30.2705352], [-97.7330569, 30.2701229], [-97.7332256, 30.2696533], [-97.7333301, 30.2693611], [-97.733414, 30.269129], [-97.7335099, 30.2688615], [-97.7336049, 30.2685966], [-97.7338524, 30.2679085], [-97.7340134, 30.2674607], [-97.7341572, 30.2670594], [-97.7342415, 30.2666678], [-97.7343985, 30.2662171], [-97.7340716, 30.26615], [-97.7333043, 30.2659062], [-97.7328185, 30.2657395], [-97.7324685, 30.2656169], [-97.7320431, 30.2654708], [-97.7299609, 30.2647546], [-97.728604, 30.264287], [-97.7273413, 30.2638515], [-97.726328, 30.2635036], [-97.7261454, 30.2639592], [-97.7257026, 30.2648111], [-97.7252936, 30.2657021], [-97.7251146, 30.2661688], [-97.7249032, 30.2666045], [-97.724508, 30.2674518], [-97.7248879, 30.2676411], [-97.7253809, 30.2678079], [-97.7263508, 30.2681467], [-97.7269239, 30.2683949], [-97.725649, 30.2686742], [-97.7249516, 30.2687728], [-97.7243377, 30.2688896], [-97.7237176, 30.2689704], [-97.7231163, 30.2690627], [-97.7221233, 30.2691965], [-97.7209931, 30.2694237], [-97.7199716, 30.2695569], [-97.7190384, 30.2697057], [-97.7192528, 30.2707387], [-97.7194769, 30.2717664], [-97.7195924, 30.2722968], [-97.7196889, 30.2727691], [-97.7199156, 30.2737913], [-97.7201074, 30.2747826], [-97.7203625, 30.2757752], [-97.7205565, 30.276805], [-97.7207833, 30.2777915], [-97.7210027, 30.2788164], [-97.7212443, 30.2798114], [-97.7222079, 30.2796578], [-97.7231864, 30.2794797], [-97.7240976, 30.2792673], [-97.72515, 30.2791099], [-97.7267442, 30.2788673], [-97.7284876, 30.2786112], [-97.729116, 30.2785772], [-97.729814, 30.2785144], [-97.7298786, 30.2783837], [-97.7301302, 30.2778965], [-97.7303133, 30.2774492], [-97.7304776, 30.2770564], [-97.7306007, 30.2767509], [-97.7307523, 30.2763882], [-97.7309364, 30.2759381], [-97.7310882, 30.2755644], [-97.7312452, 30.2751798], [-97.7313538, 30.2749125], [-97.7314155, 30.2747377]]]]}}, {"type": "Feature", "properties": {"name": "Windsor Park", "lst_c": 49.6, "lst_f": 121.3, "canopy_pct": 15.6, "impervious_pct": 49.0, "median_income_k": 83}, "geometry": {"type": "MultiPolygon", "coordinates": [[[[-97.6707629, 30.30854], [-97.6708506, 30.3087206], [-97.6710335, 30.3090984], [-97.6715404, 30.309571], [-97.6726214, 30.310028], [-97.673638, 30.3104947], [-97.6746382, 30.3109527], [-97.6751946, 30.3112063], [-97.6760067, 30.3116164], [-97.6765778, 30.3119473], [-97.6772368, 30.3127366], [-97.677879, 30.313245], [-97.6782178, 30.3134335], [-97.6809321, 30.3147604], [-97.6813075, 30.315145], [-97.6814676, 30.3154921], [-97.6815551, 30.3158817], [-97.6815114, 30.3164914], [-97.681391, 30.3166896], [-97.6811245, 30.3171297], [-97.6809125, 30.3174636], [-97.6802141, 30.3185658], [-97.6796432, 30.3194671], [-97.6794821, 30.3197333], [-97.6791225, 30.3204767], [-97.6789921, 30.3207491], [-97.6790147, 30.3210796], [-97.6791737, 30.3216385], [-97.6795622, 30.3221251], [-97.6801274, 30.3225548], [-97.6808077, 30.3230062], [-97.6822259, 30.322678], [-97.6845041, 30.321889], [-97.6858307, 30.3215203], [-97.6870791, 30.3215158], [-97.6887843, 30.3214465], [-97.6897301, 30.3214358], [-97.6913927, 30.3214178], [-97.6923491, 30.3214237], [-97.693831, 30.3214323], [-97.6951336, 30.3214756], [-97.6959627, 30.3215311], [-97.6962433, 30.3215589], [-97.6974408, 30.3216798], [-97.6986891, 30.3217962], [-97.7002306, 30.3219737], [-97.7023515, 30.3221492], [-97.7030205, 30.3222042], [-97.704008, 30.3222657], [-97.7049107, 30.3223255], [-97.7053485, 30.3223427], [-97.7060451, 30.3222882], [-97.7065685, 30.3222494], [-97.7067301, 30.3216394], [-97.7067661, 30.3215714], [-97.7069099, 30.3212966], [-97.707114, 30.3207287], [-97.7071748, 30.3192805], [-97.7073395, 30.3183542], [-97.7078795, 30.3153151], [-97.7079618, 30.314852], [-97.708202, 30.313919], [-97.70821, 30.3138862], [-97.7083598, 30.3133007], [-97.7084741, 30.3128575], [-97.7085105, 30.3127152], [-97.7087905, 30.3121241], [-97.7090102, 30.3117105], [-97.7092941, 30.3111773], [-97.7095416, 30.3107313], [-97.7096075, 30.3106116], [-97.7098108, 30.3102445], [-97.7098863, 30.3100617], [-97.7102669, 30.3094727], [-97.7101803, 30.3094214], [-97.7097, 30.309131], [-97.7084485, 30.3085278], [-97.7063022, 30.307491], [-97.7025516, 30.3056813], [-97.6988834, 30.3039118], [-97.6980615, 30.3031303], [-97.6972954, 30.3023994], [-97.6959092, 30.3018016], [-97.6953688, 30.3015677], [-97.693746, 30.3014765], [-97.6915267, 30.3013538], [-97.6911437, 30.3013321], [-97.6906769, 30.3011327], [-97.6907672, 30.3009888], [-97.69086, 30.3008147], [-97.6910187, 30.3005154], [-97.6908387, 30.3003192], [-97.690737, 30.3001246], [-97.6904092, 30.2997383], [-97.6900503, 30.2995356], [-97.6905336, 30.2992485], [-97.6905184, 30.2992262], [-97.6906648, 30.2991165], [-97.6911843, 30.2987229], [-97.6918114, 30.2982462], [-97.6919506, 30.2981418], [-97.6919907, 30.2981812], [-97.6921445, 30.2983218], [-97.6925818, 30.2987599], [-97.6929383, 30.2981842], [-97.6934921, 30.2972907], [-97.6935343, 30.2972228], [-97.6934132, 30.2971626], [-97.6934611, 30.2970893], [-97.6935636, 30.2969346], [-97.6939079, 30.2966612], [-97.6935325, 30.2965654], [-97.6931218, 30.2963727], [-97.6927807, 30.2962117], [-97.6920079, 30.2958464], [-97.6919671, 30.2958291], [-97.6916457, 30.295674], [-97.6912905, 30.2955071], [-97.6909643, 30.2953546], [-97.6906194, 30.2951907], [-97.6902861, 30.2950353], [-97.6899536, 30.2948772], [-97.6896267, 30.2947219], [-97.6892144, 30.2945292], [-97.6892102, 30.2946253], [-97.6888706, 30.2953362], [-97.6882982, 30.295869], [-97.6880087, 30.296138], [-97.6876397, 30.2968812], [-97.6875163, 30.297162], [-97.6873135, 30.2976226], [-97.6870633, 30.2981923], [-97.6859159, 30.3001571], [-97.6851424, 30.3010295], [-97.6843338, 30.3017912], [-97.6830381, 30.3029773], [-97.6818213, 30.3041183], [-97.6813202, 30.3045892], [-97.6800779, 30.3064833], [-97.6795121, 30.307404], [-97.67844, 30.3079181], [-97.6770991, 30.3080086], [-97.676367, 30.3080594], [-97.6761358, 30.3080794], [-97.6739757, 30.3080181], [-97.6730421, 30.3079904], [-97.6720353, 30.3082336], [-97.6707629, 30.30854]]]]}}, {"type": "Feature", "properties": {"name": "Montopolis", "lst_c": 48.9, "lst_f": 120.0, "canopy_pct": 15.5, "impervious_pct": 45.6, "median_income_k": 67}, "geometry": {"type": "MultiPolygon", "coordinates": [[[[-97.7123941, 30.212038], [-97.7120284, 30.2120058], [-97.7117747, 30.2119896], [-97.7115969, 30.2119777], [-97.7111365, 30.2119655], [-97.7105441, 30.2120029], [-97.7102333, 30.2120213], [-97.709752, 30.2121049], [-97.7096112, 30.21219], [-97.7094051, 30.2123151], [-97.7090768, 30.2122204], [-97.7086168, 30.2123374], [-97.7082996, 30.2124162], [-97.7081359, 30.2124651], [-97.7078876, 30.2125425], [-97.7075011, 30.2126639], [-97.7041235, 30.2137525], [-97.7027537, 30.2141946], [-97.7020188, 30.2144326], [-97.7018623, 30.2144816], [-97.7010891, 30.2147325], [-97.7007489, 30.214841], [-97.7003646, 30.2149707], [-97.7001017, 30.2150588], [-97.6994815, 30.2152715], [-97.6992171, 30.2153596], [-97.6985817, 30.2155776], [-97.6973464, 30.215995], [-97.6959534, 30.2164696], [-97.6954388, 30.2166433], [-97.6948683, 30.216835], [-97.6943042, 30.2170242], [-97.6933581, 30.217343], [-97.6927511, 30.217534], [-97.6917682, 30.2178658], [-97.6915677, 30.2179331], [-97.6912512, 30.2180394], [-97.691188, 30.2180656], [-97.6904824, 30.2183618], [-97.6899164, 30.2185592], [-97.6895471, 30.2186863], [-97.6886912, 30.2191802], [-97.6878247, 30.2196849], [-97.6877885, 30.2197061], [-97.6869401, 30.2202139], [-97.6867126, 30.2203385], [-97.6864585, 30.220479], [-97.6864727, 30.2205123], [-97.6865983, 30.2208119], [-97.6853242, 30.2224633], [-97.6838753, 30.2243366], [-97.6837873, 30.2244558], [-97.6834404, 30.2245201], [-97.6834034, 30.2246541], [-97.6833649, 30.2247881], [-97.6833193, 30.2249494], [-97.683229, 30.2252694], [-97.6831601, 30.2255292], [-97.6834725, 30.2267816], [-97.6834789, 30.2271833], [-97.6834804, 30.2272741], [-97.6834851, 30.2275355], [-97.6834922, 30.2279702], [-97.6835121, 30.2291477], [-97.6835178, 30.2294889], [-97.6835258, 30.2296596], [-97.6835381, 30.2298469], [-97.6835514, 30.2299957], [-97.6835739, 30.2301859], [-97.6837265, 30.2302523], [-97.6836926, 30.2305927], [-97.683684, 30.2306778], [-97.6836753, 30.2307628], [-97.6837149, 30.2309342], [-97.6837601, 30.2311056], [-97.6838035, 30.2312578], [-97.6838158, 30.2312966], [-97.6838544, 30.2314211], [-97.6839405, 30.2316594], [-97.6840482, 30.2318899], [-97.6841416, 30.2320927], [-97.6841805, 30.232176], [-97.6842127, 30.2322454], [-97.6842254, 30.2322732], [-97.684286, 30.2324009], [-97.684349, 30.2325288], [-97.684361, 30.2325538], [-97.6843738, 30.2325788], [-97.6844256, 30.2326816], [-97.6844647, 30.2327567], [-97.6845046, 30.2328318], [-97.6843277, 30.2331334], [-97.6845741, 30.2335318], [-97.6847797, 30.2338606], [-97.6853833, 30.2348329], [-97.6857429, 30.2354097], [-97.6858323, 30.2355546], [-97.6859233, 30.2357022], [-97.6860007, 30.2358248], [-97.6860894, 30.2359697], [-97.6861782, 30.2361118], [-97.6891353, 30.2410768], [-97.6902613, 30.2425852], [-97.6905067, 30.2440342], [-97.6916426, 30.2442584], [-97.6923664, 30.2439131], [-97.6926022, 30.2439207], [-97.6928657, 30.2436676], [-97.693187, 30.2435284], [-97.6933938, 30.2434392], [-97.6934459, 30.2434155], [-97.6938389, 30.2433521], [-97.6942819, 30.2432814], [-97.6945764, 30.2431115], [-97.6946504, 30.243069], [-97.6947484, 30.2429335], [-97.6948503, 30.2427953], [-97.6949672, 30.2426355], [-97.6952301, 30.2426931], [-97.6955609, 30.2426449], [-97.6957156, 30.2426041], [-97.6958225, 30.2425761], [-97.6956003, 30.2423047], [-97.6954845, 30.2421648], [-97.6953449, 30.2419969], [-97.6954796, 30.2419089], [-97.6958429, 30.2416826], [-97.6960151, 30.2415844], [-97.6963873, 30.2415563], [-97.6965501, 30.2415679], [-97.6967128, 30.2415823], [-97.6968755, 30.2415691], [-97.6969934, 30.2415468], [-97.6971821, 30.2415094], [-97.6983475, 30.2412886], [-97.6985536, 30.2412516], [-97.6986985, 30.2412243], [-97.69888, 30.2411896], [-97.6990585, 30.2411465], [-97.6992335, 30.2410896], [-97.6994017, 30.2410215], [-97.6995615, 30.2409395], [-97.699706, 30.240838], [-97.699849, 30.2407364], [-97.6999757, 30.240618], [-97.7000955, 30.240494], [-97.700195, 30.2403585], [-97.700276, 30.2402364], [-97.7002993, 30.2401928], [-97.7003557, 30.2400702], [-97.7004008, 30.2399557], [-97.7004161, 30.2399175], [-97.7004623, 30.2397616], [-97.7004928, 30.2396027], [-97.7005435, 30.2391362], [-97.700613, 30.2386811], [-97.7006203, 30.2386427], [-97.7006445, 30.2385112], [-97.700719, 30.238334], [-97.7009095, 30.2380876], [-97.7012031, 30.2377746], [-97.7014385, 30.2377354], [-97.7017217, 30.2376312], [-97.7022976, 30.2374203], [-97.7026848, 30.237277], [-97.702865, 30.2372037], [-97.7030353, 30.2370559], [-97.7031626, 30.2369182], [-97.7033331, 30.236732], [-97.7035529, 30.2364862], [-97.7037507, 30.2362015], [-97.704035, 30.235792], [-97.7044311, 30.2351455], [-97.7045605, 30.2349309], [-97.704651, 30.234776], [-97.7048713, 30.2343927], [-97.7049147, 30.2343111], [-97.7051658, 30.2338432], [-97.7054228, 30.2333919], [-97.7056774, 30.2329681], [-97.7059192, 30.2325495], [-97.7060747, 30.2322776], [-97.7062263, 30.2320305], [-97.7062229, 30.2318351], [-97.7062318, 30.2316813], [-97.7062357, 30.2315961], [-97.7062442, 30.2314313], [-97.7062455, 30.2312388], [-97.7060951, 30.2305096], [-97.7060811, 30.2304405], [-97.706024, 30.2301836], [-97.7060767, 30.2300196], [-97.7060853, 30.2299951], [-97.7061294, 30.2298584], [-97.70619, 30.2296699], [-97.706238, 30.2295334], [-97.7062868, 30.2293996], [-97.7063424, 30.2292742], [-97.7066697, 30.2287694], [-97.7070696, 30.2281588], [-97.707156, 30.2280395], [-97.7071905, 30.2279935], [-97.7072777, 30.2278715], [-97.7076713, 30.2271425], [-97.7079229, 30.2269441], [-97.7081384, 30.2264755], [-97.7082359, 30.2262657], [-97.7083049, 30.2261158], [-97.7083941, 30.2259224], [-97.7084808, 30.2257344], [-97.7085262, 30.2256363], [-97.7085506, 30.2255818], [-97.7085996, 30.2254123], [-97.7086881, 30.2250098], [-97.7086627, 30.2243987], [-97.7084486, 30.2238002], [-97.7082598, 30.2234058], [-97.7077835, 30.2222876], [-97.7073835, 30.221127], [-97.70728, 30.2208581], [-97.7070816, 30.2203205], [-97.7069236, 30.2198112], [-97.707132, 30.2194854], [-97.7073413, 30.2191569], [-97.7078654, 30.2182821], [-97.7085936, 30.2170648], [-97.7088691, 30.2166002], [-97.7089995, 30.2163773], [-97.7091387, 30.2161464], [-97.709418, 30.21569], [-97.7096575, 30.2153236], [-97.7098133, 30.2151838], [-97.7100209, 30.2151496], [-97.7102651, 30.2151078], [-97.7104345, 30.2150783], [-97.7105248, 30.2149289], [-97.7106789, 30.2147367], [-97.7108165, 30.214481], [-97.7109084, 30.2143316], [-97.711233, 30.213835], [-97.7114427, 30.2135175], [-97.7120752, 30.2125596], [-97.7122909, 30.2122229], [-97.7123367, 30.2121413], [-97.7123941, 30.212038]]]]}}, {"type": "Feature", "properties": {"name": "Zilker", "lst_c": 47.4, "lst_f": 117.3, "canopy_pct": 20.3, "impervious_pct": 46.4, "median_income_k": 123}, "geometry": {"type": "MultiPolygon", "coordinates": [[[[-97.768996, 30.24602], [-97.7683144, 30.2464849], [-97.7680359, 30.2467434], [-97.7677524, 30.2469522], [-97.7675832, 30.2470919], [-97.7670477, 30.2474854], [-97.7667846, 30.2476974], [-97.7665512, 30.2478688], [-97.7659776, 30.2483248], [-97.7657923, 30.2484724], [-97.7654303, 30.2487429], [-97.7651155, 30.2489951], [-97.764833, 30.2491958], [-97.7646352, 30.2493651], [-97.764491, 30.2495162], [-97.7643273, 30.2496862], [-97.7642867, 30.2497266], [-97.764146, 30.2498641], [-97.7638541, 30.2502075], [-97.7638312, 30.2502345], [-97.7634665, 30.2506645], [-97.7629924, 30.2512188], [-97.7629597, 30.2512594], [-97.7628626, 30.2513647], [-97.7625176, 30.2517126], [-97.7623704, 30.2519159], [-97.762229, 30.2521084], [-97.7619588, 30.2524715], [-97.7616518, 30.2529659], [-97.7611755, 30.2537484], [-97.7608538, 30.254292], [-97.7605832, 30.2547872], [-97.7602668, 30.2552759], [-97.7601405, 30.2554961], [-97.7599824, 30.2557542], [-97.7599, 30.2559038], [-97.759688, 30.2562516], [-97.7594869, 30.2566051], [-97.7593531, 30.2568114], [-97.7593325, 30.2568413], [-97.7592672, 30.2569417], [-97.7591365, 30.2571811], [-97.7589118, 30.2574984], [-97.758663, 30.2579472], [-97.7586031, 30.2580533], [-97.7578047, 30.2593904], [-97.7575287, 30.2598524], [-97.7570611, 30.2606323], [-97.7564716, 30.2616491], [-97.7561063, 30.2622798], [-97.7556517, 30.2630765], [-97.7553932, 30.2634729], [-97.7551821, 30.2638454], [-97.7549551, 30.2642177], [-97.7547134, 30.2646088], [-97.7547802, 30.2646267], [-97.756862, 30.2650949], [-97.757049, 30.2651839], [-97.7580902, 30.2656724], [-97.7602658, 30.266665], [-97.7603785, 30.2667167], [-97.7604203, 30.2667231], [-97.7606565, 30.2667498], [-97.7607212, 30.2667896], [-97.7609162, 30.2668705], [-97.7610561, 30.2668541], [-97.7612705, 30.2667759], [-97.7615301, 30.2666353], [-97.7619006, 30.266464], [-97.7621454, 30.2663424], [-97.7624483, 30.2662137], [-97.7629962, 30.2659854], [-97.7631596, 30.2658869], [-97.7633223, 30.2658132], [-97.7634937, 30.2657149], [-97.7633952, 30.2656661], [-97.7648358, 30.2648699], [-97.7649003, 30.264918], [-97.7649792, 30.26487], [-97.7648742, 30.2647964], [-97.7652832, 30.2645461], [-97.7661367, 30.2640269], [-97.7670065, 30.2626224], [-97.767038, 30.2625708], [-97.7681202, 30.2618746], [-97.7682073, 30.2618158], [-97.7683129, 30.2617492], [-97.768872, 30.2616641], [-97.7701249, 30.2612794], [-97.7702751, 30.2612329], [-97.7703942, 30.2611308], [-97.7707071, 30.260862], [-97.7709276, 30.2606711], [-97.771119, 30.2604714], [-97.7713088, 30.2602745], [-97.7713651, 30.2602151], [-97.7714449, 30.2601314], [-97.7715076, 30.2600667], [-97.7716437, 30.2599236], [-97.771664, 30.259902], [-97.7718563, 30.2597023], [-97.7722704, 30.2593503], [-97.7727728, 30.2589203], [-97.7727861, 30.2586896], [-97.7728234, 30.2580577], [-97.7728251, 30.2580248], [-97.7729768, 30.2579508], [-97.7733618, 30.2577659], [-97.7736812, 30.2576101], [-97.7737245, 30.2575889], [-97.7742524, 30.2573354], [-97.7747326, 30.2570865], [-97.7752985, 30.256864], [-97.7763782, 30.2556039], [-97.7765517, 30.2553626], [-97.7770506, 30.2547345], [-97.7784777, 30.2528845], [-97.7790635, 30.2520573], [-97.7795184, 30.2512083], [-97.7796117, 30.2508526], [-97.7799937, 30.2502442], [-97.7800143, 30.2502143], [-97.7803907, 30.2496663], [-97.78087, 30.248914], [-97.7812892, 30.2482732], [-97.781599, 30.2478779], [-97.781742, 30.2477735], [-97.7819592, 30.2477943], [-97.7824368, 30.2479441], [-97.7833147, 30.2472987], [-97.7834892, 30.2471674], [-97.7839237, 30.2466975], [-97.7841662, 30.2465126], [-97.7844149, 30.246391], [-97.7843253, 30.2462159], [-97.782507, 30.2438475], [-97.7823485, 30.2436408], [-97.7814075, 30.2442464], [-97.7806438, 30.2447372], [-97.7786896, 30.2461614], [-97.7781406, 30.24653], [-97.7771907, 30.2469291], [-97.7752418, 30.2473165], [-97.7727761, 30.2476578], [-97.7720919, 30.2478642], [-97.7711187, 30.2481582], [-97.7707052, 30.248282], [-97.7699528, 30.2484897], [-97.7697186, 30.2478277], [-97.7695278, 30.2473178], [-97.7691908, 30.246497], [-97.768996, 30.24602]]]]}}, {"type": "Feature", "properties": {"name": "Hyde Park", "lst_c": 46.6, "lst_f": 115.9, "canopy_pct": 19.0, "impervious_pct": 39.6, "median_income_k": 72}, "geometry": {"type": "MultiPolygon", "coordinates": [[[[-97.7196297, 30.3048618], [-97.7178002, 30.3077151], [-97.716016, 30.3104483], [-97.7153474, 30.3120739], [-97.7157249, 30.3121806], [-97.716451, 30.3124952], [-97.7173143, 30.3129227], [-97.7181918, 30.3133559], [-97.7190685, 30.313789], [-97.7199319, 30.3142137], [-97.7208327, 30.3146941], [-97.7217499, 30.3151226], [-97.7226046, 30.3155773], [-97.7228437, 30.315673], [-97.7230921, 30.3158073], [-97.7233653, 30.3159339], [-97.7233945, 30.31594], [-97.7235119, 30.3157581], [-97.7235367, 30.3157201], [-97.7235904, 30.3156387], [-97.7236417, 30.3155599], [-97.7236682, 30.3155192], [-97.7237451, 30.3153998], [-97.7238228, 30.3152803], [-97.7238501, 30.3152396], [-97.7239021, 30.3151609], [-97.7239551, 30.3150795], [-97.7239799, 30.3150415], [-97.7240502, 30.3149302], [-97.7241288, 30.3148108], [-97.7242304, 30.3146561], [-97.7243246, 30.314515], [-97.7244197, 30.3143684], [-97.7245138, 30.3142273], [-97.7246073, 30.3140834], [-97.7247023, 30.3139396], [-97.7247973, 30.3137957], [-97.7248735, 30.3136763], [-97.7249239, 30.3136003], [-97.7249718, 30.3135297], [-97.725066, 30.3133859], [-97.7251601, 30.3132448], [-97.7252338, 30.313128], [-97.7252552, 30.3130982], [-97.7252991, 30.3130303], [-97.7253495, 30.3129544], [-97.7254436, 30.3128133], [-97.7255436, 30.3126613], [-97.7256213, 30.3125446], [-97.7257246, 30.3123872], [-97.7258188, 30.3122433], [-97.7259139, 30.3120995], [-97.726008, 30.3119584], [-97.7261022, 30.3118145], [-97.7261965, 30.3116707], [-97.7262899, 30.3115268], [-97.7263773, 30.3114021], [-97.7311182, 30.3136849], [-97.7316591, 30.3128185], [-97.732646, 30.3113671], [-97.7329833, 30.3108486], [-97.7336728, 30.3097295], [-97.734358, 30.3086542], [-97.735108, 30.3075225], [-97.735804, 30.3063952], [-97.7365338, 30.3052494], [-97.7373056, 30.3040714], [-97.7376507, 30.303498], [-97.7381543, 30.3027464], [-97.7363191, 30.3018621], [-97.735249, 30.3013426], [-97.7347107, 30.3010869], [-97.733556, 30.3005354], [-97.7326166, 30.3001093], [-97.732146, 30.2998715], [-97.7315784, 30.2995849], [-97.7309367, 30.2992886], [-97.7297858, 30.2987124], [-97.7288707, 30.3002368], [-97.7287164, 30.3004922], [-97.7284771, 30.3008449], [-97.7275573, 30.3022453], [-97.7272286, 30.3027695], [-97.7270571, 30.3030438], [-97.7269244, 30.3032941], [-97.7268, 30.3035281], [-97.726702, 30.3036636], [-97.7265366, 30.3038913], [-97.725889, 30.3049233], [-97.7246683, 30.3068705], [-97.7244871, 30.3070978], [-97.7241859, 30.3069817], [-97.7236758, 30.3067677], [-97.7230871, 30.3064725], [-97.7221497, 30.3059996], [-97.7209448, 30.3054882], [-97.7201407, 30.3050978], [-97.7196297, 30.3048618]]]]}}, {"type": "Feature", "properties": {"name": "Barton Hills", "lst_c": 44.9, "lst_f": 112.8, "canopy_pct": 36.9, "impervious_pct": 27.1, "median_income_k": 92}, "geometry": {"type": "MultiPolygon", "coordinates": [[[[-97.7962764, 30.2339805], [-97.792862, 30.2360884], [-97.7919552, 30.2367249], [-97.7897293, 30.238287], [-97.789434, 30.2384956], [-97.7868607, 30.2403147], [-97.7866598, 30.2404565], [-97.7861691, 30.2408043], [-97.7823485, 30.2436408], [-97.782507, 30.2438475], [-97.7843253, 30.2462159], [-97.7844149, 30.246391], [-97.7841662, 30.2465126], [-97.7839237, 30.2466975], [-97.7834892, 30.2471674], [-97.7833147, 30.2472987], [-97.7824368, 30.2479441], [-97.7819592, 30.2477943], [-97.781742, 30.2477735], [-97.781599, 30.2478779], [-97.7812892, 30.2482732], [-97.78087, 30.248914], [-97.7803907, 30.2496663], [-97.7800143, 30.2502143], [-97.7799937, 30.2502442], [-97.7796117, 30.2508526], [-97.7795184, 30.2512083], [-97.7790635, 30.2520573], [-97.7784777, 30.2528845], [-97.7770506, 30.2547345], [-97.7765517, 30.2553626], [-97.7763782, 30.2556039], [-97.7752985, 30.256864], [-97.7747326, 30.2570865], [-97.7742524, 30.2573354], [-97.7737245, 30.2575889], [-97.7736812, 30.2576101], [-97.7733618, 30.2577659], [-97.7729768, 30.2579508], [-97.7728251, 30.2580248], [-97.7728234, 30.2580577], [-97.7727861, 30.2586896], [-97.7727728, 30.2589203], [-97.7722704, 30.2593503], [-97.7718563, 30.2597023], [-97.771664, 30.259902], [-97.7716437, 30.2599236], [-97.7715076, 30.2600667], [-97.7714449, 30.2601314], [-97.7713651, 30.2602151], [-97.7713088, 30.2602745], [-97.771119, 30.2604714], [-97.7709276, 30.2606711], [-97.7707071, 30.260862], [-97.7703942, 30.2611308], [-97.7702751, 30.2612329], [-97.7701249, 30.2612794], [-97.768872, 30.2616641], [-97.7683129, 30.2617492], [-97.7682073, 30.2618158], [-97.7681202, 30.2618746], [-97.767038, 30.2625708], [-97.7670065, 30.2626224], [-97.7661367, 30.2640269], [-97.7652832, 30.2645461], [-97.7648742, 30.2647964], [-97.7649792, 30.26487], [-97.7649003, 30.264918], [-97.7648358, 30.2648699], [-97.7633952, 30.2656661], [-97.7634937, 30.2657149], [-97.7633223, 30.2658132], [-97.7631596, 30.2658869], [-97.7629962, 30.2659854], [-97.7624483, 30.2662137], [-97.7621454, 30.2663424], [-97.7619006, 30.266464], [-97.7615301, 30.2666353], [-97.7612705, 30.2667759], [-97.7610561, 30.2668541], [-97.7609162, 30.2668705], [-97.7607212, 30.2667896], [-97.7606565, 30.2667498], [-97.7604203, 30.2667231], [-97.760582, 30.2668088], [-97.7606541, 30.2668378], [-97.7608899, 30.2669388], [-97.7615651, 30.2672219], [-97.7615947, 30.2672417], [-97.7617643, 30.2673579], [-97.7618095, 30.2673863], [-97.7624298, 30.26777], [-97.7627804, 30.2679008], [-97.7631341, 30.2680647], [-97.7718869, 30.2732071], [-97.7736159, 30.2712449], [-97.7763129, 30.2691342], [-97.7775313, 30.2685012], [-97.7803766, 30.2669737], [-97.7861819, 30.2645782], [-97.7892016, 30.2631558], [-97.7938613, 30.2602999], [-97.7987657, 30.2570444], [-97.8003311, 30.2562145], [-97.8010102, 30.2551471], [-97.801769, 30.2530911], [-97.8027085, 30.2503318], [-97.8034734, 30.2480394], [-97.8028692, 30.2462866], [-97.8023223, 30.2448813], [-97.803506, 30.2441951], [-97.8060465, 30.2427134], [-97.8061472, 30.2426191], [-97.8061922, 30.242532], [-97.806348, 30.2425103], [-97.8063919, 30.2424672], [-97.8064927, 30.2423674], [-97.8065939, 30.2422841], [-97.8068081, 30.2421783], [-97.8070242, 30.2419983], [-97.807088, 30.2419528], [-97.8071566, 30.2419047], [-97.8072114, 30.2418673], [-97.8072794, 30.2417806], [-97.8073424, 30.2417021], [-97.8074754, 30.2415507], [-97.807604, 30.2414212], [-97.8077495, 30.2412756], [-97.8078454, 30.2411839], [-97.8079517, 30.2410843], [-97.8081266, 30.2408787], [-97.8081704, 30.240775], [-97.8082017, 30.2406987], [-97.8082038, 30.2406189], [-97.8082258, 30.2405039], [-97.8081711, 30.240478], [-97.8073938, 30.2401299], [-97.8073258, 30.2399471], [-97.8080746, 30.2388067], [-97.8084169, 30.2382826], [-97.8089298, 30.2375062], [-97.8110111, 30.2342826], [-97.8111099, 30.2341057], [-97.8104962, 30.2340166], [-97.8098782, 30.2338807], [-97.8094707, 30.2337462], [-97.8089766, 30.2335659], [-97.8080142, 30.2331839], [-97.8068246, 30.2327094], [-97.806174, 30.2325178], [-97.805799, 30.2324444], [-97.8050883, 30.2323671], [-97.8047435, 30.232352], [-97.8044857, 30.2323387], [-97.8039737, 30.2323588], [-97.8032532, 30.2324766], [-97.8029186, 30.232525], [-97.8031854, 30.2320737], [-97.801856, 30.232251], [-97.8004459, 30.2325779], [-97.7989758, 30.2329559], [-97.797682, 30.2332851], [-97.7962764, 30.2339805]]]]}}]};
 
-  // color scales
-  function lstColor(t){ // °C ramp
-    const stops=[[28,'#2c7fb8'],[31,'#7fcdbb'],[34,'#ffffbf'],[37,'#fd8d3c'],[41,'#bd0026']];
-    for(let i=stops.length-1;i>=0;i--){ if(t>=stops[i][0]) return stops[i][1]; }
-    return stops[0][1];
-  }
-  function canopyColor(c){ const stops=[[6,'#f7fcf5'],[15,'#c7e9c0'],[25,'#74c476'],[35,'#31a354'],[45,'#006d2c']];
+  function lstColor(t){ const stops=[[44,'#2c7fb8'],[46,'#7fcdbb'],[47.5,'#ffffbf'],[49,'#fd8d3c'],[50,'#bd0026']];
+    for(let i=stops.length-1;i>=0;i--){ if(t>=stops[i][0]) return stops[i][1]; } return stops[0][1]; }
+  function canopyColor(c){ const stops=[[12,'#f7fcf5'],[18,'#c7e9c0'],[25,'#74c476'],[32,'#31a354'],[37,'#006d2c']];
     for(let i=stops.length-1;i>=0;i--){ if(c>=stops[i][0]) return stops[i][1]; } return stops[0][1]; }
-  function impColor(p){ const stops=[[20,'#f1eef6'],[35,'#bdc9e1'],[50,'#74a9cf'],[65,'#2b8cbe'],[78,'#045a8d']];
+  function impColor(p){ const stops=[[27,'#f1eef6'],[40,'#bdc9e1'],[46,'#74a9cf'],[50,'#2b8cbe'],[53,'#045a8d']];
     for(let i=stops.length-1;i>=0;i--){ if(p>=stops[i][0]) return stops[i][1]; } return stops[0][1]; }
-  function incomeColor(k){ const stops=[[28,'#810f7c'],[55,'#8856a7'],[80,'#8c96c6'],[110,'#b3cde3'],[140,'#edf8fb']];
+  function incomeColor(k){ const stops=[[67,'#810f7c'],[75,'#8856a7'],[85,'#8c96c6'],[110,'#b3cde3'],[123,'#edf8fb']];
     for(let i=stops.length-1;i>=0;i--){ if(k>=stops[i][0]) return stops[i][1]; } return stops[0][1]; }
 
-  const map = L.map('map',{zoomControl:true, scrollWheelZoom:false}).setView([30.30,-97.74],11);
+  const map = L.map('map',{zoomControl:true, scrollWheelZoom:false}).setView([30.27,-97.74],11);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{
     attribution:'&copy; OpenStreetMap &copy; CARTO', subdomains:'abcd', maxZoom:19
   }).addTo(map);
 
   let mode='lst';
-  function styleFor(f){
-    const p=f.properties; let c;
+  function styleFor(f){ const p=f.properties; let c;
     if(mode==='lst') c=lstColor(p.lst_c);
     else if(mode==='canopy') c=canopyColor(p.canopy_pct);
     else if(mode==='impervious') c=impColor(p.impervious_pct);
     else if(mode==='income') c=incomeColor(p.median_income_k);
-    return {fillColor:c, fillOpacity:.82, color:'#fff', weight:1.2};
+    return {fillColor:c, fillOpacity:.82, color:'#fff', weight:1.4};
   }
   function popupHtml(p){
     return `<div class="nei-popup"><h3>${p.name}</h3>
-      <div class="row"><span>Surface temp</span><b>${p.lst_f}°F</b></div>
+      <div class="row"><span>Surface temp</span><b>${p.lst_f}&deg;F</b></div>
       <div class="row"><span>Tree canopy</span><b>${p.canopy_pct}%</b></div>
       <div class="row"><span>Impervious</span><b>${p.impervious_pct}%</b></div>
       <div class="row"><span>Median income</span><b>$${p.median_income_k}k</b></div></div>`;
@@ -225,14 +196,14 @@
     style:styleFor,
     onEachFeature:(f,l)=>{
       l.bindPopup(popupHtml(f.properties));
-      l.on('mouseover',()=>l.setStyle({weight:2.5,color:'#1c1c1c'}));
+      l.on('mouseover',()=>l.setStyle({weight:3,color:'#1c1c1c'}));
       l.on('mouseout',()=>layer.resetStyle(l));
     }
   }).addTo(map);
+  map.fitBounds(layer.getBounds(), {padding:[40,40]});
 
   function setMode(m){ mode=m; layer.setStyle(styleFor); updateLegend(); }
 
-  // legend updates with mode
   const lt=document.getElementById('legend-title'), lb=document.getElementById('legend-bar'),
         llo=document.getElementById('legend-lo'), lhi=document.getElementById('legend-hi');
   function updateLegend(){
@@ -242,33 +213,14 @@
     if(mode==='income'){lt.textContent='Median income';lb.style.background='linear-gradient(90deg,#810f7c,#8856a7,#8c96c6,#b3cde3,#edf8fb)';llo.textContent='lower';lhi.textContent='higher';}
   }
 
-  // compute stats for steps
   const props = DATA.features.map(f=>f.properties);
   const maxF = Math.max(...props.map(p=>p.lst_f));
   const minF = Math.min(...props.map(p=>p.lst_f));
   document.getElementById('s2-max').textContent = maxF.toFixed(0);
   document.getElementById('s2-gap').textContent = '+'+(maxF-minF).toFixed(0);
-  // correlation canopy vs lst
-  function corr(xs,ys){const n=xs.length,mx=xs.reduce((a,b)=>a+b)/n,my=ys.reduce((a,b)=>a+b)/n;
-    let num=0,dx=0,dy=0;for(let i=0;i<n;i++){num+=(xs[i]-mx)*(ys[i]-my);dx+=(xs[i]-mx)**2;dy+=(ys[i]-my)**2;}return num/Math.sqrt(dx*dy);}
-  const r = corr(props.map(p=>p.canopy_pct),props.map(p=>p.lst_c));
-  document.getElementById('s3-corr').textContent = r.toFixed(2);
-  // impervious in hottest tercile
-  const sorted=[...props].sort((a,b)=>b.lst_c-a.lst_c);
-  const hottest=sorted.slice(0,Math.ceil(sorted.length/3));
-  const impAvg=hottest.reduce((a,p)=>a+p.impervious_pct,0)/hottest.length;
-  document.getElementById('s4-imp').textContent = impAvg.toFixed(0)+'%';
 
-  // scroll detection -> activate steps & switch map mode + view
   const steps=[...document.querySelectorAll('.step')];
   const stepModes=['lst','lst','canopy','impervious','income'];
-  const views=[
-    [30.30,-97.74,11],
-    [30.27,-97.71,12],   // east/core
-    [30.30,-97.78,12],   // west canopy
-    [30.27,-97.73,12],   // paved core
-    [30.28,-97.73,11],   // whole city income
-  ];
   let current=-1;
   const obs=new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
@@ -276,16 +228,11 @@
         const i=+e.target.dataset.step;
         steps.forEach(s=>s.classList.remove('active'));
         e.target.classList.add('active');
-        if(i!==current){
-          current=i;
-          setMode(stepModes[i]);
-          const v=views[i]; map.flyTo([v[0],v[1]],v[2],{duration:1.1});
-        }
+        if(i!==current){ current=i; setMode(stepModes[i]); }
       }
     });
   },{rootMargin:'-45% 0px -45% 0px',threshold:0});
   steps.forEach(s=>obs.observe(s));
-
   updateLegend();
 </script>
 </body>
