@@ -36,37 +36,43 @@
   .scroll-cue{position:relative;z-index:1;font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px;}
   .scroll-cue .arrow{width:22px;height:22px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);animation:bounce 1.8s infinite;}
   @keyframes bounce{0%,100%{transform:rotate(45deg) translate(0,0);}50%{transform:rotate(45deg) translate(5px,5px);}}
-  .scrolly{position:relative;}
-  .map-sticky{position:sticky;top:0;height:100vh;width:100%;z-index:1;}
+  /* scrollytelling: map fixed on the RIGHT, text floats on the LEFT */
+  .scrolly{position:relative;display:grid;grid-template-columns:40% 60%;}
+  .map-col{position:relative;}
+  .map-sticky{position:sticky;top:0;height:100vh;width:100%;}
   #map{position:absolute;inset:0;height:100vh;width:100%;background:#dfe7e6;}
-  .steps{position:relative;z-index:2;max-width:480px;margin:0 auto;padding:0 20px;}
-  .step{min-height:88vh;display:flex;align-items:center;}
-  .step-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px 28px;box-shadow:var(--shadow);opacity:.35;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
+  .steps{position:relative;z-index:2;max-width:520px;margin:0;padding:0 4vw;}
+  .step{min-height:95vh;display:flex;align-items:center;}
+  /* floating text, no box: subtle scrim + shadow for legibility over the map */
+  .step-card{
+    background:linear-gradient(105deg, rgba(244,241,234,.92) 60%, rgba(244,241,234,.0) 100%);
+    border-radius:0;padding:24px 26px 24px 0;
+    opacity:.25;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;
+  }
   .step.active .step-card{opacity:1;transform:none;}
   .step-num{font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hot);margin-bottom:10px;}
-  .step-card h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.7rem;line-height:1.12;margin-bottom:12px;}
-  .step-card p{color:var(--ink-soft);font-size:1.02rem;margin-bottom:10px;}
+  .step-card h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.8rem;line-height:1.12;margin-bottom:12px;color:var(--ink);text-shadow:0 1px 0 rgba(244,241,234,.6);}
+  .step-card p{color:var(--ink-soft);font-size:1.04rem;margin-bottom:10px;text-shadow:0 1px 3px rgba(244,241,234,.85);}
   .step-card .stat-inline{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;}
   .step-card .si b{font-family:"Fraunces",serif;font-size:1.5rem;color:var(--cool-deep);display:block;line-height:1;}
   .step-card .si.hot b{color:var(--hot);}
   .step-card .si span{font-size:.76rem;color:var(--muted);}
+
   .legend{position:absolute;bottom:24px;right:18px;z-index:500;background:rgba(251,249,244,.94);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.76rem;box-shadow:var(--shadow);max-width:200px;}
   .legend .ltitle{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
   .legend .lbar{height:10px;border-radius:5px;background:linear-gradient(90deg,#2c7fb8,#7fcdbb,#ffffbf,#fd8d3c,#bd0026);margin-bottom:5px;}
   .legend .lrow{display:flex;justify-content:space-between;color:var(--ink-soft);}
-  .outro{position:relative;z-index:3;background:var(--ink);color:var(--paper);padding:80px 24px;text-align:center;}
-  .outro h2{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);max-width:20ch;margin:0 auto 18px;}
-  .outro p{color:rgba(244,241,234,.8);max-width:58ch;margin:0 auto 14px;font-size:1.05rem;}
-  .outro .methods{margin-top:30px;font-size:.85rem;color:rgba(244,241,234,.55);max-width:64ch;margin-left:auto;margin-right:auto;}
-  .outro .btns{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-  .outro .btn{padding:12px 20px;border-radius:999px;font-weight:600;font-size:.92rem;text-decoration:none;}
-  .btn-hot{background:var(--hot);color:#fff;}
-  .btn-ghost{border:1.5px solid rgba(244,241,234,.4);color:var(--paper);}
-  .leaflet-popup-content-wrapper{border-radius:12px;}
-  .nei-popup h3{font-family:"Fraunces",serif;font-size:1.1rem;margin-bottom:6px;color:var(--ink);}
-  .nei-popup .row{display:flex;justify-content:space-between;gap:18px;font-size:.85rem;color:var(--ink-soft);padding:2px 0;}
-  .nei-popup .row b{color:var(--ink);}
-  @media(max-width:760px){.step-card{padding:22px 20px;}.step-card h2{font-size:1.4rem;}.legend{bottom:14px;right:12px;max-width:160px;}}
+  /* stack on mobile: map becomes a shorter sticky band, text full width */
+  @media(max-width:760px){
+    .scrolly{grid-template-columns:1fr;}
+    .map-col{position:sticky;top:0;height:62vh;z-index:1;}
+    .map-sticky{height:62vh;}
+    .steps{width:100%;max-width:none;padding:0 22px;}
+    .step{min-height:80vh;}
+    .step-card{background:linear-gradient(180deg, rgba(244,241,234,.94) 70%, rgba(244,241,234,0) 100%);padding:22px 18px;}
+    .step-card h2{font-size:1.4rem;}
+    .legend{bottom:14px;right:12px;max-width:160px;}
+  }
   @media(prefers-reduced-motion:reduce){.scroll-cue .arrow{animation:none;}}
 </style>
 </head>
@@ -86,15 +92,6 @@
 </section>
 
 <div class="scrolly">
-  <div class="map-sticky">
-    <div id="map"></div>
-    <div class="legend" id="legend">
-      <div class="ltitle" id="legend-title">Land surface temp</div>
-      <div class="lbar" id="legend-bar"></div>
-      <div class="lrow"><span id="legend-lo">cooler</span><span id="legend-hi">hotter</span></div>
-    </div>
-  </div>
-
   <div class="steps">
     <div class="step" data-step="0">
       <div class="step-card">
@@ -146,6 +143,16 @@
         <p>Heat in Austin is shaped first by the physical landscape. Income plays a real but weaker role: lower-income neighborhoods tend to run hotter (r = &minus;0.51 citywide), though there are clear exceptions. Central East Austin is among the hottest in the city despite rising incomes from gentrification, while leafy, affluent Zilker stays cooler. The clearest lever for cooling a neighborhood isn't its wealth &mdash; it's its trees and its pavement.</p>
       </div>
     </div>
+  </div>
+  <div class="map-col">
+  <div class="map-sticky">
+    <div id="map"></div>
+    <div class="legend" id="legend">
+      <div class="ltitle" id="legend-title">Land surface temp</div>
+      <div class="lbar" id="legend-bar"></div>
+      <div class="lrow"><span id="legend-lo">cooler</span><span id="legend-hi">hotter</span></div>
+    </div>
+  </div>
   </div>
 </div>
 
