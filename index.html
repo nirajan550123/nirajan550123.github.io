@@ -144,7 +144,7 @@
   .skill-card h3{font-family:"Fraunces",serif;font-size:1.12rem;color:var(--forest-deep);margin-bottom:10px;}
   .chips{display:flex;flex-wrap:wrap;gap:7px;}
   .chip{font-size:.82rem;background:var(--paper-2);color:var(--ink-soft);padding:5px 11px;border-radius:999px;border:1px solid var(--line);}
-  .chip.lead{background:var(--forest);color:#fff;border-color:var(--forest);font-weight:600;}
+  .chip.lead{background:rgba(47,93,80,.12);color:var(--forest-deep);border-color:rgba(47,93,80,.35);font-weight:600;}
 
   /* projects */
   .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
@@ -324,48 +324,51 @@
       <span class="sec-num">02</span>
       <div>
         <h2 class="sec-title">Skills</h2>
-        <p class="sec-sub">The instruments I reach for, grouped by what they do. Highlighted chips are the ones I lead with.</p>
+        <p class="sec-sub">Grouped by what they do. Tinted chips are the ones I lead with.</p>
       </div>
     </div>
     <div class="skill-grid">
       <div class="skill-card reveal">
         <h3>Programming &amp; Data</h3>
         <div class="chips">
-          <span class="chip lead">Python (ArcPy)</span><span class="chip lead">PostGIS / Spatial SQL</span>
-          <span class="chip">Pandas / NumPy</span><span class="chip">Rasterio</span>
-          <span class="chip">R (Tidyverse, sf)</span><span class="chip">SQL</span><span class="chip">Git / GitHub</span>
+          <span class="chip lead">Python</span><span class="chip lead">PostgreSQL / PostGIS</span>
+          <span class="chip">Pandas / NumPy</span><span class="chip">Rasterio</span><span class="chip">ArcPy</span>
+          <span class="chip">R (Tidyverse, sf)</span><span class="chip">Spatial SQL</span>
+          <span class="chip">Statistical Analysis</span><span class="chip">Git / GitHub</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <h3>Remote Sensing</h3>
         <div class="chips">
           <span class="chip lead">Google Earth Engine</span>
-          <span class="chip">ERDAS IMAGINE</span><span class="chip">Landsat / Sentinel</span>
-          <span class="chip">NDVI / LST</span><span class="chip">Hyperspectral</span><span class="chip">Classification</span>
+          <span class="chip">Landsat / Sentinel</span><span class="chip">NDVI / LST</span>
+          <span class="chip">Land Cover Classification</span><span class="chip">Hyperspectral</span>
+          <span class="chip">ERDAS IMAGINE</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Spatial Analysis &amp; GIS</h3>
+        <div class="chips">
+          <span class="chip lead">ArcGIS Pro</span>
+          <span class="chip">Spatial Statistics</span><span class="chip">Suitability / MCDA</span>
+          <span class="chip">QGIS</span><span class="chip">ModelBuilder</span>
+          <span class="chip">ArcGIS Online</span><span class="chip">Field Maps / Survey123</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <h3>Web Mapping</h3>
         <div class="chips">
           <span class="chip lead">Leaflet</span>
-          <span class="chip">Chart.js</span><span class="chip">JavaScript</span>
+          <span class="chip">JavaScript</span><span class="chip">Chart.js</span>
           <span class="chip">GeoJSON</span><span class="chip">HTML / CSS</span>
-        </div>
-      </div>
-      <div class="skill-card reveal">
-        <h3>GIS &amp; Cartography</h3>
-        <div class="chips">
-          <span class="chip lead">ArcGIS Pro</span>
-          <span class="chip">QGIS</span><span class="chip">ArcGIS Online</span>
-          <span class="chip">ModelBuilder</span><span class="chip">Field Maps</span><span class="chip">Survey123</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <h3>Surveying &amp; Field</h3>
         <div class="chips">
           <span class="chip lead">GNSS / DGPS</span>
-          <span class="chip">UAV / Drone</span><span class="chip">Pix4D</span>
-          <span class="chip">AutoCAD</span><span class="chip">Statistics / SPSS</span>
+          <span class="chip">UAV / Drone Mapping</span><span class="chip">Pix4D</span>
+          <span class="chip">AutoCAD</span>
         </div>
       </div>
     </div>
