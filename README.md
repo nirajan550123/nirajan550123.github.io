@@ -26,15 +26,6 @@ Pages. No framework or build step.
 | [NDVI, LST & Land Cover](./projects/ndvi-lst-hillcountry/) | Vegetation cooling across land-cover types, reproducible R workflow | ArcGIS Pro, Landsat, R |
 | [Post-Fire Vegetation Damage Assessment](./projects/palisades-fire-rs/) | Pre/post-fire change detection using hyperspectral imagery | ERDAS, hyperspectral, red-edge indices |
 
-## Structure
-
-```
-index.html              portfolio homepage
-profile.jpg             portrait
-N_Tripathi_Resume.pdf   résumé
-projects/               individual project pages, each with its own code and README
-```
-
 ## Contact
 
 **Nirajan Tripathi**
