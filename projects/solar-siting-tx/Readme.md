@@ -19,7 +19,7 @@ Then the part that makes it more than a Texas story:
 - **North Carolina built about four times as much solar as Texas despite lower irradiance.** Worse sun, more solar. Policy beats physics.
 - The Texas-trained model transfers to North Carolina at **ROC-AUC 0.76 ± 0.01**, partial transfer. The siting logic generalizes in kind (grid access matters everywhere) but shifts in degree (what counts as "close enough" to the grid is set by each state's regulatory regime).
 
-![Texas solar siting suitability map](outputs/figures/tx_suitability_map.png)
+![Texas solar siting suitability map](tx_suitability_map.png)
 
 *Relative siting suitability across Texas. Warm corridors trace grid-accessible east and central Texas; grey areas fall outside the model's Area of Applicability. Triangles are existing facilities, which land overwhelmingly in the warm zones.*
 
