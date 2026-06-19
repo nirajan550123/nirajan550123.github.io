@@ -1,15 +1,3 @@
-"""
-Kathmandu run: reproject the Copernicus GLO-30 DSM to UTM 45N (metric),
-fetch OSM building footprints for the urban-core box, and estimate per-building
-rooftop solar potential using the SAME shared module as Austin.
-
-This is the methods-transfer side: identical analysis, 30 m open DSM instead of
-1 m LiDAR, footprint-level screen instead of roof-facet design.
-
-Run from the project root:
-    python src/run_kathmandu.py
-"""
-
 import os
 import sys
 
@@ -20,17 +8,16 @@ from rasterio.warp import calculate_default_transform, reproject, Resampling
 from shapely.geometry import box
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
-from solar_suitability import building_suitability  # noqa: E402
+from solar_suitability import building_suitability
 
-SRC_DSM = "data/kathmandu/output_hh.tif"          # WGS84 Copernicus DSM
-DSM_UTM = "data/kathmandu/dsm_utm45n.tif"          # reprojected metric DSM
+SRC_DSM = "data/kathmandu/output_hh.tif"
+DSM_UTM = "data/kathmandu/dsm_utm45n.tif"
 OUT_FP = "outputs/Kathmandu/osm_footprints.geojson"
 OUT_SOLAR = "outputs/Kathmandu/buildings_solar.geojson"
 
-DST_EPSG = 32645          # UTM zone 45N, metres (correct for Kathmandu)
-KATHMANDU_GHI = 1800.0    # placeholder; replace with cited Global Solar Atlas value
+DST_EPSG = 32645
+KATHMANDU_GHI = 1774.8  # Global Solar Atlas v2.6 (Solargis/World Bank), long-term annual GHI at 27.7083, 85.3206 (Kathmandu, Nepal)
 
-# Your OpenTopography selection box (lon/lat):
 BBOX_S, BBOX_W = 27.687953, 85.310391
 BBOX_N, BBOX_E = 27.700265, 85.333394
 
@@ -64,11 +51,8 @@ def reproject_to_utm(src_path, dst_path, dst_epsg):
 
 def main():
     os.makedirs("outputs/Kathmandu", exist_ok=True)
-
-    # 1. Reproject the Copernicus DSM to metric UTM 45N
     reproject_to_utm(SRC_DSM, DSM_UTM, DST_EPSG)
 
-    # 2. Fetch OSM footprints for the urban-core box
     import osmnx as ox
     print("Fetching OSM building footprints for Kathmandu...")
     try:
@@ -85,8 +69,6 @@ def main():
     )
     print(f"  {len(fp)} footprints -> {OUT_FP}")
 
-    # 3. Per-building suitability. At 30 m this is a FOOTPRINT-LEVEL SCREEN,
-    #    not roof-facet design -- the slope cap is generous accordingly.
     result = building_suitability(
         footprints_path=OUT_FP,
         dsm_path=DSM_UTM,

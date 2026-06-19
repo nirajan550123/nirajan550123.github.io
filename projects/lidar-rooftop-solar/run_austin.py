@@ -21,7 +21,7 @@ from solar_suitability import building_suitability  # noqa: E402
 DSM = "outputs/Austin/dsm.tif"
 OUT_FP = "outputs/Austin/osm_footprints.geojson"
 OUT_SOLAR = "outputs/Austin/buildings_solar.geojson"
-AUSTIN_GHI = 1700.0  # placeholder; replace with cited Global Solar Atlas value
+AUSTIN_GHI = 1750.7  # Global Solar Atlas v2.6 (Solargis/World Bank), long-term annual GHI at 30.2697, -97.7447 (Austin, TX)
 
 
 def main():

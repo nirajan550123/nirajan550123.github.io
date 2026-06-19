@@ -61,14 +61,14 @@ def building_suitability(
     max_slope_deg: float = 35.0,
     panel_efficiency: float = 0.20,
     performance_ratio: float = 0.75,
-    annual_ghi_kwh_m2: float = 1700.0,  # site-specific; replace per city
+    annual_ghi_kwh_m2: float = 1750.0,  # default; callers pass a site-specific cited value
     usable_fraction: float = 0.70,      # roof area actually mountable
 ):
     """
     Aggregate slope/aspect to each building footprint and estimate annual kWh.
 
-    annual_ghi_kwh_m2: global horizontal irradiation for the city. Austin ~1700,
-    Kathmandu ~1800 (verify from a real source before reporting numbers).
+    annual_ghi_kwh_m2: long-term annual global horizontal irradiation for the city,
+    from Global Solar Atlas (Austin 1750.7, Kathmandu 1774.8 kWh/m2/yr).
 
     Energy model (first-order, transparent):
         usable_area = footprint_area * usable_fraction * (frac cells under slope cap)

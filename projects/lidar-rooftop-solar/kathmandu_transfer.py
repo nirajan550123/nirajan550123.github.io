@@ -37,8 +37,7 @@ import geopandas as gpd
 sys.path.insert(0, os.path.dirname(__file__))
 from solar_suitability import building_suitability  # noqa: E402
 
-KATHMANDU_GHI = 1800.0  # kWh/m2/yr, first-order. Replace with a cited value
-                        # from Global Solar Atlas for your exact AOI before reporting.
+KATHMANDU_GHI = 1774.8  # kWh/m2/yr. Global Solar Atlas v2.6 (Solargis/World Bank), long-term annual GHI at 27.7083, 85.3206 (Kathmandu, Nepal)
 
 
 def fetch_osm_buildings(bbox, out_path, metric_epsg=32645):
