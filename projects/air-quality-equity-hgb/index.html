@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Air Quality &amp; Monitoring Equity — Houston-Galveston-Brazoria | Nirajan Tripathi</title>
+<meta name="description" content="A live ArcGIS dashboard pairing real-time EPA AirNow air quality with a census-tract analysis of social vulnerability and monitoring gaps across the Houston-Galveston-Brazoria metro." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3efe6;--paper-2:#ece6d9;--ink:#1f2a24;--ink-soft:#4a5650;--muted:#6b756e;
+    --line:#d8d0bf;--forest:#2f5d50;--forest-deep:#1d3b33;--moss:#6b8f5e;--clay:#c2703d;--gold:#cda434;
+    --surface:#fbf9f4;--shadow-sm:0 2px 8px rgba(31,42,36,.06);--shadow:0 16px 40px rgba(29,59,51,.12);
+    --shadow-lg:0 30px 60px rgba(29,59,51,.18);--radius:16px;--max:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.65;-webkit-font-smoothing:antialiased;}
+  a{color:var(--forest);text-decoration:none;transition:color .18s;}
+  a:hover{color:var(--clay);}
+  .wrap{width:min(var(--max),calc(100% - 40px));margin:0 auto;}
+  .mono{font-family:"JetBrains Mono",monospace;}
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(243,239,230,.82);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+  .brand{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem;color:var(--ink);}
+  .brand span{color:var(--forest);}
+  .back{font-size:.9rem;color:var(--ink-soft);font-weight:500;}
+  .back:hover{color:var(--forest);}
+  .phero{position:relative;overflow:hidden;padding:64px 0 44px;border-bottom:1px solid var(--line);}
+  .phero-bg{position:absolute;inset:0;z-index:0;opacity:.42;}
+  .phero .wrap{position:relative;z-index:1;}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin-bottom:16px;}
+  .phero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(2.1rem,4.6vw,3.3rem);line-height:1.05;letter-spacing:-.01em;max-width:22ch;}
+  .phero .lede{font-size:1.1rem;color:var(--ink-soft);max-width:64ch;margin:18px 0 22px;}
+  .tagrow{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:.76rem;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);padding:6px 12px;border-radius:999px;}
+  main{padding:8px 0 40px;}
+  .sec{padding:40px 0;border-bottom:1px solid var(--line);}
+  .sec:last-of-type{border-bottom:none;}
+  .sec-label{display:flex;align-items:baseline;gap:12px;margin-bottom:22px;}
+  .sec-num{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--clay);}
+  .sec-title{font-family:"Fraunces",serif;font-weight:600;font-size:1.55rem;color:var(--ink);}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;}
+  .split.text-lead{grid-template-columns:1.05fr .95fr;}
+  .prose p{color:var(--ink-soft);font-size:1.02rem;margin-bottom:14px;}
+  .prose ul,.prose ol{color:var(--ink-soft);font-size:1.02rem;padding-left:1.2rem;margin:8px 0 0;}
+  .prose li{margin-bottom:8px;}
+  .prose strong{color:var(--ink);}
+  @media(max-width:820px){.split,.split.text-lead{grid-template-columns:1fr;gap:22px;}}
+  figure.fig{margin:0;cursor:zoom-in;}
+  figure.fig img{width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface);transition:transform .25s,box-shadow .25s;}
+  figure.fig:hover img{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+  figure.fig figcaption{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--muted);margin-top:9px;text-align:center;letter-spacing:.02em;}
+  .datatable{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .datatable th,.datatable td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--line);color:var(--ink-soft);}
+  .datatable th{background:var(--paper-2);color:var(--ink);font-weight:600;font-size:.8rem;}
+  .datatable tr:last-child td{border-bottom:none;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow-sm);text-align:center;}
+  .stat b{font-family:"Fraunces",serif;font-size:1.8rem;color:var(--forest);display:block;line-height:1;}
+  .stat span{font-size:.82rem;color:var(--muted);display:block;margin-top:6px;}
+  @media(max-width:560px){.stats{grid-template-columns:1fr;}}
+  .figrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .figrow.three{grid-template-columns:1fr 1fr 1fr;}
+  @media(max-width:640px){.figrow,.figrow.three{grid-template-columns:1fr;}}
+  .callout{background:var(--surface);border-left:4px solid var(--clay);border-radius:10px;padding:16px 18px;margin-top:14px;}
+  .callout p{margin:0;color:var(--ink-soft);font-size:.98rem;}
+  .embed-wrap{position:relative;width:100%;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface);}
+  .embed-wrap iframe{display:block;width:100%;height:640px;border:0;}
+  @media(max-width:640px){.embed-wrap iframe{height:520px;}}
+  .endcta{background:linear-gradient(135deg,var(--forest-deep),var(--forest));color:#fff;border-radius:20px;padding:36px;margin:40px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;box-shadow:var(--shadow-lg);}
+  .endcta h3{font-family:"Fraunces",serif;font-size:1.4rem;margin-bottom:4px;}
+  .endcta p{color:rgba(255,255,255,.82);font-size:.95rem;}
+  .endcta .acts{display:flex;flex-wrap:wrap;gap:10px;}
+  .btn{display:inline-block;padding:11px 18px;border-radius:999px;font-weight:600;font-size:.92rem;transition:transform .18s,background .18s;}
+  .btn-light{background:#fff;color:var(--forest-deep);}
+  .btn-light:hover{transform:translateY(-2px);color:var(--forest-deep);}
+  .btn-outline{border:1.5px solid rgba(255,255,255,.5);color:#fff;}
+  .btn-outline:hover{background:rgba(255,255,255,.14);color:#fff;}
+  footer{text-align:center;padding:30px 0;color:var(--muted);font-size:.88rem;}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;}}
+  .lb{position:fixed;inset:0;background:rgba(20,28,24,.88);display:none;align-items:center;justify-content:center;z-index:200;padding:24px;cursor:zoom-out;backdrop-filter:blur(4px);}
+  .lb.open{display:flex;}
+  .lb img{max-width:95%;max-height:92%;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  .lb-cap{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.8);font-family:"JetBrains Mono",monospace;font-size:.8rem;}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">Nirajan&nbsp;<span>Tripathi</span></div>
+    <a class="back" href="../../">← All projects</a>
+  </div>
+</header>
+
+<section class="phero">
+  <svg class="phero-bg" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g fill="none" stroke="#9db89a" stroke-width="1.1">
+      <path d="M-50 300 C 200 260 380 300 600 270 S 1000 240 1260 265"/>
+      <path d="M-50 250 C 220 210 400 250 600 220 S 1000 190 1260 215"/>
+      <path d="M-50 350 C 220 320 400 360 620 340 S 1010 320 1260 345"/>
+    </g>
+    <g fill="#c2703d" opacity=".5">
+      <circle cx="300" cy="284" r="3"/><circle cx="540" cy="248" r="3"/><circle cx="820" cy="232" r="3"/><circle cx="1000" cy="238" r="3"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">Environmental Justice · Live Dashboard · Spatial Analysis</p>
+    <h1>Who Breathes Unmonitored Air?</h1>
+    <p class="lede">Regulatory air monitors are placed for regional compliance, not neighborhood exposure, so the communities that may need monitoring most are not necessarily the ones that have it. This live ArcGIS dashboard pairs real-time EPA AirNow air quality with a census-tract analysis of social vulnerability and monitoring coverage across the eight-county Houston-Galveston-Brazoria metro, and finds that roughly one tract in four is both highly vulnerable and beyond neighborhood-scale monitoring.</p>
+    <div class="tagrow">
+      <span class="tag">ArcGIS Online · Dashboards</span><span class="tag">Arcade</span><span class="tag">EPA AirNow (live)</span>
+      <span class="tag">CDC/ATSDR SVI 2022</span><span class="tag">Buffers · Find Closest · Join</span><span class="tag">Bivariate Choropleth</span>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section class="sec">
+    <div class="embed-wrap reveal">
+      <iframe title="Air Quality and Monitoring Equity dashboard for Houston-Galveston-Brazoria"
+              src="https://txst.maps.arcgis.com/apps/dashboards/f9333bcd15ee4baaaad2bd5ea4ed88c0"
+              loading="lazy" allowfullscreen></iframe>
+    </div>
+    <p class="mono" style="text-align:center;color:var(--muted);font-size:.74rem;margin-top:10px;">Live dashboard — air quality updates hourly from EPA AirNow. Best viewed full screen.</p>
+  </section>
+
+  <section class="sec">
+    <div class="split text-lead">
+      <div class="prose reveal">
+        <div class="sec-label"><span class="sec-num">01</span><span class="sec-title">The question</span></div>
+        <p>A standard air quality map tells you where the air is bad right now. It cannot tell you whether the communities least equipped to cope are the ones being watched. That is a fairness question, and it has two parts.</p>
+        <p>Where is the <strong>pollution burden</strong>, and where is the <strong>monitoring</strong>? When those two diverge, vulnerable neighborhoods can sit in a blind spot, exposed but unmeasured.</p>
+        <div class="callout"><p>Which socially vulnerable communities in Houston-Galveston-Brazoria face the highest air pollution burden, yet lie farthest from the nearest air quality monitor?</p></div>
+      </div>
+      <figure class="fig reveal">
+        <img src="bivariate_map.png" alt="Bivariate map of priority neighborhoods and live air monitors across the Houston metro" />
+        <figcaption>Shaded tracts cross social vulnerability with monitoring gap; red marks priority neighborhoods. Circles are live AirNow monitors, clustered in the central core.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">02</span><span class="sec-title">The headline finding</span></div>
+    <div class="stats reveal" style="margin-bottom:22px;">
+      <div class="stat"><b>399</b><span>Of 1,595 tracts: high vulnerability + under-monitored</span></div>
+      <div class="stat"><b>1 in 4</b><span>Share of the metro flagged as priority</span></div>
+      <div class="stat"><b>4 km</b><span>Coverage threshold (EPA neighborhood scale)</span></div>
+    </div>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>Of the metro's 1,595 census tracts, <strong>399 are "priority" tracts: both highly socially vulnerable and beyond neighborhood-scale monitoring coverage.</strong> They are not randomly scattered. They ring the metro along the industrial eastern corridor toward the Ship Channel and Baytown, and across the northern and outer fringes, while the regulatory monitors cluster in the central core.</p>
+      <p>The pattern is the finding: monitoring is concentrated where it already exists, and the vulnerable edge communities are the ones left uncovered. The burden is overwhelmingly concentrated in Harris County.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">03</span><span class="sec-title">A hybrid by design</span></div>
+    <div class="split reveal" style="align-items:start;">
+      <div class="prose">
+        <p>The dashboard answers two questions with different time signatures, so it is built in two halves.</p>
+        <p>The <strong>live operational layer</strong> pulls current air quality directly from the EPA AirNow hosted feature layer, which refreshes every hour. It drives the current maximum AQI, the count of monitors in the moderate range, and the ranked chart of the worst-air sites right now.</p>
+        <p>The <strong>structural equity layer</strong> rests on monitor locations and tract vulnerability, quantities that do not change hour to hour. Freezing them at analysis time loses nothing, because a monitor does not move and a neighborhood's vulnerability does not shift by lunchtime.</p>
+      </div>
+      <div class="prose">
+        <table class="datatable">
+          <tr><th>Layer</th><th>Updates</th></tr>
+          <tr><td>Current max AQI</td><td>Hourly (live)</td></tr>
+          <tr><td>Monitors in moderate range</td><td>Hourly (live)</td></tr>
+          <tr><td>Worst-air sites chart</td><td>Hourly (live)</td></tr>
+          <tr><td>Priority-neighborhood map</td><td>Structural snapshot</td></tr>
+          <tr><td>Priority count by county</td><td>Structural snapshot</td></tr>
+        </table>
+        <div class="callout" style="margin-top:16px;"><p>Live AQI is used where time matters; monitor distance and vulnerability are used where the quantity is stable. Keeping them separate is the point, not a shortcut.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">04</span><span class="sec-title">How the analysis was built</span></div>
+    <div class="prose reveal" style="max-width:74ch;margin-bottom:18px;">
+      <p>The equity layer is real spatial analysis, not two layers overlaid. Each step ran in ArcGIS Online:</p>
+      <ol>
+        <li><strong>Create Buffers</strong> around every monitor at a 4 km radius, EPA's neighborhood scale of representativeness.</li>
+        <li><strong>Find Closest</strong> to compute the straight-line distance from each of the 1,595 tracts to its nearest monitor.</li>
+        <li><strong>Join Features</strong> to attach that distance to the CDC Social Vulnerability Index tract layer on the census FIPS code.</li>
+        <li><strong>Classify</strong> every tract with an Arcade expression into a 2×2 scheme crossing vulnerability (high if SVI ≥ 0.75) with coverage (under-monitored if &gt; 4 km), producing the four-class bivariate map and the stored priority flag.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">05</span><span class="sec-title">Thresholds that earn the number</span></div>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>The classification cutoffs are not arbitrary. Each is grounded in federal guidance or peer-reviewed work, which is what makes the result defensible:</p>
+      <ul>
+        <li><strong>High social vulnerability: CDC/ATSDR SVI 2022 overall percentile ≥ 0.75.</strong> This top national quartile is the exact break used by the CDC/ATSDR SVI Interactive Map and the most common cutoff in the environmental-justice literature.</li>
+        <li><strong>Monitoring desert: nearest monitor more than 4 km (about 2.5 miles) away.</strong> This is the upper bound of EPA's "neighborhood scale" of representativeness (40 CFR Part 58 Appendix D), and the same coverage radius applied to this exact regulatory network by Kelly et al. (2024) in <em>JAMA Network Open</em>.</li>
+        <li><strong>Classification: a 2×2 priority flag</strong> for the headline metric, paired with a bivariate choropleth for the map, following standard cartographic guidance to keep bivariate maps legible.</li>
+        <li><strong>Distance is measured straight-line, by design.</strong> The question is whether a monitor's sampled air parcel reaches a tract, which is a Euclidean concept. Because EPA's spatial scales are themselves defined as straight-line air-parcel dimensions, line distance is the construct-appropriate measure here, not a road-network travel distance.</li>
+      </ul>
+      <div class="callout"><p>Data: U.S. EPA AirNow (live hourly AQI); CDC/ATSDR Social Vulnerability Index 2022 (census tract); nearest-monitor distance computed in ArcGIS Online. Air quality is current as of viewing; vulnerability reflects the 2022 SVI release.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">06</span><span class="sec-title">Limitations</span></div>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>A screening tool is only as good as its honesty about what it cannot say:</p>
+      <ul>
+        <li><strong>Live AQI is a preliminary, unvalidated hourly snapshot,</strong> shown for situational awareness, not regulatory determination. These values are not built into the tract analysis; the equity layer uses monitor locations and vulnerability, which are structural.</li>
+        <li><strong>Regulatory monitors are sited for regional compliance, not neighborhood exposure,</strong> so sparse coverage limits any claim about individual exposure.</li>
+        <li><strong>Tract-level results carry the ecological fallacy and the modifiable areal unit problem:</strong> a tract average is not an individual's experience, and results can shift with the choice of spatial unit.</li>
+        <li><strong>SVI is a relative national ranking,</strong> so "high vulnerability" means high relative to all US tracts. HGB skews more vulnerable than the national median, which is part of why the priority count is large; a stricter cutoff (SVI ≥ 0.90) would isolate a smaller, more acute set of tracts.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label reveal"><span class="sec-num">07</span><span class="sec-title">Tools &amp; skills</span></div>
+    <div class="prose reveal" style="max-width:74ch;">
+      <p>ArcGIS Online (Map Viewer, hosted feature layers, spatial analysis: Create Buffers, Find Closest, Join Features), ArcGIS Dashboards (indicators, serial charts, bivariate symbology, filters), Arcade expressions (derived classification and dashboard logic), live-feed integration, multi-source spatial data integration across federal air quality, federal vulnerability, and census geography, and cartographic design for an equity audience.</p>
+    </div>
+  </section>
+
+  <div class="endcta reveal">
+    <div>
+      <h3>Open the live dashboard</h3>
+      <p>Real-time air quality and the full monitoring-equity analysis, interactive and public on ArcGIS Online.</p>
+    </div>
+    <div class="acts">
+      <a class="btn btn-light" href="https://txst.maps.arcgis.com/apps/dashboards/f9333bcd15ee4baaaad2bd5ea4ed88c0" target="_blank" rel="noopener">Open dashboard →</a>
+      <a class="btn btn-outline" href="../../">Back to portfolio</a>
+    </div>
+  </div>
+
+</main>
+<footer>© 2026 Nirajan Tripathi · GIS &amp; Geospatial Data Science</footer>
+<div class="lb" id="lb"><img id="lb-img" src="" alt=""><div class="lb-cap" id="lb-cap"></div></div>
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const lb=document.getElementById('lb'),lbi=document.getElementById('lb-img'),lbc=document.getElementById('lb-cap');
+  document.querySelectorAll('figure.fig').forEach(f=>{f.addEventListener('click',()=>{const img=f.querySelector('img');const cap=f.querySelector('figcaption');lbi.src=img.src;lbi.alt=img.alt;lbc.textContent=cap?cap.textContent:'';lb.classList.add('open');});});
+  lb.addEventListener('click',()=>lb.classList.remove('open'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open');});
+</script>
+</body>
+</html>
